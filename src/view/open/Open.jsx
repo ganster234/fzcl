@@ -1,0 +1,376 @@
+import React, { useState, useEffect } from "react";
+import { Table, message, Modal, Input,Button } from "antd";
+import { useSearchParams, useLocation } from "react-router-dom";
+
+import { getResidueHeightByDOMRect } from "../../utils/utils";
+import { renew } from "../../utils/area";
+import {
+  getOpenList,
+  setAftermarket,
+  setRenew,
+  setRenewUpdate,
+} from "../../api/open";
+import { openColumns } from "../../utils/columns";
+import OpenTop from "./components/OpenTop";
+import CreateOpenModal from "./components/CreateOpenModal";
+import ExportModal from "./components/ExportModal";
+import dayjs from "dayjs";
+import "./Open.less";
+const ContentLayouts = React.lazy(async () => {
+  const item = await import("../../components/contentLayouts/ContentLayouts");
+  return item;
+});
+
+// 提取Open
+export default function Open() {
+  const [height, setHeight] = useState(550);
+  const [loading, setLoading] = useState(false);
+  const [search] = useSearchParams();
+  const [saleShow, setSaleShow] = useState(false); //售后
+  const [saleNumber, setSaleNumber] = useState("");
+  const [saleConfirmLoading, setSaleConfirmLoading] = useState(false);
+  const location = useLocation();
+  const [showOpen, setShowOpen] = useState(false); //创建open
+  const [exportOpen, setExportOpen] = useState(false);
+  const [state, setState] = useState({
+    start_time: new Date(),
+    end_time: new Date(),
+    open_task_id: "", //任务编号
+    name: "", //用户名称
+    is_op: "1", //1op,2ck
+  });
+  const [total, setTotal] = useState(0); // 总条数
+  const [dataList, setDataList] = useState([]);
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1, //当前页码
+      pageSize: 10, // 每页数据条数
+    },
+  });
+
+  useEffect(() => {
+    //高度自适应
+    setHeight(getResidueHeightByDOMRect());
+    window.onresize = () => {
+      setHeight(getResidueHeightByDOMRect());
+    };
+    (() => {
+      openList();
+      const { state } = location;
+      if (state?.app_id && state?.num) {
+        setShowOpen(true);
+      }
+    })();
+  }, [JSON.stringify(tableParams)]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  //获取list
+  const openList = async (str) => {
+    const { current, pageSize } = tableParams.pagination;
+    setLoading(true);
+    let param = {
+      ...state,
+      // 判断有无参数进来有就取没有就取本页面的
+      open_task_id: search.get("open_task_id")
+        ? search.get("open_task_id")
+        : state.open_task_id,
+      page: current,
+      limit: pageSize,
+      start_time:
+        state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
+      end_time: state.start_time && dayjs(state.end_time).format("YYYY-MM-DD"),
+    };
+    if (str) {
+      param = {
+        ...param,
+        page: 1,
+        open_task_id: "", //任务编号
+        name: "", //用户名称
+        start_time: "",
+        end_time: "",
+        is_op: "1",
+      };
+    }
+    let result = await getOpenList(param);
+    const { code, data, msg } = result || {};
+    message.destroy();
+    if (code === 200) {
+      setDataList([...data?.data]);
+      setTotal(data?.total);
+    } else {
+      message.error(msg);
+    }
+    setLoading(false);
+  };
+
+  const openQuery = () => {
+    changeCurrentGetList("");
+  };
+  //查询或者是重置，是第一页就直接调用接口，不是第一页就改变页数触发请求
+  const changeCurrentGetList = (str) => {
+    const { pagination } = tableParams;
+    if (pagination.current === 1 && pagination.pageSize === 10) {
+      openList(str);
+    } else {
+      setTableParams(() => {
+        return {
+          pagination: {
+            ...pagination,
+            current: 1,
+          },
+        };
+      });
+    }
+  };
+
+  const openReset = () => {
+    setState({
+      ...state,
+      start_time: new Date(),
+      end_time: new Date(),
+      open_task_id: "", //任务编号
+      name: "", //用户名称
+    });
+    changeCurrentGetList("str");
+  };
+
+  const setStatus = (data, str) => {
+    setState({
+      ...state,
+      [str]: data,
+    });
+  };
+
+  const handleTableChange = (pagination) => {
+    setTableParams({ pagination });
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+      setDataList([]);
+    }
+  };
+
+  const copy = (data) => {
+    let copyInput = document.createElement("input"); //创建input元素
+    document.body.appendChild(copyInput); //向页面底部追加输入框
+    copyInput.setAttribute("value", data); //添加属性，将url赋值给input元素的value属性
+    copyInput.select(); //选择input元素
+    document.execCommand("Copy"); //执行复制命令
+    message.destroy();
+    message.success("复制成功");
+    //复制之后再删除元素，否则无法成功赋值
+    copyInput.remove(); //删除动态创建的节点
+  };
+
+  const changeModal = () => {
+    setShowOpen(true);
+  };
+  const changeExport = () => {
+    setExportOpen(true);
+  };
+
+  const cancelModal = () => {
+    setShowOpen(false);
+  };
+  const comModal = () => {
+    setShowOpen(false);
+    openList();
+  };
+  const setExport = (data) => {
+    setExportOpen(data);
+  };
+  const saleChange = (data) => {
+    setSaleShow(data);
+  };
+
+  const comSale = async () => {
+    if (!saleNumber) {
+      return message.error("请输入任务编号");
+    }
+    setSaleConfirmLoading(true);
+    let result = await setAftermarket({ openid_task_id: saleNumber });
+    if (result?.code === 200) {
+      message.success("提交成功");
+      setSaleConfirmLoading(false);
+      setSaleShow(false);
+    } else {
+      message.error(result?.msg);
+    }
+    setSaleConfirmLoading(false);
+  };
+
+  // 续费
+  const renewBtn = async (openid_task_id) => {
+    if (!openid_task_id) {
+      return message.error("订单ID不存在,请联系客服");
+    }
+    setLoading(true);
+    let { code, msg } = await setRenew({ openid_task_id });
+    if (code === 200) {
+      message.success("续费申请成功");
+      openList();
+    } else {
+      message.error(msg || "续费失败，请联系客服");
+    }
+    setLoading(false);
+  };
+
+  //更新
+  const renewUpdate = async (openid_task_id) => {
+    if (!openid_task_id) {
+      return message.error("订单ID不存在,请联系客服");
+    }
+    setLoading(true);
+    let { code, msg } = await setRenewUpdate({openid_task_id});
+    if (code === 200) {
+      message.success("更新open中,请稍等片刻");
+      openList();
+    } else {
+      message.error(msg || "更新open失败,请联系客服");
+    }
+    setLoading(false);
+  };
+  return (
+    <ContentLayouts
+      top={
+        <OpenTop
+          state={state}
+          setStatus={setStatus}
+          openQuery={openQuery}
+          openReset={openReset}
+          changeModal={changeModal}
+          changeExport={changeExport}
+          saleChange={saleChange}
+        />
+      }
+      content={
+        <div className="open-content">
+          <Table
+            rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
+            scroll={{
+              x: 1500,
+              y: height,
+            }}
+            rowKey={() => Math.random()}
+            loading={loading}
+            pagination={{
+              ...tableParams.pagination,
+              total: total,
+              hideOnSinglePage: false,
+              showSizeChanger: true,
+            }}
+            onChange={handleTableChange}
+            columns={[
+              {
+                title: "ID",
+                dataIndex: "id",
+                width: 200,
+              },
+              {
+                title: "任务编号（双击复制）",
+                width: 300,
+                dataIndex: "openid_task_id",
+                render: (record) => (
+                  <span
+                    onDoubleClick={() => copy(record)}
+                    className="openid-task-id"
+                  >
+                    {record}
+                  </span>
+                ),
+              },
+              ...openColumns,
+
+              {
+                title: "任务状态",
+                dataIndex: "status",
+                render: (record) => (
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div
+                      className={
+                        record
+                          ? "open-task-status open-task-status-active"
+                          : "open-task-status"
+                      }
+                    >
+                      {record ? "已完成" : "进行中"}
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                title: "操作",
+                width: 220,
+                render: (record) => (
+                  <>
+                    {renew[record.package_id] && (
+                      <div className="open-task-package">
+                        <Button
+                          type="primary"
+                          onClick={() => renewBtn(record.openid_task_id)}
+                        >
+                          续费
+                        </Button>
+                        <Button
+                          onClick={() => renewUpdate(record.openid_task_id)}
+                        >
+                          更新open
+                        </Button>
+                      </div>
+                    )}
+                    {!renew[record.package_id] && "-"}
+                  </>
+                ),
+              },
+            ]}
+            dataSource={dataList}
+          />
+          <Modal
+            title="创建任务"
+            open={showOpen}
+            width={400}
+            footer={null}
+            destroyOnClose
+            onCancel={() => setShowOpen(false)}
+          >
+            {showOpen && (
+              <CreateOpenModal cancelModal={cancelModal} comModal={comModal} />
+            )}
+          </Modal>
+          <Modal
+            title="open导出"
+            open={exportOpen}
+            width={450}
+            footer={null}
+            destroyOnClose
+            onCancel={() => setExportOpen(false)}
+          >
+            {exportOpen && <ExportModal setExport={setExport} />}
+          </Modal>
+          <Modal
+            title="售后"
+            open={saleShow}
+            width={450}
+            destroyOnClose
+            confirmLoading={saleConfirmLoading}
+            onOk={() => comSale()}
+            onCancel={() => {
+              setSaleNumber("");
+              setSaleShow(false);
+            }}
+          >
+            <div
+              style={{ color: "red", padding: "12px 0", textAlign: "center" }}
+            >
+              提示：请勿乱提交售后，如果非法售后账号将被封停。
+            </div>
+            <div>
+              <Input
+                placeholder="请输入任务编号"
+                value={saleNumber}
+                onChange={(even) => setSaleNumber(even.target.value)}
+              />
+            </div>
+          </Modal>
+        </div>
+      }
+    />
+  );
+}

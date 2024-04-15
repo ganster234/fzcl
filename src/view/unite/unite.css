@@ -1,0 +1,13 @@
+.MODul {
+  list-style: none;
+  box-sizing: border-box;
+  padding: 20px;
+}
+.MODul li {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+.MODul li p {
+  width: 100px;
+}

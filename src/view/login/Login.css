@@ -1,0 +1,64 @@
+.login {
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("../../assets/image/23.jpg");
+  background-size: cover;
+}
+.login .login-form {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(8.5px);
+  -webkit-backdrop-filter: blur(8.5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 478px;
+  box-sizing: border-box;
+  padding: 40px;
+}
+.login .login-form .yonghu {
+  font-size: 18px;
+  font-weight: 900;
+  color: white;
+  position: relative;
+  margin: 10px 0px 25px 0;
+}
+.login .login-form .yonghu span {
+  position: absolute;
+  bottom: 2px;
+  left: 10px;
+  width: 55px;
+  height: 3px;
+  background-color: #3177FF;
+}
+.login .login-form .imgcodeBOX {
+  display: flex;
+}
+.login .login-form .imgcodeBOX input {
+  width: 295px;
+}
+.login .login-form .imgcodeBOX .codeImg {
+  width: 100px;
+  height: 50px;
+  border-radius: 0 6px 6px 0;
+}
+.login .login-form .clickLgzc {
+  display: flex;
+  justify-content: flex-end;
+  color: white;
+}
+.login .login-form .clickLgzc span {
+  cursor: pointer;
+  color: #2381FF;
+}
+.login .login-form #basic input {
+  border: none;
+  height: 50px;
+}
+.login .login-form #basic #basic_password {
+  border: none !important;
+  height: 40px;
+}

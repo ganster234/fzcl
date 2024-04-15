@@ -1,0 +1,18 @@
+import { getData,postData } from './index'
+
+
+//获取全部套餐
+export const getThaliList = (data) => { return getData('appPrice/getAll', data) }
+
+//获取套餐详情 
+export const getPackDetail = (data) => { return getData('project/pack/detail', data) }
+
+//下单
+export const getPlaceOrder = (data) => { return postData('pay/create', data) }
+
+
+// 微信导出code
+export const getOpenCode = (data) => { return getData('get/open/code', data) }
+
+// 微信更新code 
+export const setUpdateCode = (data) => { return postData('update/open/code', data) }

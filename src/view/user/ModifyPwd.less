@@ -1,0 +1,71 @@
+.modify-pwd {
+  flex: 1;
+  display: flex;
+  font-family: PingFang SC-Regular, PingFang SC;
+  .personal-settings {
+    width: 385px;
+    height: 174px;
+    background-color: #fff;
+    margin-right: 24px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #323232;
+    .personal-settings-title {
+      padding: 24px 32px 12px 32px;
+      font-size: 16px;
+      font-weight: normal;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .personal-settings-tabs {
+      padding: 18px 16px;
+      .personal-tabs-item {
+        padding: 16px 12px;
+        height: 67px;
+        box-sizing: border-box;
+        cursor: pointer;
+        .personal-tabs-item-title {
+          font-size: 16px;
+          font-weight: 400;
+        }
+        .personal-tabs-item-text {
+          font-size: 12px;
+          font-weight: 400;
+        }
+      }
+      .personal-tabs-item-active {
+        color: #327dfc;
+        background: rgba(44, 141, 252, 0.1);
+      }
+    }
+  }
+  .basic-settings {
+    flex: 1;
+    padding: 24px 32px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 4px;
+    .basic-title {
+      font-size: 16px;
+      font-weight: normal;
+      color: #323232;
+      margin-bottom: 6px;
+    }
+    .basic-form {
+      display: flex;
+      flex-direction: column;
+      .form-item {
+        margin-top:24px;
+        font-size: 16px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        color: #323233;
+        .form-item-title {
+          margin-bottom: 8px;
+          .form-color {
+            color: #fe2424;
+          }
+        }
+      }
+    }
+  }
+}

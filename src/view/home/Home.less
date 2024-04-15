@@ -1,0 +1,204 @@
+.home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  .home-user-info {
+    width:100%;
+    height: 80px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    box-sizing: border-box;
+    border-radius: 4px;
+    .home-head-icon {
+      width: 44px;
+      height: 44px;
+      margin-right: 16px;
+    }
+    .user-info-box {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #323232;
+    }
+    .home-money {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .home-money-item {
+        margin-right: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 22px;
+        font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+        font-weight: bold;
+        color: #323232;
+        .home-money-item-test-icon {
+          font-size: 12px;
+          font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+          font-weight: 400;
+          color: #999999;
+          display: flex;
+          align-items: center;
+          .home-money-item-icon {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
+    }
+    .home-recharge-cash-btn {
+      display: flex;
+      align-items: center;
+      .home-recharge-cash {
+        width: 73px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        font-size: 12px;
+        font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+        font-weight: 400;
+        box-sizing: border-box;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .home-cash {
+        color: #2773f2;
+        border: 1px solid #2773f2;
+        margin-left: 32px;
+      }
+      .home-recharge {
+        color: #fff;
+        background-color: #2773f2;
+      }
+    }
+  }
+  .home-main {
+    margin-top: 14px;
+    flex: 1;
+    display: flex;
+    .home-main-left {
+      flex: 1;
+      max-width: 1272px;
+      display: flex;
+      flex-direction: column;
+    }
+    .home-main-right {
+      width: 384px;
+      margin-left: 24px;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.home-main-left-carousel {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  // min-width: 1272px;
+}
+.cash-modal {
+  padding: 32px;
+  .cash-modal-pour {
+    font-size: 16px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #f31111;
+    background: #fdf3f3;
+    padding: 12px;
+    border-radius: 4px;
+  }
+  .cash-modal-title {
+    margin-top: 50px;
+    font-size: 20px;
+    font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+    font-weight: 400;
+    color: #323232;
+    margin-bottom: 39px;
+  }
+  .cash-modal-input-box-bottom {
+    margin-bottom: 36px;
+  }
+  .cash-modal-input-box {
+    display: flex;
+    align-items: center;
+    .cash-modal-input-title {
+      width: 100px;
+      text-align: right;
+      margin-right: 12px;
+      font-size: 16px;
+      font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+      font-weight: 400;
+      color: #999999;
+    }
+  }
+  .cash-modal-whole-btn {
+    padding-left: 130px;
+    font-size: 14px;
+    font-family: PingFang SC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #2773f2;
+    margin-top: 12px;
+    cursor: pointer;
+  }
+}
+.explain-modal-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  border-bottom: 1px solid #e8e8e8;
+  .explain-modal-tabs-box {
+    display: flex;
+    align-items: center;
+    .explain-modal-tabs-item {
+      margin-right: 48px;
+      font-size: 16px;
+      font-family: PingFang SC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #666666;
+      cursor: pointer;
+    }
+    .explain-modal-tabs-item-active {
+      font-weight: bold;
+      color: #323232;
+    }
+  }
+  .explain-modal-close-icon {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+  }
+}
+.explain-title-denga {
+  height: 52px;
+  padding-left: 24px;
+  line-height: 52px;
+  background: #fdf3f3;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #f31111;
+  margin: 20px 0;
+}
+.explain-text-content-box {
+  height: 413px;
+  padding: 22px;
+  box-sizing: border-box;
+  background: #f8f8f8;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: PingFang SC-Regular, PingFang SC;
+  color: #666666;
+  .explain-text-bold {
+    font-weight: Bold;
+    color: #323232;
+  }
+}

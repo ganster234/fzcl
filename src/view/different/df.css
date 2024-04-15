@@ -1,0 +1,37 @@
+.myviode {
+  width: 100%;
+  flex: 1;
+}
+.maxBox {
+  position: relative;
+}
+.maxBox .totoTEx {
+  position: absolute;
+  top: 30%;
+  left: 8%;
+  font-size: 30px;
+  color: white;
+  z-index: 99;
+}
+.maxBox .totoTEx .btn32 {
+  margin-top: 50px;
+  height: 50px;
+  padding: 0 15px;
+  width: 200px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  background-color: #f2fff7;
+  font-size: 18px;
+  font-weight: 700;
+  color: #3177FF;
+  box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.2), -6px -6px 16px rgba(255, 255, 255, 0.8), inset 0px 0px 0px rgba(0, 0, 0, 0.2), inset 0px 0px 0px rgba(255, 255, 255, 0.8);
+  transition: 0.2s;
+}
+.maxBox .totoTEx .btn32:hover {
+  color: #3034d4;
+  background-color: #f2f3ff;
+  border: 1px solid #ffffff;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px rgba(255, 255, 255, 0.8), inset 6px 6px 12px rgba(0, 0, 0, 0.2), inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+  transform: translateY(10px) scale(0.98);
+}

@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app,
+.wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: "PingFang SC", "Helvetica Neue", Helvetica, "microsoft yahei",
+    arial, STHeiTi, sans-serif;
+}
+
+.el-table th {
+  background-color: #f5f7fa !important;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #000 !important;
+}
+.pointer {
+  cursor: pointer;
+}
+.ant-table-body {
+  &::-webkit-scrollbar {
+    height: 5px;
+    width: 10px;
+    overflow-y: auto;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(89, 89, 89, 0.2);
+    background: #939392;
+  }
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: 0;
+    border-radius: 0;
+    background: #f0f2f5;
+  }
+}
+.odd {
+  background-color: #f0f6ff;
+}
+.even {
+  background-color: rgba(250, 250, 250, 1);
+}
+
+.ant-table-cell {
+  text-align: center;
+}
+.ant-table-thead > tr > .ant-table-cell {
+  text-align: center !important;
+}
+
+.ant-pagination {
+  justify-content: center !important;
+}
+
+.crisp-client
+  .cc-tlyw[data-last-operator-face="false"]
+  .cc-kxkl
+  .cc-nsge
+  .cc-imbb
+  .cc-11f2[data-is-ongoing="false"]
+  .cc-15e7 {
+  background-image: url(../image/msg.png) !important;
+  width: 47px !important;
+  height: 40px !important;
+  top: 13px !important;
+  left: 7px !important;
+}
+.ant-layout {
+  min-height: 100vh !important;
+  height: 100% !important;
+}

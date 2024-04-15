@@ -1,0 +1,25 @@
+.msg-detail-list {
+  max-height: 300px; /* 定义容器高度 */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  padding: 5px;
+  border-radius: 8px;
+  overflow-y: scroll; /* 垂直滚动条 */
+  .msg-detail-list-item{
+    padding:5px 0;
+    border-bottom: 1px solid #E5E5E6;
+  }
+}
+/* 隐藏滚动条的样式 */
+.msg-detail-list::-webkit-scrollbar {
+  width: 0;
+  display: none; /* 隐藏滚动条 */
+}
+
+.msg-detail-input-text {
+  margin-top: 15px;
+}
+.msg-detail-input-btn {
+  display: flex;
+  justify-content: flex-end;
+}

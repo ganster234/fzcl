@@ -1,0 +1,50 @@
+.common {
+  flex: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  margin-top: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.common .common-title {
+  font-size: 16px;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #323232;
+}
+.common .common-content {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.common .common-content .common-item {
+  margin-top: 40px;
+  margin-right: 102px;
+  width: 71px;
+  height: 105px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #666666;
+  cursor: pointer;
+}
+.common .common-content .common-item .common-item-icon {
+  width: 68px;
+  height: 68px;
+  margin-bottom: 16px;
+}
+.huobao {
+  z-index: 9;
+  margin-left: 20px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}

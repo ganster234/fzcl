@@ -1,0 +1,8 @@
+.modcss li {
+  display: flex;
+  align-items: center;
+  margin: 25px 0;
+}
+.modcss li p {
+  width: 85px;
+}

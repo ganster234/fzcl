@@ -1,0 +1,37 @@
+.mail-config-top {
+  background: #f5f5f5;
+  display: flex;
+  justify-content: flex-end;
+}
+.mail-config-content {
+  flex: 1;
+  margin: 32px;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+}
+
+.msg-config-list {
+  max-height: 300px; /* 定义容器高度 */
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  padding: 5px;
+  border-radius: 8px;
+  overflow-y: scroll; /* 垂直滚动条 */
+  .msg-config-list-item {
+    padding: 5px 0;
+    border-bottom: 1px solid #e5e5e6;
+  }
+}
+/* 隐藏滚动条的样式 */
+.msg-config-list::-webkit-scrollbar {
+  width: 0;
+  display: none; /* 隐藏滚动条 */
+}
+
+.msg-config-input-text {
+  margin-top: 15px;
+}
+.msg-config-input-btn {
+  display: flex;
+  justify-content: flex-end;
+}

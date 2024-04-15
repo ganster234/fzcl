@@ -1,0 +1,103 @@
+.thali-top {
+  height: 170px;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+.thali-top .types-radio {
+  padding: 40px 0 20px 0;
+  display: flex;
+  align-items: center;
+}
+.thali-top .types-radio .types-text {
+  margin-right: 20px;
+  font-size: 14px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #666666;
+}
+.thali-top .thali-tabs-input {
+  display: flex;
+  justify-content: space-between;
+}
+.thali-top .thali-tabs-input .thali-input {
+  display: flex;
+  align-items: center;
+}
+.thali-content {
+  width: 100%;
+  max-height: 620px;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+.thali-content .thali-item-content {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.thali-content .thali-content-item {
+  width: 228px;
+  height: 84px;
+  margin: 16px 20px;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  display: flex;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 1px rgba(38, 128, 235, 0.3);
+}
+.thali-content .thali-content-item .thali-item-logo-path {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  margin-right: 12px;
+}
+.thali-content .thali-content-item .thali-item-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+.thali-content .thali-content-item .thali-item-details .thali-item-app-name {
+  font-size: 13px;
+  font-family: PingFangSC-Regular-, PingFangSC-Regular;
+  font-weight: normal;
+  color: #323232;
+}
+.thali-content .thali-content-item .thali-item-details .inventory-price {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-family: PingFangSC-Regular-, PingFangSC-Regular;
+  font-weight: normal;
+  color: #999999;
+}
+.thali-content .thali-content-item .thali-item-details .inventory-price .thali-item-pirce-color {
+  font-family: PingFang SC-Bold, PingFang SC;
+  font-weight: bold;
+  color: #f73d48;
+}
+.thali-content .thali-empty {
+  margin: 0 auto;
+}
+* {
+  /* 隐藏滚动条 */
+  -ms-overflow-style: none;
+  /* Internet Explorer和Edge */
+}
+* ::-webkit-scrollbar {
+  display: none !important;
+}
+.ant-tabs-top > .ant-tabs-nav::before,
+.ant-tabs-bottom > .ant-tabs-nav::before,
+.ant-tabs-top > div > .ant-tabs-nav::before,
+.ant-tabs-bottom > div > .ant-tabs-nav::before {
+  border: none;
+}
+.ant-tabs-top > .ant-tabs-nav,
+.ant-tabs-bottom > .ant-tabs-nav,
+.ant-tabs-top > div > .ant-tabs-nav,
+.ant-tabs-bottom > div > .ant-tabs-nav {
+  margin-bottom: 0;
+}

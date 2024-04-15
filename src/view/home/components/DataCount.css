@@ -1,0 +1,124 @@
+.data-count {
+  flex: 1;
+}
+.data-count .data-count-channel {
+  height: 180px;
+  padding: 10px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.data-count .data-count-channel .data-count-channel-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #323232;
+}
+.data-count .data-count-channel .data-count-channel-title .count-channel-btn {
+  display: flex;
+  align-items: center;
+  width: 100px;
+  height: 24px;
+  border: 1px solid #c8c8c8;
+  border-radius: 4px;
+}
+.data-count .data-count-channel .data-count-channel-title .count-channel-btn .count-channel-btn-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #999999;
+  cursor: pointer;
+}
+.data-count .data-count-channel .data-count-channel-title .count-channel-btn .count-channel-btn-item-active {
+  color: #327dfc;
+}
+.data-count .data-count-channel .count-channel-detail {
+  margin-top: 10px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.data-count .data-count-channel .count-channel-detail .count-channel-detail-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.data-count .data-count-channel .count-channel-detail .count-channel-detail-item .channel-detail-item-title {
+  font-size: 14px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #666666;
+  margin-bottom: 16px;
+}
+.data-count .data-count-channel .count-channel-detail .count-channel-detail-item .channel-detail-item-content {
+  font-size: 24px;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #323232;
+  margin-bottom: 6px;
+}
+.data-count .data-count-channel .count-channel-detail .count-channel-detail-item .channel-detail-item-footer {
+  font-size: 12px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #999999;
+}
+.data-count .data-count-channel .count-channel-detail .channel-detail-item-vertical {
+  height: 92px;
+}
+.data-count .data-count-e-charts {
+  margin-top: 15px;
+  width: 100%;
+  height: 565px;
+  box-sizing: border-box;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.data-count .data-count-e-charts .data-count-e-charts-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-family: Microsoft YaHei-Bold, Microsoft YaHei;
+  font-weight: bold;
+  color: #323232;
+  line-height: 22px;
+}
+.data-count .data-count-e-charts .data-count-e-charts-title .count-btn-box {
+  display: flex;
+  align-items: center;
+  width: 110px;
+  height: 24px;
+  font-size: 10px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #999999;
+  border: 1px solid #c8c8c8;
+  border-radius: 4px;
+}
+.data-count .data-count-e-charts .data-count-e-charts-title .count-btn-box .count-btn-box-item {
+  flex: 1;
+  text-align: center;
+  line-height: 24px;
+  cursor: pointer;
+}
+.data-count .data-count-e-charts .data-count-e-charts-title .count-btn-box .count-btn-box-item-active {
+  color: #327dfc;
+}
+.data-count .data-count-e-charts .charts-box {
+  width: 100%;
+  height: 505px;
+}
