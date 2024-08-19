@@ -226,14 +226,14 @@ export default function AppProvider({ children }) {
       label: "充值记录",
       roles: ["admin", "role", "superAdmin"],
     },
-    {
-      key: "/layouts/process",
-      icon: require("../assets/image/sidermenu/process.png"),
-      iconActive: require("../assets/image/sidermenu/process-active.png"),
-      element: lazyLoad(lazy(() => import("../view/process/Process.jsx"))),
-      label: "USDT管理",
-      roles: ["admin", "superAdmin"],
-    },
+    // {
+    //   key: "/layouts/process",
+    //   icon: require("../assets/image/sidermenu/process.png"),
+    //   iconActive: require("../assets/image/sidermenu/process-active.png"),
+    //   element: lazyLoad(lazy(() => import("../view/process/Process.jsx"))),
+    //   label: "USDT管理",
+    //   // roles: ["admin", "superAdmin"],
+    // },
     {
       key: "/layouts/cash",
       icon: require("../assets/image/sidermenu/cash.png"),
@@ -267,17 +267,15 @@ export default function AppProvider({ children }) {
       children: [
         {
           key: "/layouts/platform/project",
-          element: lazyLoad(lazy(() => import("../view/platform/Project.jsx"))),
+          element: lazyLoad(lazy(() => import("../project/Project.jsx"))),
           roles: ["superAdmin"],
-          label: "项目管理(qq)",
+          label: "项目管理(Q)",
         },
         {
           key: "/layouts/platform/wechat/project",
-          element: lazyLoad(
-            lazy(() => import("../view/platform/WeChatProject.jsx"))
-          ),
+          element: lazyLoad(lazy(() => import("../project/ProjectWx.jsx"))),
           roles: ["superAdmin"],
-          label: "项目管理(微信)",
+          label: "项目管理(W)",
         },
         {
           key: "/layouts/platform/group",
@@ -355,7 +353,7 @@ export default function AppProvider({ children }) {
       iconActive: require("../assets/image/sidermenu/rebate-active.png"),
       element: lazyLoad(lazy(() => import("../view/rebate/Rebate.jsx"))),
       label: "邀请返利",
-      roles: ["admin","role", "superAdmin"],
+      roles: ["admin", "role", "superAdmin"],
     },
     {
       key: "/layouts/project/list",

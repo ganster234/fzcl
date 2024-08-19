@@ -83,7 +83,9 @@ export default function AppProvider({ children }) {
       key: "/layouts/tendency",
       icon: require("../assets/image/sidermenu/recharge-active.png"),
       iconActive: require("../assets/image/sidermenu/recharge.png"),
-      element: lazyLoad(lazy(() => import("../view/home/components/DataCount.jsx"))),
+      element: lazyLoad(
+        lazy(() => import("../view/home/components/DataCount.jsx"))
+      ),
       label: "销售数据走势",
       roles: ["admin", "superAdmin"],
     },
@@ -103,13 +105,13 @@ export default function AppProvider({ children }) {
       label: "统计",
       roles: ["admin", "superAdmin"],
     },
-    // {
-    //   key: "/layouts/qqunited",
-    //   iconActive: require("../assets/image/sidermenu/thali.png"),
-    //   icon: require("../assets/image/sidermenu/thali-active.png"),
-    //   element: lazyLoad(lazy(() => import("../view/unitedQQ/index.jsx"))),
-    //   label: "联合套餐",
-    // },
+    {
+      key: "/layouts/qqunited",
+      iconActive: require("../assets/image/sidermenu/thali.png"),
+      icon: require("../assets/image/sidermenu/thali-active.png"),
+      element: lazyLoad(lazy(() => import("../view/unitedQQ/index.jsx"))),
+      label: "联合套餐",
+    },
     {
       key: "/layouts/thali",
       iconActive: require("../assets/image/sidermenu/thali.png"),
@@ -212,6 +214,14 @@ export default function AppProvider({ children }) {
       roles: ["admin", "role", "agent", "superAdmin"],
     },
     {
+      key: "/layouts/process",
+      iconActive: require("../assets/image/sidermenu/process.png"),
+      icon: require("../assets/image/sidermenu/process-active.png"),
+      element: lazyLoad(lazy(() => import("../view/process/Process.jsx"))),
+      label: "USDT管理",
+      roles: ["admin", "superAdmin"],
+    },
+    {
       key: "/layouts/project",
       iconActive: require("../assets/image/sidermenu/user.png"),
       icon: require("../assets/image/sidermenu/user-active.png"),
@@ -235,6 +245,20 @@ export default function AppProvider({ children }) {
       roles: ["admin", "role", "agent", "superAdmin"], //不存在就展示，存在就会过滤权限
       children: [
         {
+          key: "/layouts/platform/project",
+          element: lazyLoad(lazy(() => import("../view/project/Project.jsx"))),
+          roles: ["superAdmin"],
+          label: "项目管理(Q)",
+        },
+        {
+          key: "/layouts/platform/wechat/project",
+          element: lazyLoad(
+            lazy(() => import("../view/project/ProjectWx.jsx"))
+          ),
+          roles: ["superAdmin"],
+          label: "项目管理(W)",
+        },
+        {
           key: "/layouts/platform/group",
           element: lazyLoad(lazy(() => import("../view/platform/Group.jsx"))),
           roles: ["admin", "role", "agent", "superAdmin"],
@@ -246,14 +270,14 @@ export default function AppProvider({ children }) {
           roles: ["admin", "superAdmin"],
           label: "公告管理",
         },
-        // {
-        //   key: "/layouts/platform/setup",
-        //   element: lazyLoad(
-        //     lazy(() => import("../view/platform/SystemSetup.jsx"))
-        //   ),
-        //   roles: ["superAdmin"],
-        //   label: "系统设置",
-        // },
+        {
+          key: "/layouts/platform/setup",
+          element: lazyLoad(
+            lazy(() => import("../view/platform/SystemSetup.jsx"))
+          ),
+          roles: ["superAdmin"],
+          label: "系统设置",
+        },
       ],
     },
     {

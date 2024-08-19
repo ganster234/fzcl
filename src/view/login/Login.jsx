@@ -61,32 +61,32 @@ export default function Login() {
       // 获取查询参数,如果没有就跳转到首页
       navigate("/layouts/home", { replace: true });
 
-      await fetch("https://api.afei567.com/v1/add/user/ip", {
-        method: "POST",
-        headers: {
-          Token: data?.data,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          zhi: fingerprint,
-          data: window.navigator.userAgent,
-          account: data?.account,
-          type:
-            platformSrc === "rosefinch"
-              ? "2"
-              : platformSrc === "whale"
-              ? "3"
-              : platformSrc === "shark"
-              ? "4"
-              : "",
-        }),
-      });
+      // await fetch("https://api.afei567.com/v1/add/user/ip", {
+      //   method: "POST",
+      //   headers: {
+      //     Token: data?.data,
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     zhi: fingerprint,
+      //     data: window.navigator.userAgent,
+      //     account: data?.account,
+      //     type:
+      //       platformSrc === "rosefinch"
+      //         ? "2"
+      //         : platformSrc === "whale"
+      //         ? "3"
+      //         : platformSrc === "shark"
+      //         ? "4"
+      //         : "",
+      //   }),
+      // });
     } else if (code === 410) {
       //未修改密码禁止用户操作
       takestore.setdisclosedBallot(true);
       // console.log(result);
       setLoading(false);
-      sessionStorage.setItem("token", data);
+      sessionStorage.setItem("token", data.data);
       // 刷新页面导致路由以及丢失menu的关键
       sessionStorage.setItem("role", data?.roles || "admin");
       //重置路由菜关键点
@@ -112,6 +112,7 @@ export default function Login() {
   };
   return (
     <Spin spinning={loading}>
+      {/* login background */}
       <div className="login background">
         <>
           <strong></strong>
@@ -153,7 +154,7 @@ export default function Login() {
             >
               注册
             </span> */}
-          <img src={require("../../assets/image/login.png")} alt="" />
+          {/* <img src={require("../../assets/image/login.png")} alt="" /> */}
           <p className="yonghu">
             用户登录<span></span>
           </p>

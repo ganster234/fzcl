@@ -20,15 +20,14 @@ export const settlement = [
   },
 ];
 export const projectColumns = [
-  
   {
     title: "项目名称",
     dataIndex: "app_name",
   },
-  {
-    title: "日卡老号",
-    dataIndex: "distribution_price0",
-  },
+  // {
+  //   title: "日卡老号",
+  //   dataIndex: "distribution_price0",
+  // },
   {
     title: "日卡新号",
     dataIndex: "distribution_price1",
@@ -45,30 +44,30 @@ export const projectColumns = [
   //   title: "信用分300",
   //   dataIndex: "distribution_price4",
   // },
-  {
-    title: "30天回归",
-    dataIndex: "distribution_price4",
-  },
-  {
-    title: "CK",
-    dataIndex: "distribution_price5",
-  },
-  {
-    title: "open",
-    dataIndex: "distribution_price6",
-  },
-  {
-    title: "15级号",
-    dataIndex: "distribution_price7",
-  },
-  {
-    title: "21级号",
-    dataIndex: "distribution_price8",
-  },
-  {
-    title: "15W豆",
-    dataIndex: "distribution_price9",
-  },
+  // {
+  //   title: "30天回归",
+  //   dataIndex: "distribution_price4",
+  // },
+  // {
+  //   title: "CK",
+  //   dataIndex: "distribution_price5",
+  // },
+  // {
+  //   title: "open",
+  //   dataIndex: "distribution_price6",
+  // },
+  // {
+  //   title: "15级号",
+  //   dataIndex: "distribution_price7",
+  // },
+  // {
+  //   title: "21级号",
+  //   dataIndex: "distribution_price8",
+  // },
+  // {
+  //   title: "15W豆",
+  //   dataIndex: "distribution_price9",
+  // },
 ];
 
 export const userListColumns = [
@@ -222,6 +221,44 @@ export const scanColumns = [
   },
 ];
 
+export const experience = [
+  {
+    title: "账号名称",
+    dataIndex: "account",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "充值金额",
+    dataIndex: "money",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "状态",
+    dataIndex: "status",
+    render: (record) => (
+      <span>
+        {record === 0
+          ? "待审核"
+          : record === 1
+          ? "通过"
+          : record === 2
+          ? "驳回"
+          : "-"}
+      </span>
+    ),
+  },
+  {
+    title: "交易单号",
+    dataIndex: "addr",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "创建时间",
+    dataIndex: "create_time",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+];
+
 export const payColumns = [
   {
     title: "账号名称",
@@ -304,7 +341,6 @@ export const rechargeColumns = [
     dataIndex: "create_time",
   },
 ];
-
 
 export const groupColumns = [
   {
@@ -654,7 +690,6 @@ export const jointManagement = [
     title: "项目",
     dataIndex: "app_id",
   },
-
 ];
 export const myaccountdata = [
   {

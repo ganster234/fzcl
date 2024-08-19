@@ -1,4 +1,4 @@
-import { getData } from './index'
+import { getData,postData } from './index'
 
 //获取支付记录列表 
 export const getUsdtList = (data) => { return getData('usdt/list', data) }
@@ -8,4 +8,7 @@ export const setUpdate = (data) => { return getData('usdt/update', data) }
 
 
 //修改金额
-export const setUpdateUsdt = (data) => { return getData('update/usdt', data) }
+export const setUpdateUsdt = (data) => { return getData("update/usdt", data); }
+
+//修改交易单号
+export const updateAddr = (data) => { return postData("updateAddr", data); }

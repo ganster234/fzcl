@@ -263,9 +263,6 @@ export default function Layouts({ children }) {
     if (!Topupaccount) {
       return message.error("请输入充值账户");
     }
-    if (Topupaccount.length < 20 || Topupaccount.length > 60) {
-      return message.error("充值账户输入范围20-60字符之间");
-    }
 
     setRechargeLoading(true);
     let result = await getPayUsdt({
@@ -629,7 +626,7 @@ export default function Layouts({ children }) {
                         <span>支付完成!</span>
                       </div>
                     )}
-                  {rechargedActiveShow === "USDT" && (
+                  {rechargedActiveShow === "usdt" && (
                     <div className="recharged-ustd">
                       <div className="ustd-money-title">
                         <img
