@@ -52,7 +52,7 @@ export default function Project() {
       list.forEach((element, i) => {
         element.data.forEach((item, index) => {
           element["key"] = i;
-          element["distribution_price" + index] = item.distribution_price;
+          element["distribution_price" + (index + 1)] = item.distribution_price;
         });
       });
       setTotal(data?.total);
@@ -140,7 +140,7 @@ export default function Project() {
           <Table
             rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
             scroll={{
-              x: 1600,
+              x: 900,
               y: height,
             }}
             rowKey={(record) => record.id}
