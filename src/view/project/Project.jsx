@@ -1,235 +1,236 @@
 import React, { useState, useEffect } from "react";
-import { Table, message, Spin } from "antd";
-import { Popup, Input } from "antd-mobile";
-
-import { getResidueHeightByDOMRect } from "../../utils/utils";
+import { Table, Button, Modal, Form, Input, message } from "antd";
+import axios from "axios";
 import {
   getProjectList,
   getChangeShare,
   getChangePrice,
+  addProjectAlias,
+  updateProjectAlias,
+  getProjectAlias,
 } from "../../api/project";
-import { projectColumns } from "../../utils/columns";
+const { TextArea } = Input;
 
-import "./Project.less";
+const EditableCell = ({ title, editable, children, record, ...restProps }) => {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(children);
 
-export default function Project() {
-  const [loading, setLoading] = useState(false);
-  const [popupLoading, setPopupLoading] = useState(false);
-  const [total, setTotal] = useState(0); // 总条数
-  const [dataList, setDataList] = useState([]);
-  const [height, setHeight] = useState(436);
-  const [detailsShow, setSetailsShow] = useState(false);
-  const [projectDetails, setProjectDetails] = useState({});
-  const [tableParams, setTableParams] = useState({
-    pagination: {
-      current: 1, //当前页码
-      pageSize: 10, // 每页数据条数
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const handleBlur = async () => {
+    setEditing(false);
+    if (value !== children) {
+      // 触发保存请求
+      try {
+        await axios.post("/api/updateProjectAlias", {
+          id: record.id,
+          name: value,
+        });
+        message.success("修改成功");
+      } catch (error) {
+        message.error("修改失败");
+      }
+    }
+  };
+
+  const inputNode = (
+    <Input
+      onChange={handleChange}
+      onBlur={handleBlur}
+      value={value}
+      autoFocus
+    />
+  );
+
+  return <td {...restProps}>{editable ? inputNode : children}</td>;
+};
+
+const EditableTable = ({ data, setData }) => {
+  const [editingKey, setEditingKey] = useState("");
+
+  const isEditing = (record) => record.id === editingKey;
+
+  const edit = (record) => {
+    setEditingKey(record.id);
+  };
+
+  const save = async (id) => {
+    try {
+      await axios.post("/api/updateProjectAlias", {
+        id,
+        name: data.find((item) => item.id === id).name,
+      });
+      message.success("修改成功");
+      setEditingKey("");
+      // 刷新数据
+      const response = await axios.get("/api/getAliases");
+      setData(response.data);
+    } catch (error) {
+      message.error("修改失败");
+    }
+  };
+
+  const cancel = () => {
+    setEditingKey("");
+  };
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) =>
+        isEditing(record) ? (
+          <EditableCell title="Name" editable record={record} children={text} />
+        ) : (
+          text
+        ),
     },
-  });
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <>
+            <Button onClick={() => save(record.id)} style={{ marginRight: 8 }}>
+              保存
+            </Button>
+            <Button onClick={cancel}>取消</Button>
+          </>
+        ) : (
+          <Button onClick={() => edit(record)}>修改</Button>
+        );
+      },
+    },
+  ];
 
-  // 初始化
+  return (
+    <Table
+      components={{
+        body: {
+          cell: EditableCell,
+        },
+      }}
+      rowKey="id"
+      dataSource={data}
+      columns={columns}
+      pagination={false}
+    />
+  );
+};
+
+const MyTable = () => {
+  const [mainData, setMainData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalType, setModalType] = useState("");
+  const [form] = Form.useForm();
+  const [aliasTableData, setAliasTableData] = useState([]);
+
   useEffect(() => {
-    //高度自适应
-    setHeight(getResidueHeightByDOMRect() + 88);
-    window.onresize = () => {
-      setHeight(getResidueHeightByDOMRect());
-    };
-    getList();
-  }, [JSON.stringify(tableParams)]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (modalType === "view" && isModalVisible) {
+      fetchAliases();
+    }
+  }, [modalType, isModalVisible]);
 
-  // 获取list
-  const getList = async () => {
-    setLoading(true);
-    const { pageSize, current } = tableParams.pagination;
-    let result = await getProjectList({
-      page: current,
-      limit: pageSize,
-    });
-    const { code, data, msg } = result || {};
-    if (code === 200) {
-      let list = data?.data;
-      list.forEach((element, i) => {
-        element.data.forEach((item, index) => {
-          element["key"] = i;
-          element["distribution_price" + (index + 1)] = item.distribution_price;
-        });
-      });
-      setTotal(data?.total);
-      setDataList([...data.data]);
-      setLoading(false);
-    } else {
-      message.destroy();
-      message.open({
-        type: "error",
-        content: msg,
-      });
+  const fetchAliases = async () => {
+    try {
+      // const response = await axios.get("/api/getAliases");
+      const response = await getProjectAlias({ app_id: currentItem.app_id }); // 查询别名接口
+
+      setAliasTableData(response.data);
+    } catch (error) {
+      message.error("加载别名失败");
     }
   };
 
-  const handleTableChange = (pagination) => {
-    setTableParams({ pagination });
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setDataList([]);
+  const handleAddAlias = async (values) => {
+    try {
+      await axios.post("/api/addProjectAlias", { name: values.text });
+      message.success("新增别名成功");
+      setIsModalVisible(false);
+      fetchAliases(); // 刷新别名数据
+    } catch (error) {
+      message.error("新增别名失败");
     }
   };
-  const projectEdit = (record) => {
-    setProjectDetails((item) => ({ ...item, ...record }));
-    setSetailsShow(true);
-  };
 
-  const changeValue = (index, even) => {
-    const { data } = projectDetails;
-    let list = [...data];
-    list[index].distribution_price = even;
-    setProjectDetails((item) => ({
-      ...item,
-      data: [...list],
-    }));
-  };
-
-  const inputDetailBlur = async (index, str) => {
-    const { id, data } = projectDetails;
-    const item = data[index];
-    console.log(item, projectDetails);
-    if (str) {
-      if (item) {
-        setPopupLoading(true);
-        let result = await getChangePrice({
-          price_id: projectDetails.app_id,
-          package_id: item.id,
-          price: item.distribution_price,
-        });
-        message.destroy();
-        if (result?.code === 200) {
-          message.success("修改成功");
-          getList();
-        } else {
-          message.error(result?.msg || "");
-        }
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+      if (modalType === "add") {
+        await handleAddAlias(values);
       }
-    } else {
-      if (item) {
-        setPopupLoading(true);
-        let result = await getChangeShare({
-          price_id: id,
-          package_id: item.id,
-          is_share: item?.is_share,
-        });
-        message.destroy();
-        if (result?.code === 200) {
-          message.success("修改成功");
-          const { data } = projectDetails;
-          let list = [...data];
-          list[index].is_share = list[index].is_share === 0 ? 1 : 0;
-          setProjectDetails((item) => ({
-            ...item,
-            data: [...list],
-          }));
-        } else {
-          message.error(result?.msg || "");
-        }
-      }
+      form.resetFields();
+    } catch (error) {
+      console.error("Form validation failed:", error);
     }
-    setPopupLoading(false);
   };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+  };
+
   return (
     <>
-      <div className="project-content">
-        <div className="project-content-main">
-          <div className="project-content-main-title">项目管理</div>
-          <Table
-            rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
-            scroll={{
-              x: 770,
-              y: height,
-            }}
-            rowKey={(record) => record.id}
-            loading={loading}
-            pagination={{
-              ...tableParams.pagination,
-              total: total,
-              hideOnSinglePage: false,
-              showSizeChanger: true,
-            }}
-            onChange={handleTableChange}
-            columns={[
-              {
-                title: "订单ID",
-                dataIndex: "app_id",
-              },
-              ...projectColumns,
-              {
-                title: "操作",
-                width: 200,
-                render: (record) => (
-                  <span
-                    className="project-edit"
-                    onClick={() => projectEdit(record)}
-                  >
-                    编辑
-                  </span>
-                ),
-              },
-            ]}
-            dataSource={dataList}
-          />
-        </div>
-        <Popup
-          visible={detailsShow}
-          onMaskClick={() => {
-            setSetailsShow(false);
-          }}
-          onClose={() => {
-            setSetailsShow(false);
-          }}
-          bodyStyle={{
-            borderTopLeftRadius: "8px",
-            borderTopRightRadius: "8px",
-            padding: "20px 0 ",
-            overflowY: "scroll",
-            minHeight: "60vh",
-          }}
-        >
-          <Spin spinning={popupLoading}>
-            {projectDetails?.data &&
-              projectDetails?.data.map((subItem, index) => {
-                return (
-                  <div className="popup-details-item" key={index}>
-                    <span className="popup-details-item-title">
-                      {subItem?.name}:
-                    </span>
-                    <span className="popup-details-item-content">
-                      <span className="popup-details-item-content-main">
-                        <Input
-                          value={subItem?.distribution_price}
-                          readOnly={subItem?.is_share === 1}
-                          onChange={(even) => {
-                            changeValue(index, even);
-                          }}
-                          onBlur={() => inputDetailBlur(index, "blur")}
-                        />
-                      </span>
-                    </span>
-                    <span className="popup-details-item-right">
-                      <img
-                        src={
-                          subItem?.is_share === 0
-                            ? require("../../assets/image/project/active-radio.png")
-                            : require("../../assets/image/project/radio.png")
-                        }
-                        alt=""
-                        className="popup-details-item-icon"
-                      />
-                      <span onClick={() => inputDetailBlur(index)}>
-                        {subItem?.is_share === 0 ? "启用" : "禁用"}
-                      </span>
-                    </span>
-                  </div>
-                );
-              })}
-          </Spin>
-        </Popup>
-      </div>
+      <Table
+        dataSource={mainData}
+        columns={[
+          { title: "Name", dataIndex: "name", key: "name" },
+          { title: "Age", dataIndex: "age", key: "age" },
+        ]}
+        title={() => (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Button
+              type="default"
+              onClick={() => {
+                setModalType("view");
+                setIsModalVisible(true);
+              }}
+              style={{ color: "blue" }}
+            >
+              查看别名
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                setModalType("add");
+                setIsModalVisible(true);
+              }}
+              style={{ color: "green" }}
+            >
+              新增别名
+            </Button>
+          </div>
+        )}
+      />
+
+      <Modal
+        title={modalType === "add" ? "新增别名" : "查看别名"}
+        visible={isModalVisible}
+        onOk={modalType === "add" ? handleOk : undefined}
+        onCancel={handleCancel}
+        width={800}
+      >
+        {modalType === "add" ? (
+          <Form form={form} layout="vertical">
+            <Form.Item
+              name="text"
+              label="内容"
+              rules={[{ required: true, message: "请输入内容!" }]}
+            >
+              <TextArea rows={4} />
+            </Form.Item>
+          </Form>
+        ) : (
+          <EditableTable data={aliasTableData} setData={setAliasTableData} />
+        )}
+      </Modal>
     </>
   );
-}
+};
+
+export default MyTable;

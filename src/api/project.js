@@ -29,3 +29,15 @@ export const getProjectPackList = (data) => {
 export const setAddApplication = (data) => {
   return postData("add/application", data);
 };
+//新增项目别名
+export const addProjectAlias = (data) => {
+  return postData("project/add/sanname", data);
+};
+//修改项目别名
+export const updateProjectAlias = (data) => {
+  return postData("project/update/sanname", data);
+};
+//获取项目别名
+export const getProjectAlias = (data) => {
+  return getData("project/get/sanname", data);
+};
