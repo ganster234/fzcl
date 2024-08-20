@@ -253,7 +253,10 @@ export default function AppProvider({ children }) {
       children: [
         {
           key: "/layouts/platform/project",
-          element: lazyLoad(lazy(() => import("../view/project/Project.jsx"))),
+          // element: lazyLoad(lazy(() => import("../view/project/Project.jsx"))),
+          element: lazyLoad(
+            lazy(() => import("../view/project/Project copy.jsx"))
+          ),
           roles: ["superAdmin"],
           label: "项目管理(Q)",
         },

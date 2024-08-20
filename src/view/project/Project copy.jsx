@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+  useRef,
+} from "react";
 import { Table, message, Spin, Button, Modal, Form, Input } from "antd";
 import { Popup } from "antd-mobile";
 import { getResidueHeightByDOMRect } from "../../utils/utils";
@@ -13,6 +19,120 @@ import {
 import { projectColumns } from "../../utils/columns";
 import "./Project.less";
 const { TextArea } = Input;
+
+//可编辑逻辑
+const EditableCell = ({ title, editable, children, record, ...restProps }) => {
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(children);
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+  const handleBlur = async () => {
+    setEditing(false);
+    if (value !== children) {
+      // 触发保存请求
+      try {
+        await updateProjectAlias({
+          id: record.id.toString(),
+          name: value,
+        }); // 修改项目别名
+        message.success("修改成功");
+      } catch (error) {
+        message.error("修改失败");
+      }
+    }
+  };
+
+  const inputNode = (
+    <Input
+      onChange={handleChange}
+      onBlur={handleBlur}
+      value={value}
+      autoFocus
+    />
+  );
+
+  return <td {...restProps}>{editable ? inputNode : children}</td>;
+};
+
+const EditableTable = forwardRef(({ data, setData }, ref) => {
+  const [editingKey, setEditingKey] = useState("");
+  useImperativeHandle(ref, () => ({
+    cancel: () => {
+      setEditingKey("");
+    },
+  }));
+  const isEditing = (record) => record.id === editingKey;
+
+  const edit = (record) => {
+    setEditingKey(record.id);
+  };
+
+  const save = async (record) => {
+    console.log(record, "recordrecord", data);
+
+    try {
+      // await updateProjectAlias({
+      //   id: record.id.toString(),
+      //   name: "11111111111",
+      // });
+      message.success("修改成功");
+      // 刷新数据
+      // const response = await axios.get("/api/getAliases");
+      // setData(response.data);
+    } catch (error) {
+      message.error("修改失败");
+    }
+    cancel();
+  };
+
+  const cancel = () => {
+    setEditingKey("");
+  };
+
+  const columns = [
+    {
+      title: "别名",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) =>
+        isEditing(record) ? (
+          <EditableCell title="别名" editable record={record} children={text} />
+        ) : (
+          text
+        ),
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? //     保存 //   <Button onClick={() => save(record)} style={{ marginRight: 8 }}> // <>
+        //   </Button>
+        //   <Button onClick={cancel}>取消</Button>
+        // </>
+        null : (
+          <Button onClick={() => edit(record)}>修改</Button>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Table
+      components={{
+        body: {
+          cell: EditableCell,
+        },
+      }}
+      rowKey="id"
+      dataSource={data}
+      columns={columns}
+      pagination={false}
+    />
+  );
+});
 export default function Project() {
   const [loading, setLoading] = useState(false);
   const [popupLoading, setPopupLoading] = useState(false);
@@ -28,14 +148,11 @@ export default function Project() {
     },
   });
   //弹框
-
+  const editableTableRef = useRef(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalType, setModalType] = useState("");
   const [form] = Form.useForm();
   const [currentItem, setCurrentItem] = useState([]); // 设置当前选中的项
-  const [aliases, setAliases] = useState([]); // 存储别名数据
-
-  const [currentAliasId, setCurrentAliasId] = useState(null); // 当前别名的ID
   const [aliasTableData, setAliasTableData] = useState([]); // 别名表格数据
 
   useEffect(() => {
@@ -46,6 +163,8 @@ export default function Project() {
   }, [modalType, isModalVisible]);
 
   const showModal = (type, item) => {
+    if (type === "view") {
+    }
     setModalType(type);
     setCurrentItem(item); // 设置当前选中的项
     setIsModalVisible(true);
@@ -73,15 +192,6 @@ export default function Project() {
     }
   };
 
-  const handleUpdateAlias = async (id, name) => {
-    try {
-      // await axios.post("/api/updateProjectAlias", { id, name });
-      message.success("修改别名成功");
-      fetchAliases(); // 刷新别名数据
-    } catch (error) {
-      message.error("修改别名失败");
-    }
-  };
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
@@ -95,48 +205,14 @@ export default function Project() {
   };
 
   const handleCancel = () => {
+    console.log("xiaohui");
+    // console.log(editableTableRef.current, "editableTableRef");
     setIsModalVisible(false);
     form.resetFields();
+    if (editableTableRef.current) {
+      editableTableRef.current.cancel();
+    }
   };
-  const aliasColumns = [
-    { title: "别名", dataIndex: "name", key: "name" },
-    {
-      title: "操作",
-      key: "action",
-      render: (_, record) => (
-        <Button
-          type="text"
-          style={{ color: "red" }}
-          onClick={() => handleUpdateAlias(record.id)}
-        >
-          修改别名
-        </Button>
-      ),
-    },
-  ];
-  //可编辑
-  // const mergedColumns: TableProps<Item>['columns'] = aliasColumns.map((col) => {
-  //   if (!col.editable) {
-  //     return col;
-  //   }
-  //   return {
-  //     ...col,
-  //     onCell: (record: Item) => ({
-  //       record,
-  //       inputType: col.dataIndex === 'age' ? 'number' : 'text',
-  //       dataIndex: col.dataIndex,
-  //       title: col.title,
-  //       editing: isEditing(record),
-  //     }),
-  //   };
-  // });
-  const mergedColumns = aliasColumns.map((col) => ({
-    ...col,
-    onCell: (record) => ({
-      record,
-      editable: col.editable,
-    }),
-  }));
 
   // 初始化
   useEffect(() => {
@@ -291,15 +367,12 @@ export default function Project() {
                       type="text"
                       className="project-edit"
                       onClick={() => projectEdit(record)}
-                      // style={{ color: "orange" }}
                     >
                       编辑
                     </Button>
                     <Button
                       type="text"
                       onClick={() => {
-                        // setModalType("view");
-                        // setIsModalVisible(true);
                         showModal("view", record);
                       }}
                       style={{ color: "blue" }}
@@ -309,8 +382,6 @@ export default function Project() {
                     <Button
                       type="text"
                       onClick={() => {
-                        // setModalType("add");
-                        // setIsModalVisible(true);
                         showModal("add", record);
                       }}
                       style={{ color: "orange" }}
@@ -379,23 +450,9 @@ export default function Project() {
               })}
           </Spin>
         </Popup>
-        {/* <Modal
-            title={modalType === "add" ? "新增别名" : "修改别名"}
-            open={isModalVisible}
-            onOk={handleOk}
-            onCancel={handleCancel}
-          >
-            <Form form={form} layout="vertical">
-              <Form.Item
-                name="text"
-                rules={[{ required: true, message: "请输入内容!" }]}
-              >
-                <TextArea rows={4} />
-              </Form.Item>
-            </Form>
-          </Modal> */}
         <Modal
           title={modalType === "add" ? "新增别名" : "查看别名"}
+          footer={modalType === "view" ? null : undefined}
           open={isModalVisible}
           onOk={modalType === "add" ? handleOk : undefined}
           onCancel={handleCancel}
@@ -411,12 +468,17 @@ export default function Project() {
               </Form.Item>
             </Form>
           ) : (
-            <Table
-              dataSource={aliasTableData}
-              columns={mergedColumns}
-              rowKey="id"
-              pagination={false}
-              rowClassName="editable-row"
+            // <Table
+            //   dataSource={aliasTableData}
+            //   columns={mergedColumns}
+            //   rowKey="id"
+            //   pagination={false}
+            //   rowClassName="editable-row"
+            // />
+            <EditableTable
+              ref={editableTableRef}
+              data={aliasTableData}
+              setData={setAliasTableData}
             />
           )}
         </Modal>

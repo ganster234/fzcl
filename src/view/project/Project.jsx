@@ -24,10 +24,10 @@ const EditableCell = ({ title, editable, children, record, ...restProps }) => {
     if (value !== children) {
       // 触发保存请求
       try {
-        await axios.post("/api/updateProjectAlias", {
-          id: record.id,
+        await updateProjectAlias({
+          id: record.id.toString(),
           name: value,
-        });
+        }); // 修改项目别名
         message.success("修改成功");
       } catch (error) {
         message.error("修改失败");
@@ -56,17 +56,19 @@ const EditableTable = ({ data, setData }) => {
     setEditingKey(record.id);
   };
 
-  const save = async (id) => {
+  const save = async (record) => {
+    console.log(record, "recordrecord", data);
+
     try {
-      await axios.post("/api/updateProjectAlias", {
-        id,
-        name: data.find((item) => item.id === id).name,
+      await updateProjectAlias({
+        id: record.id.toString(),
+        name: "11111111111",
       });
       message.success("修改成功");
       setEditingKey("");
       // 刷新数据
-      const response = await axios.get("/api/getAliases");
-      setData(response.data);
+      // const response = await axios.get("/api/getAliases");
+      // setData(response.data);
     } catch (error) {
       message.error("修改失败");
     }
@@ -95,7 +97,7 @@ const EditableTable = ({ data, setData }) => {
         const editable = isEditing(record);
         return editable ? (
           <>
-            <Button onClick={() => save(record.id)} style={{ marginRight: 8 }}>
+            <Button onClick={() => save(record)} style={{ marginRight: 8 }}>
               保存
             </Button>
             <Button onClick={cancel}>取消</Button>
@@ -138,7 +140,7 @@ const MyTable = () => {
   const fetchAliases = async () => {
     try {
       // const response = await axios.get("/api/getAliases");
-      const response = await getProjectAlias({ app_id: currentItem.app_id }); // 查询别名接口
+      const response = await getProjectAlias({ app_id: 23423 }); // 查询别名接口
 
       setAliasTableData(response.data);
     } catch (error) {
