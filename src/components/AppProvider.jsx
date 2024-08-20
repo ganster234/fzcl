@@ -73,6 +73,13 @@ export default function AppProvider({ children }) {
       label: "首页",
     },
     {
+      key: "/layouts/addressConfig",
+      icon: require("../assets/image/sidermenu/leave-active.png"),
+      iconActive: require("../assets/image/sidermenu/leave.png"),
+      element: lazyLoad(lazy(() => import("../view/addressConfig"))),
+      label: "地址配置管理",
+    },
+    {
       key: "/layouts/viods",
       icon: require("../assets/image/sidermenu/spviode.png"),
       iconActive: require("../assets/image/sidermenu/afterspviode.png"),

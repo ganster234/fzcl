@@ -1,4 +1,25 @@
 import dayjs from "dayjs";
+export const urlConfigColumns = [
+  {
+    title: "url名称",
+    dataIndex: "name",
+  },
+  {
+    title: "状态",
+    // dataIndex: "is_use",
+    dataIndex: "is_share",
+    render: (record) => (
+      <div>
+        {record === 0 && "开启"}
+        {record === 1 && "关闭"}
+      </div>
+    ),
+  },
+  {
+    title: "url地址",
+    dataIndex: "value",
+  },
+];
 export const settlement = [
   {
     title: "支付名",
