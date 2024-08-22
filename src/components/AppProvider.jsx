@@ -124,15 +124,40 @@ export default function AppProvider({ children }) {
       key: "/layouts/thali",
       iconActive: require("../assets/image/sidermenu/thali.png"),
       icon: require("../assets/image/sidermenu/thali-active.png"),
-      element: lazyLoad(lazy(() => import("../view/thali/Thali.jsx"))),
-      label: "套餐(QQ)",
+      label: "套餐(Q)",
       roles: ["admin", "role", "agent", "superAdmin"],
+      children: [
+        {
+          key: "/layouts/thali/thail",
+          element: lazyLoad(lazy(() => import("../view/thali/Thali.jsx"))),
+          roles: ["admin", "role", "agent", "superAdmin"],
+          label: "网页",
+        },
+        {
+          key: "/layouts/thali/app",
+          element: lazyLoad(lazy(() => import("../view/thali/Thali.jsx"))),
+          roles: ["admin", "role", "agent", "superAdmin"],
+          label: "APP",
+        },
+        {
+          key: "/layouts/thali/open",
+          element: lazyLoad(lazy(() => import("../view/open/Open.jsx"))),
+          label: "提open",
+          roles: ["admin", "role", "agent", "superAdmin"],
+        },
+        {
+          key: "/layouts/thali/ck",
+          element: lazyLoad(lazy(() => import("../view/ck/Ck.jsx"))),
+          label: "提ck",
+          roles: ["admin", "role", "agent", "superAdmin"],
+        },
+      ],
     },
     {
       key: "/layouts/wechat",
       iconActive: require("../assets/image/sidermenu/thali-wx.png"),
       icon: require("../assets/image/sidermenu/thali-wx-active.png"),
-      label: "套餐(微信)",
+      label: "套餐(W)",
       roles: ["admin", "role", "agent", "superAdmin"],
       children: [
         {
@@ -141,7 +166,15 @@ export default function AppProvider({ children }) {
             lazy(() => import("../view/thali/WeChatThali.jsx"))
           ),
           roles: ["admin", "role", "agent", "superAdmin"],
-          label: "套餐列表",
+          label: "网页",
+        },
+        {
+          key: "/layouts/wechat/app",
+          element: lazyLoad(
+            lazy(() => import("../view/thali/WeChatThali.jsx"))
+          ),
+          roles: ["admin", "role", "agent", "superAdmin"],
+          label: "APP",
         },
         {
           key: "/layouts/wechat/take/code",
@@ -174,22 +207,7 @@ export default function AppProvider({ children }) {
     //   label: "卡密列表",
     //   roles: ["admin", "role", "agent", "superAdmin"],
     // },
-    {
-      key: "/layouts/open",
-      icon: require("../assets/image/sidermenu/open-active.png"),
-      iconActive: require("../assets/image/sidermenu/open.png"),
-      element: lazyLoad(lazy(() => import("../view/open/Open.jsx"))),
-      label: "提取open",
-      roles: ["admin", "role", "agent", "superAdmin"],
-    },
-    {
-      key: "/layouts/ck",
-      icon: require("../assets/image/sidermenu/ck-active.png"),
-      iconActive: require("../assets/image/sidermenu/ck.png"),
-      element: lazyLoad(lazy(() => import("../view/ck/Ck.jsx"))),
-      label: "提取ck",
-      roles: ["admin", "role", "agent", "superAdmin"],
-    },
+
     {
       key: "/layouts/thali/config",
       element: lazyLoad(lazy(() => import("../view/thali/ThaliConfig.jsx"))),

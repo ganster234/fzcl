@@ -170,28 +170,26 @@ export default function ThaliConfig() {
   }, [active, thaliData]);
 
   // availableNum计算获取库存
-  useMemo(() => {
-    let num = 0;
-    const is_op = scanOpenShow ? 1 : 0;
-    setThaliConfigLoading(true);
-    if (thaliData?.pack_id) {
-      getkucun({
-        is_op,
-        is_qq: 2,
-        priceId: thaliData.id,
-        package_id: thaliData?.pack_id[active]?.package_id,
-        is_shiming: "-1",
-        score: "-1",
-        is_fifteen: "-1",
-      }).then((res) => {
-        setThaliConfigLoading(false);
-        if (res.code === 200) {
-          setinventory(res.data);
-        }
-      });
-    }
-    return num;
-  }, [weeklyCardShow, scanOpenShow, active]);
+    useEffect(() => {
+      const is_op = scanOpenShow ? 1 : 0;
+      if (thaliData?.pack_id) {
+        setThaliConfigLoading(true);
+        getkucun({
+          is_op,
+          is_qq: 2,
+          priceId: thaliData.id,
+          package_id: thaliData?.pack_id[active]?.package_id,
+          is_shiming: "-1",
+          score: "-1",
+          is_fifteen: "-1",
+        }).then((res) => {
+          setThaliConfigLoading(false);
+          if (res.code === 200) {
+            setinventory(res.data);
+          }
+        });
+      }
+    }, [weeklyCardShow, scanOpenShow, active, thaliData]);
 
   //总金额
   const totalNum = useMemo(() => {
