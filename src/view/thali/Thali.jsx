@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getThaliList } from "../../api/thali";
 import useAppStore from "../../store";
 import { Radio, Tabs, Empty, Input, Button, Spin } from "antd";
+import { useLocation } from "react-router-dom";
 
 import "./Thali.less";
 
@@ -35,6 +36,7 @@ const items = [
 ];
 
 export default function Thali(props) {
+  const location = useLocation();
   const [list, setList] = useState([]);
 
   const [screenData, setScreenData] = useState([]);
@@ -54,16 +56,20 @@ export default function Thali(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getList();
-  }, [is_qq]); // eslint-disable-line react-hooks/exhaustive-deps
+    const whetherAPP =
+      location.pathname === "/layouts/thali/thail"
+        ? { is_web: 1, is_app: 0 }
+        : { is_web: 0, is_app: 1 };
+    getList(whetherAPP);
+  }, [location, is_qq]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     screenList();
   }, [radioValue, activeKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getList = async () => {
+  const getList = async (val) => {
     setThaliLoading(true);
-    let result = await getThaliList({ is_qq: props.is_qq ? is_qq : undefined });
+    let result = await getThaliList({ is_qq: props.is_qq ? is_qq : undefined,...val });
     const { code, data } = result || {};
     if (code === 200) {
       const { appPriceList } = data || {};
@@ -88,7 +94,7 @@ export default function Thali(props) {
       } else {
         navigate("/layouts/thali/config");
       }
-    } 
+    }
   };
 
   const onChange = (e) => {

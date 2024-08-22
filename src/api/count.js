@@ -1,4 +1,4 @@
-import { getData } from "./index";
+import { getData,postData } from "./index";
 
 //获取统计列表
 export const getCount = (data) => {
@@ -10,7 +10,7 @@ export const payprice = (data) => {
 };
 //修改支付状态
 export const setpayprice = (data) => {
-  return getData("usePay", data);
+  return postData("usePay", data);
 };
 //添加支付方式
 export const addpayprice = (data) => {

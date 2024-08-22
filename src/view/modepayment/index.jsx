@@ -16,6 +16,9 @@ export default function Equipment() {
   const [remark, setremark] = useState(""); //备注
   const [price, setprice] = useState(""); //充值额
   const [my_id, setmy_id] = useState(""); //状态
+  const [mch_wx_key, setmch_wx_key] = useState(""); //商户号
+  const [wx_app_id, setwx_app_id] = useState(""); //wx_app_id
+  const [xuliehao, setxuliehao] = useState(""); //序列号
 
   const showModal = () => {
     setpaydesignation("");
@@ -25,15 +28,23 @@ export default function Equipment() {
 
   const handleOk = () => {
     if (isModalOpen === "修改支付") {
-      if (paydesignation === "" || price === "" || remark === "") {
+      if (
+        paydesignation === "" ||
+        price === "" ||
+        remark === "" ||
+        payway === ""
+      ) {
         message.warning("请完成填写相关内容");
       } else {
         setpayprice({
-          id: my_id,
+          id: my_id +"",
           pay_name: paydesignation,
           url: payway,
           price,
           remark,
+          mch_wx_key,
+          wx_app_id,
+          xuliehao,
         }).then((result) => {
           const { code, msg } = result || {};
           if (code === 200) {
@@ -188,6 +199,9 @@ export default function Equipment() {
                       setprice(record.price);
                       setremark(record.remark);
                       setmy_id(record.id);
+                      setmch_wx_key(record.mch_wx_key);
+                      setwx_app_id(record.wx_app_id);
+                      setxuliehao(record.xuliehao);
                       console.log(record, "record");
                       setIsModalOpen("修改支付");
                     }}
@@ -236,6 +250,27 @@ export default function Equipment() {
                 <Input
                   value={remark}
                   onChange={(val) => setremark(val.target.value)}
+                ></Input>
+              </li>
+              <li>
+                <p>商户号：</p>
+                <Input
+                  value={mch_wx_key}
+                  onChange={(val) => setmch_wx_key(val.target.value)}
+                ></Input>
+              </li>
+              <li>
+                <p>wx_app_id：</p>
+                <Input
+                  value={wx_app_id}
+                  onChange={(val) => setwx_app_id(val.target.value)}
+                ></Input>
+              </li>
+              <li>
+                <p>序列号：</p>
+                <Input
+                  value={xuliehao}
+                  onChange={(val) => setxuliehao(val.target.value)}
                 ></Input>
               </li>
             </>

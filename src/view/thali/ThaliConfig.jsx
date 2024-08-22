@@ -165,11 +165,10 @@ export default function ThaliConfig() {
   }, [active, thaliData]);
 
   // availableNum计算获取库存
-  useMemo(() => {
-    let num = 0;
+  useEffect(() => {
     const is_op = scanOpenShow ? 1 : 0;
-    setThaliConfigLoading(true);
     if (thaliData?.pack_id) {
+      setThaliConfigLoading(true);
       getkucun({
         is_op,
         is_qq: 1,
@@ -185,8 +184,7 @@ export default function ThaliConfig() {
         }
       });
     }
-    return num;
-  }, [weeklyCardShow, scanOpenShow, active]);
+  }, [weeklyCardShow, scanOpenShow, active, thaliData]);
 
   //总金额
   const totalNum = useMemo(() => {

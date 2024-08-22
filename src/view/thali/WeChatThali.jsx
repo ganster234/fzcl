@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getThaliList } from "../../api/thali";
 import useAppStore from "../../store";
 import { Radio, Tabs, Empty, Input, Button, Spin } from "antd";
+import { useLocation } from "react-router-dom";
 
 import "./Thali.less";
 
@@ -35,6 +36,7 @@ const items = [
 ];
 
 export default function Thali() {
+  const location = useLocation();
   const [list, setList] = useState([]);
 
   const [screenData, setScreenData] = useState([]);
@@ -52,16 +54,20 @@ export default function Thali() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getList();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const whetherAPP =
+      location.pathname === "/layouts/wechat/thail"
+        ? { is_web: 1, is_app: 0 }
+        : { is_web: 0, is_app: 1 };
+    getList(whetherAPP);
+  }, [location]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     screenList();
   }, [radioValue, activeKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getList = async () => {
+  const getList = async (val) => {
     setThaliLoading(true);
-    let result = await getThaliList({ is_qq: 2 });
+    let result = await getThaliList({ is_qq: 2,...val });
     const { code, data } = result || {};
     if (code === 200) {
       const { appPriceList } = data || {};
