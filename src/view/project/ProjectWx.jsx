@@ -479,13 +479,21 @@ export default function Project() {
                           value={subItem?.distribution_price}
                           readOnly={subItem?.is_share === 1}
                           onChange={(even) => {
-                            changeValue(index, even);
+                            changeValue(index, even.target.value);
                           }}
                           onBlur={() => inputDetailBlur(index, "blur")}
                         />
                       </span>
                     </span>
-                    <span className="popup-details-item-right">
+                    <span
+                      onClick={() => inputDetailBlur(index)}
+                      style={
+                        subItem?.is_share === 0
+                          ? { color: "blue" }
+                          : { color: "red" }
+                      }
+                      className="popup-details-item-right"
+                    >
                       <img
                         src={
                           subItem?.is_share === 0
@@ -495,9 +503,7 @@ export default function Project() {
                         alt=""
                         className="popup-details-item-icon"
                       />
-                      <span onClick={() => inputDetailBlur(index)}>
-                        {subItem?.is_share === 0 ? "启用" : "禁用"}
-                      </span>
+                      <span>{subItem?.is_share === 0 ? "启用" : "禁用"}</span>
                     </span>
                   </div>
                 );

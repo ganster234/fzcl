@@ -322,7 +322,7 @@ export default function Project() {
   };
 
   const inputDetailBlur = async (index, str) => {
-    const { id, data } = projectDetails;
+    const { app_id, data } = projectDetails;
     const item = data[index];
     console.log(item, projectDetails);
     if (str) {
@@ -330,7 +330,7 @@ export default function Project() {
         setPopupLoading(true);
         let result = await getChangePrice({
           price_id: projectDetails.app_id,
-          package_id: item.id,
+          package_id: app_id,
           price: item.distribution_price,
         });
         message.destroy();
@@ -345,7 +345,7 @@ export default function Project() {
       if (item) {
         setPopupLoading(true);
         let result = await getChangeShare({
-          price_id: id,
+          price_id: app_id,
           package_id: item.id,
           is_share: item?.is_share,
         });
@@ -471,7 +471,10 @@ export default function Project() {
                         />
                       </span>
                     </span>
-                    <span className="popup-details-item-right">
+                    <span
+                      onClick={() => inputDetailBlur(index)}
+                      className="popup-details-item-right"
+                    >
                       <img
                         src={
                           subItem?.is_share === 0
@@ -481,7 +484,13 @@ export default function Project() {
                         alt=""
                         className="popup-details-item-icon"
                       />
-                      <span onClick={() => inputDetailBlur(index)}>
+                      <span
+                        style={
+                          subItem?.is_share === 0
+                            ? { color: "blue" }
+                            : { color: "red" }
+                        }
+                      >
                         {subItem?.is_share === 0 ? "启用" : "禁用"}
                       </span>
                     </span>

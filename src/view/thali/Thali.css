@@ -1,6 +1,6 @@
 .thali-top {
-  height: 170px;
   padding: 0 40px;
+  padding-bottom: 20px;
   box-sizing: border-box;
 }
 .thali-top .types-radio {

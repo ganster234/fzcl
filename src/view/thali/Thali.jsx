@@ -16,24 +16,24 @@ const ThaliItem = React.lazy(async () => {
   return item;
 });
 
-const items = [
-  {
-    key: "whole",
-    label: "全部项目",
-  },
-  {
-    key: "0",
-    label: "APP项目",
-  },
-  // {
-  //   key: "1",
-  //   label: "PC项目",
-  // },
-  {
-    key: "2",
-    label: "wegame项目",
-  },
-];
+// const items = [
+//   {
+//     key: "whole",
+//     label: "全部项目",
+//   },
+//   {
+//     key: "0",
+//     label: "APP项目",
+//   },
+//   // {
+//   //   key: "1",
+//   //   label: "PC项目",
+//   // },
+//   {
+//     key: "2",
+//     label: "wegame项目",
+//   },
+// ];
 
 export default function Thali(props) {
   const location = useLocation();
@@ -100,9 +100,9 @@ export default function Thali(props) {
   const onChange = (e) => {
     setRadioValue(e.target.value);
   };
-  const onChangeTabs = (key) => {
-    setActiveKey(key);
-  };
+  // const onChangeTabs = (key) => {
+  //   setActiveKey(key);
+  // };
   const screenList = (subList) => {
     let arr = [];
     if (radioValue === "whole" && activeKey === "whole") {
@@ -152,7 +152,7 @@ export default function Thali(props) {
     <ContentLayouts
       top={
         <div className="thali-top">
-          <div className="types-radio">
+          {/* <div className="types-radio">
             <span className="types-text">类型：</span>
             <Radio.Group onChange={onChange} value={radioValue}>
               <Radio value={"whole"}>全部</Radio>
@@ -160,15 +160,13 @@ export default function Thali(props) {
               <Radio value={10000}>日卡新号</Radio>
               <Radio value={10001}>周卡</Radio>
               <Radio value={10002}>月卡</Radio>
-              {/* <Radio value={10003}>信用分</Radio> */}
-              {/* <Radio value={10004}>30天回归</Radio> */}
               <Radio value={10006}>ck</Radio>
               <Radio value={10007}>open</Radio>
               <Radio value={10008}>15级号</Radio>
               <Radio value={10010}>21级号</Radio>
               <Radio value={10011}>15W豆</Radio>
             </Radio.Group>
-          </div>
+          </div> */}
           {props.is_qq ? (
             <div style={{ height: "40px" }}>
               <span>项目：</span>
@@ -187,7 +185,7 @@ export default function Thali(props) {
             <div style={{ height: "40px" }}></div>
           )}
           <div className="thali-tabs-input">
-            <Tabs activeKey={activeKey} items={items} onChange={onChangeTabs} />
+            {/* <Tabs activeKey={activeKey} items={items} onChange={onChangeTabs} /> */}
             <div className="thali-input">
               <Input
                 value={projectName}
