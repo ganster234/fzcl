@@ -1,0 +1,25 @@
+.systems-setup {
+  flex: 1;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.systems-setup .systems-setup-item {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+.systems-setup .systems-setup-item .systems-setup-item-title {
+  margin-right: 20px;
+  width: 200px;
+  text-align: right;
+}
+.systems-setup .systems-setup-btn {
+  margin-top: 55px;
+  padding-left: 90px;
+}

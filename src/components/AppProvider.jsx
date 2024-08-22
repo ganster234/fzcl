@@ -79,13 +79,13 @@ export default function AppProvider({ children }) {
       element: lazyLoad(lazy(() => import("../view/addressConfig"))),
       label: "地址配置管理",
     },
-    {
-      key: "/layouts/viods",
-      icon: require("../assets/image/sidermenu/spviode.png"),
-      iconActive: require("../assets/image/sidermenu/afterspviode.png"),
-      element: lazyLoad(lazy(() => import("../view/home/Home.jsx"))),
-      label: "教程与下载",
-    },
+    // {
+    //   key: "/layouts/viods",
+    //   icon: require("../assets/image/sidermenu/spviode.png"),
+    //   iconActive: require("../assets/image/sidermenu/afterspviode.png"),
+    //   element: lazyLoad(lazy(() => import("../view/home/Home.jsx"))),
+    //   label: "教程与下载",
+    // },
     {
       key: "/layouts/tendency",
       icon: require("../assets/image/sidermenu/recharge-active.png"),
@@ -112,13 +112,13 @@ export default function AppProvider({ children }) {
       label: "统计",
       roles: ["admin", "superAdmin"],
     },
-    {
-      key: "/layouts/qqunited",
-      iconActive: require("../assets/image/sidermenu/thali.png"),
-      icon: require("../assets/image/sidermenu/thali-active.png"),
-      element: lazyLoad(lazy(() => import("../view/unitedQQ/index.jsx"))),
-      label: "联合套餐",
-    },
+    // {
+    //   key: "/layouts/qqunited",
+    //   iconActive: require("../assets/image/sidermenu/thali.png"),
+    //   icon: require("../assets/image/sidermenu/thali-active.png"),
+    //   element: lazyLoad(lazy(() => import("../view/unitedQQ/index.jsx"))),
+    //   label: "联合套餐",
+    // },
     {
       key: "/layouts/thali",
       iconActive: require("../assets/image/sidermenu/thali.png"),
@@ -228,14 +228,14 @@ export default function AppProvider({ children }) {
       label: "USDT管理",
       roles: ["admin", "superAdmin"],
     },
-    {
-      key: "/layouts/project",
-      iconActive: require("../assets/image/sidermenu/user.png"),
-      icon: require("../assets/image/sidermenu/user-active.png"),
-      element: lazyLoad(lazy(() => import("../view/account/index.jsx"))),
-      roles: ["admin", "superAdmin"],
-      label: "账号状态时间",
-    },
+    // {
+    //   key: "/layouts/project",
+    //   iconActive: require("../assets/image/sidermenu/user.png"),
+    //   icon: require("../assets/image/sidermenu/user-active.png"),
+    //   element: lazyLoad(lazy(() => import("../view/account/index.jsx"))),
+    //   roles: ["admin", "superAdmin"],
+    //   label: "账号状态时间",
+    // },
     {
       key: "/layouts/order",
       iconActive: require("../assets/image/sidermenu/order.png"),
@@ -282,7 +282,7 @@ export default function AppProvider({ children }) {
           element: lazyLoad(
             lazy(() => import("../view/platform/SystemSetup.jsx"))
           ),
-          roles: ["superAdmin"],
+          // roles: ["superAdmin"],
           label: "系统设置",
         },
       ],
@@ -323,6 +323,14 @@ export default function AppProvider({ children }) {
       element: lazyLoad(lazy(() => import("../view/project/AddProject.jsx"))),
       label: "添加项目",
       roles: ["admin", "role", "agent", "superAdmin"],
+    },
+    {
+      key: "/layouts/add/applyfor",
+      iconActive: require("../assets/image/sidermenu/add-project.png"),
+      icon: require("../assets/image/sidermenu/add-project-active.png"),
+      element: lazyLoad(lazy(() => import("../view/project/AddProject.jsx"))),
+      label: "申请项目列表",
+      roles: ["admin", "superAdmin"],
     },
     {
       key: "/layouts/mail",

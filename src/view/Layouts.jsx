@@ -646,7 +646,7 @@ export default function Layouts({ children }) {
                         <span className="recharge-message-item-money">
                           {Topupaccount.length > 20
                             ? userInfo?.wallet
-                            : "请输入正确打U账户与选择充U金额"}
+                            : "请输入正确交易单号与交易金额"}
                         </span>
                       </div>
                       <div className="recharge-modal-message-item">

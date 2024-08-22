@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import useAppStore from "../../store";
 
 import { exportRaw } from "../../utils/utils";
-import { getPackDetail, getPlaceOrder } from "../../api/thali";
+import { getPackDetail, getPlaceOrder, getkucun } from "../../api/thali";
 import { getGroupListNoPage, postAddGroup } from "../../api/group";
 // 组件
 import Insurance from "./components/Insurance";
@@ -42,7 +42,9 @@ export default function ThaliConfig() {
   const [weeklyCardShow, setWeeklyCardShow] = useState(false); //选中周卡的15级号
   const [scanOpenShow, setScanOpenShow] = useState(false); //选中open还是扫码账号
   // const [exclusive, setExclusive] = useState(true); //是否独享
-  const [active, setActive] = useState(0); //库存
+  const [active, setActive] = useState(0); 
+  const [inventory, setinventory] = useState(0); //库存
+
   const [num, setNum] = useState("");
   const navigate = useNavigate();
   const [thaliData, setThaliData] = useState({});
@@ -168,22 +170,28 @@ export default function ThaliConfig() {
   }, [active, thaliData]);
 
   // availableNum计算获取库存
-  const availableNum = useMemo(() => {
+  useMemo(() => {
     let num = 0;
-    if (thaliData.pack_id && thaliData.pack_id[active]) {
-      // &&thaliData.pack_id[active].package_id === 10001
-      if (thaliData.id === 317) {
-        if (weeklyCardShow) {
-          num = thaliData.pack_id[active]?.achieve_availableNum;
-        } else {
-          num = thaliData.pack_id[active]?.availableNum;
+    const is_op = scanOpenShow ? 1 : 0;
+    setThaliConfigLoading(true);
+    if (thaliData?.pack_id) {
+      getkucun({
+        is_op,
+        is_qq: 2,
+        priceId: thaliData.id,
+        package_id: thaliData?.pack_id[active]?.package_id,
+        is_shiming: "-1",
+        score: "-1",
+        is_fifteen: "-1",
+      }).then((res) => {
+        setThaliConfigLoading(false);
+        if (res.code === 200) {
+          setinventory(res.data);
         }
-      } else {
-        num = thaliData.pack_id[active]?.availableNum;
-      }
+      });
     }
     return num;
-  }, [active, thaliData, weeklyCardShow]);
+  }, [weeklyCardShow, scanOpenShow, active]);
 
   //总金额
   const totalNum = useMemo(() => {
@@ -260,9 +268,6 @@ export default function ThaliConfig() {
 
     if (!num) {
       return message.error("请输入购买数量");
-    }
-    if (num && available < num) {
-      return message.error("库存数不足");
     }
     // if (
     //   scanOpenShow ||
@@ -465,7 +470,7 @@ export default function ThaliConfig() {
                 </div>
               )}
               {/* activeWeeklyCard && */}
-              {thaliInfo.id === 317 && (
+              {/* {thaliInfo.id === 317 && (
                 <>
                   <div className="project-details-item project-details-item-center">
                     <div className="project-details-item-title">等级：</div>
@@ -481,20 +486,8 @@ export default function ThaliConfig() {
                       </Radio.Group>
                     </div>
                   </div>
-                  {/* <div className="project-details-item project-details-item-center">
-                    <div className="project-details-item-title">是否独享：</div>
-                    <div className="project-details-item-thali-info">
-                      <Radio.Group
-                        onChange={(even) => setExclusive(even.target.value)}
-                        value={exclusive}
-                      >
-                        <Radio value={true}>独享</Radio>
-                        <Radio value={false}>不独享</Radio>
-                      </Radio.Group>
-                    </div>
-                  </div> */}
                 </>
-              )}
+              )} */}
               {thaliData?.pack_id &&
                 thaliData?.pack_id[active] &&
                 thaliData?.pack_id[active]?.package_id !== 10006 && (
@@ -522,7 +515,7 @@ export default function ThaliConfig() {
                 <div className="project-details-item-title">库存：</div>
                 <div className="project-details-item-thali-info">
                   <Input
-                    value={availableNum}
+                    value={inventory}
                     suffix="个"
                     style={{ width: "472px", height: "36px" }}
                     disabled={true}
@@ -585,91 +578,6 @@ export default function ThaliConfig() {
                   />
                 </div>
               </div>
-              {/* 稳定了才上线 */}
-              {/* <div className="project-details-item">
-                <div className="project-details-item-title">交易安全险：</div>
-                <div className="details-pack-secure">
-                  <div className="project-details-pack-select">
-                    <div className="project-details-pack-select-item">
-                      <img
-                        src={selectShow ? thaliSelectActive : thaliSelect}
-                        alt=""
-                        className="details-pack-select-icon"
-                        onClick={() => purchase()}
-                      />
-                      <span
-                        className="details-pack-select-item-text"
-                        onClick={() => {
-                          purchase();
-                        }}
-                      >
-                        购买
-                      </span>
-                    </div>
-                    <span className="term-price">
-                      （价格：{insurePrice && insurePrice.toFixed(2)}元/份）
-                    </span>
-                    <span
-                      className="term-price details-pack-term"
-                      onClick={() => setInsuranceTerms(true)}
-                    >
-                      须知条款
-                    </span>
-                    <div className="project-details-pack-select-item">
-                      <img
-                        src={selectShow ? thaliSelect : thaliSelectActive}
-                        alt=""
-                        className="details-pack-select-icon"
-                        onClick={() => setSelectShow(false)}
-                      />
-                      <span
-                        className="details-pack-select-item-text"
-                        onClick={() => {
-                          setSelectShow(false);
-                        }}
-                      >
-                        不购买
-                      </span>
-                    </div>
-                  </div>
-                  <div className="project-details-pack-secure">
-                    <div className="project-secure-insure">
-                      <span>购买份数</span>
-                      <span className="project-secure-insure-share">
-                        {insureList &&
-                          insureList.map((item) => {
-                            return (
-                              <span
-                                key={item}
-                                onClick={() => setInsureActive(item)}
-                                className={
-                                  insureActive === item
-                                    ? "project-secure-insure-share-item project-secure-insure-share-item-active"
-                                    : "project-secure-insure-share-item"
-                                }
-                              >
-                                {item}份
-                                {insureActive === item && (
-                                  <img
-                                    src={thaliSelectShare}
-                                    alt=""
-                                    className="project-insure-share-active-icon"
-                                  />
-                                )}
-                              </span>
-                            );
-                          })}
-                      </span>
-                    </div>
-                    <div className="project-secure-insure">
-                      <span>保险金额</span>
-                      <span className="project-secure-insure-money">
-                        ￥{insurePrice && insurePrice.toFixed(2)}元
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
             </div>
             <div className="total-amount">
               <div className="total-amount-item">
@@ -698,14 +606,6 @@ export default function ThaliConfig() {
                   ￥{totalNum && totalNum.toFixed(2)}
                 </div>
               </div>
-              {/* 稳定了才上线 */}
-              {/* <div className="total-amount-item total-amount-item-insure">
-                <div className="total-amount-item-left">交易保险：</div>
-                <div className="total-amount-item-right">
-                  ￥{selectShow && insureNum && insureNum.toFixed(2)}
-                  {!selectShow && "0"}
-                </div>
-              </div> */}
               {userInfo?.discount && userInfo?.discount !== 1 && (
                 <div className="total-amount-item" style={{ color: "red" }}>
                   <div className="total-amount-item-left">当前折扣：</div>
