@@ -75,6 +75,7 @@
   border: 1px solid #e3e5ec;
 }
 .popup-details-item .popup-details-item-right {
+  cursor: pointer;
   width: 60px;
   box-sizing: border-box;
   display: flex;
@@ -133,4 +134,10 @@
   margin-top: 30px;
   display: flex;
   justify-content: center;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 65px;
 }
