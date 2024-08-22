@@ -279,6 +279,35 @@ export const experience = [
     render: (record) => <span>{record ? record : "-"}</span>,
   },
 ];
+export const apply_show = [
+  {
+    title: "申请账号",
+    dataIndex: "account",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "项目名称",
+    dataIndex: "app_name",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "项目地址",
+    dataIndex: "url",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "类型",
+    dataIndex: "type",
+    render: (record) => (
+      <span>{record === 1 ? "Q" : record === 2 ? "WX" : "全部"}</span>
+    ),
+  },
+  {
+    title: "创建时间",
+    dataIndex: "create_time",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+];
 
 export const payColumns = [
   {

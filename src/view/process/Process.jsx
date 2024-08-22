@@ -46,7 +46,7 @@ export default function Payment() {
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1, //当前页码
-      pageSize: 3, // 每页数据条数
+      pageSize: 10, // 每页数据条数
     },
   });
   const [state, setState] = useState({

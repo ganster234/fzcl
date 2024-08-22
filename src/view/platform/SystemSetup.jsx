@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Input,  message, Spin } from "antd";
+import { Button, Input, message, Spin } from "antd";
 import useAppStore from "../../store";
 import { getRate, getRateUpdate } from "../../api/setup";
 import { getUser } from "../../api/login";
@@ -26,6 +26,7 @@ export default function SystemSetup() {
       });
       if (result?.code === 200) {
         const fieldsData = result.data.map((item, index) => ({
+          id: item.id,
           label: item.remark,
           key: item.notice, // Assuming the key should be unique, possibly `config_id`
           config_id: item.config_id,
@@ -34,8 +35,8 @@ export default function SystemSetup() {
         }));
         const newState = {};
         fieldsData.forEach((field) => {
-          newState[`${field.key}Id`] = field.config_id;
-          newState[field.key] = field.value;
+          newState[`${field.id}Id`] = field.config_id;
+          newState[field.id] = field.value;
         });
         setFields(fieldsData);
         setState(newState);
@@ -50,11 +51,10 @@ export default function SystemSetup() {
   };
 
   const setSetup = async () => {
-    const param = fields.map(({ key }) => ({
-      config_id: state[`${key}Id`],
-      notice: state[key],
+    const param = fields.map(({ key, id }) => ({
+      config_id: state[`${id}Id`],
+      notice: state[id],
     }));
-
     setSetupLoading(true);
     try {
       const result = await getRateUpdate({ noticeList: param });
@@ -85,24 +85,16 @@ export default function SystemSetup() {
   };
 
   const renderFields = () =>
-    fields.map(({ label, key, type }) => (
+    fields.map(({ label, key, type, id }) => (
       <div className="systems-setup-item" key={label}>
         <span className="systems-setup-item-title">{label}：</span>
-        {type === "input" ? (
-          <Input
-            value={state[key]}
-            style={{ width: "460px" }}
-            onChange={(even) =>
-              setState((data) => ({ ...data, [key]: even.target.value }))
-            }
-          />
-        ) : (
-          <Input
-            value={state[key]}
-            style={{ width: "460px" }}
-            onChange={(even) => setState((data) => ({ ...data, [key]: even.target.value }))}
-          />
-        )}
+        <Input
+          value={state[id]}
+          style={{ width: "460px" }}
+          onChange={(even) => {
+            setState((data) => ({ ...data, [id]: even.target.value }));
+          }}
+        />
       </div>
     ));
 

@@ -328,7 +328,7 @@ export default function AppProvider({ children }) {
       key: "/layouts/add/applyfor",
       iconActive: require("../assets/image/sidermenu/add-project.png"),
       icon: require("../assets/image/sidermenu/add-project-active.png"),
-      element: lazyLoad(lazy(() => import("../view/project/AddProject.jsx"))),
+      element: lazyLoad(lazy(() => import("../view/applyforlist"))),
       label: "申请项目列表",
       roles: ["admin", "superAdmin"],
     },
