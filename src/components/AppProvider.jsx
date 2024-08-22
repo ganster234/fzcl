@@ -77,6 +77,7 @@ export default function AppProvider({ children }) {
       icon: require("../assets/image/sidermenu/leave-active.png"),
       iconActive: require("../assets/image/sidermenu/leave.png"),
       element: lazyLoad(lazy(() => import("../view/addressConfig"))),
+      roles: ["admin", "superAdmin"],
       label: "地址配置管理",
     },
     // {
@@ -282,7 +283,7 @@ export default function AppProvider({ children }) {
           element: lazyLoad(
             lazy(() => import("../view/platform/SystemSetup.jsx"))
           ),
-          // roles: ["superAdmin"],
+          roles: ["admin", "superAdmin"],
           label: "系统设置",
         },
       ],

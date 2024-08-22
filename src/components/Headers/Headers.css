@@ -20,7 +20,7 @@
 }
 .headers .recharge-balance {
   margin-left: 24px;
-  width: 218px;
+  width: 200px;
   height: 40px;
   box-sizing: border-box;
   padding: 0 4px;
@@ -53,7 +53,7 @@
   cursor: pointer;
 }
 .headers .customer-service {
-  margin-left: 20px;
+  margin-left: 10px;
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -61,10 +61,9 @@
 .headers .head-message {
   width: 40px;
   height: 40px;
-  margin-left: 30px;
 }
 .headers .user-name {
-  padding: 0 25px;
+  padding: 0 10px;
 }
 .headers .invitation-code-box {
   margin-right: 25px;

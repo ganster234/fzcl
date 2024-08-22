@@ -48,7 +48,7 @@ export default function Headers() {
           color: "red",
         }}
       >
-        <p style={{ marginRight: "40px" }}>{service.phone}</p>
+        <p>客服：{service["telegram"]}</p>
       </div>
       <div className="recharge-balance">
         <span className="balance">
