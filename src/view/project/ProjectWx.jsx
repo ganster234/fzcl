@@ -1,17 +1,147 @@
-import React, { useState, useEffect } from "react";
-import { Table, message, Spin } from "antd";
-import { Popup, Input } from "antd-mobile";
+import React, {
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+  useRef,
+} from "react";
+import { Table, message, Spin, Button, Modal, Form, Input } from "antd";
+import { Popup } from "antd-mobile";
 
 import { getResidueHeightByDOMRect } from "../../utils/utils";
 import {
   getProjectList,
   getChangeShare,
   getChangePrice,
+  addProjectAlias,
+  updateProjectAlias,
+  getProjectAlias,
 } from "../../api/project";
 import { projectColumns } from "../../utils/columns";
 
 import "./Project.less";
+const { TextArea } = Input;
+//可编辑逻辑
+const EditableCell = ({
+  title,
+  editable,
+  children,
+  record,
+  changeValue,
+  ...restProps
+}) => {
+  const [value, setValue] = useState(children);
+  const handleChange = (e) => {
+    console.log("触发handleChange", e.target.value, children);
+    setValue(e.target.value);
 
+    changeValue(record.id, e.target.value);
+  };
+  const handleBlur = async () => {};
+
+  const inputNode = (
+    <Input
+      // className="flex-center"
+      onChange={handleChange}
+      onBlur={handleBlur}
+      value={value}
+      autoFocus
+    />
+  );
+
+  return <td {...restProps}>{editable ? inputNode : children}</td>;
+};
+
+const EditableTable = forwardRef(({ data, fetchAliases }, ref) => {
+  const [editingKey, setEditingKey] = useState("");
+  const [editValue, setEditValue] = useState("");
+  const [editId, setEditId] = useState("");
+
+  useImperativeHandle(ref, () => ({
+    cancel: () => {
+      setEditingKey("");
+    },
+  }));
+  const isEditing = (record) => record.id === editingKey;
+
+  const edit = (record) => {
+    setEditingKey(record.id);
+  };
+  const changeValue = (id, value) => {
+    setEditValue(value);
+    setEditId(id.toString());
+  };
+
+  const save = async () => {
+    try {
+      await updateProjectAlias({
+        id: editId,
+        name: editValue,
+      });
+      message.success("修改成功");
+      fetchAliases();
+      // 刷新数据
+    } catch (error) {
+      message.error("修改失败");
+    }
+    cancel();
+  };
+
+  const cancel = () => {
+    setEditingKey("");
+  };
+
+  const columns = [
+    {
+      className: "flex-center",
+      title: "别名",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) =>
+        isEditing(record) ? (
+          <EditableCell
+            title="别名"
+            editable
+            record={record}
+            children={text}
+            changeValue={changeValue}
+          />
+        ) : (
+          text
+        ),
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <>
+            <Button onClick={() => save()} style={{ marginRight: 8 }}>
+              保存
+            </Button>
+          </>
+        ) : (
+          <Button onClick={() => edit(record)}>修改</Button>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Table
+      components={{
+        body: {
+          cell: EditableCell,
+        },
+      }}
+      rowKey="id"
+      dataSource={data}
+      columns={columns}
+      pagination={false}
+    />
+  );
+});
 export default function Project() {
   const [loading, setLoading] = useState(false);
   const [popupLoading, setPopupLoading] = useState(false);
@@ -26,7 +156,72 @@ export default function Project() {
       pageSize: 10, // 每页数据条数
     },
   });
+  //弹框
+  const editableTableRef = useRef(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalType, setModalType] = useState("");
+  const [form] = Form.useForm();
+  const [currentItem, setCurrentItem] = useState([]); // 设置当前选中的项
+  const [aliasTableData, setAliasTableData] = useState([]); // 别名表格数据
 
+  useEffect(() => {
+    // 根据 modalType 进行数据加载
+    if (modalType === "view" && isModalVisible) {
+      fetchAliases();
+    }
+  }, [modalType, isModalVisible]);
+
+  const showModal = (type, item) => {
+    if (type === "view") {
+    }
+    setModalType(type);
+    setCurrentItem(item); // 设置当前选中的项
+    setIsModalVisible(true);
+  };
+  const fetchAliases = async () => {
+    try {
+      const response = await getProjectAlias({ app_id: currentItem.app_id }); // 查询别名接口
+      setAliasTableData(response.data);
+    } catch (error) {
+      message.error("加载别名失败");
+    }
+  };
+
+  const handleAddAlias = async (values) => {
+    try {
+      await addProjectAlias({
+        app_id: currentItem.app_id,
+        name: values.text,
+      }); // 新增项目别名
+      message.success("新增别名成功");
+      setIsModalVisible(false);
+      fetchAliases(); // 刷新别名数据
+    } catch (error) {
+      message.error("新增别名失败");
+    }
+  };
+
+  const handleOk = async () => {
+    try {
+      if (modalType === "add") {
+        const values = await form.validateFields();
+        await handleAddAlias(values);
+      }
+      form.resetFields();
+    } catch (error) {
+      console.error("Form validation failed:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    if (modalType === "add") {
+      form.resetFields();
+    }
+    if (editableTableRef.current) {
+      editableTableRef.current.cancel();
+    }
+  };
   // 初始化
   useEffect(() => {
     //高度自适应
@@ -158,16 +353,54 @@ export default function Project() {
                 dataIndex: "wx_app_id",
               },
               ...projectColumns,
+              // {
+              //   title: "操作",
+              //   width: 200,
+              //   render: (record) => (
+              //     <span
+              //       className="project-edit"
+              //       onClick={() => projectEdit(record)}
+              //     >
+              //       编辑
+              //     </span>
+              //   ),
+              // },
               {
                 title: "操作",
-                width: 200,
+                width: 300,
                 render: (record) => (
-                  <span
-                    className="project-edit"
-                    onClick={() => projectEdit(record)}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
                   >
-                    编辑
-                  </span>
+                    <Button
+                      type="text"
+                      className="project-edit"
+                      onClick={() => projectEdit(record)}
+                    >
+                      编辑
+                    </Button>
+                    <Button
+                      type="text"
+                      onClick={() => {
+                        showModal("view", record);
+                      }}
+                      style={{ color: "blue" }}
+                    >
+                      查看别名
+                    </Button>
+                    <Button
+                      type="text"
+                      onClick={() => {
+                        showModal("add", record);
+                      }}
+                      style={{ color: "orange" }}
+                    >
+                      新增别名
+                    </Button>
+                  </div>
                 ),
               },
             ]}
@@ -229,6 +462,31 @@ export default function Project() {
               })}
           </Spin>
         </Popup>
+        <Modal
+          title={modalType === "add" ? "新增别名" : "查看别名"}
+          footer={modalType === "view" ? null : undefined}
+          open={isModalVisible}
+          onOk={modalType === "add" ? handleOk : undefined}
+          onCancel={handleCancel}
+          width={800}
+        >
+          {modalType === "add" ? (
+            <Form form={form} layout="vertical">
+              <Form.Item
+                name="text"
+                rules={[{ required: true, message: "请输入内容!" }]}
+              >
+                <TextArea rows={4} />
+              </Form.Item>
+            </Form>
+          ) : (
+            <EditableTable
+              ref={editableTableRef}
+              data={aliasTableData}
+              fetchAliases={fetchAliases}
+            />
+          )}
+        </Modal>
       </div>
     </>
   );
