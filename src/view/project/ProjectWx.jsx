@@ -219,7 +219,7 @@ export default function Project() {
   };
   const fetchAliases = async () => {
     try {
-      const response = await getProjectAlias({ app_id: currentItem.app_id }); // 查询别名接口
+      const response = await getProjectAlias({ app_id: currentItem.wx_app_id }); // 查询别名接口
       setAliasTableData(response.data);
     } catch (error) {
       message.error("加载别名失败");
