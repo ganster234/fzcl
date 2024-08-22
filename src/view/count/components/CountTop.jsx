@@ -31,18 +31,18 @@ export default function CountTop({
       title: "统计每个项目总销售额（wx）",
       type: 6,
     },
-    {
-      title: "售后信息",
-      type: 3,
-    },
-    {
-      title: "open销售总额",
-      type: 4,
-    },
-    {
-      title: "周卡售后",
-      type: 5,
-    },
+    // {
+    //   title: "售后信息",
+    //   type: 3,
+    // },
+    // {
+    //   title: "open销售总额",
+    //   type: 4,
+    // },
+    // {
+    //   title: "周卡售后",
+    //   type: 5,
+    // },
   ]);
   const [priceList, setPriceList] = useState([]);
 

@@ -5,7 +5,7 @@ import { Layout, message, Modal, Spin, InputNumber, Input } from "antd";
 import { Stepper } from "antd-mobile";
 import { PoweroffOutlined } from "@ant-design/icons";
 
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SiderMenus from "../components/siderMenus/SiderMenus";
 import { getUser } from "../api/login";
 import {
@@ -109,6 +109,7 @@ export default function Layouts({ children }) {
       key: "one_thousand",
     },
   ];
+
   const [AAASSSS, setAAASSSS] = useState(roWx);
   useEffect(() => {
     settourl(lohad.pathname);
@@ -180,6 +181,7 @@ export default function Layouts({ children }) {
     navigate("/");
   };
   const serviceOk = () => {
+    console.log(service);
     changServiceShow(!service);
   };
   // 关闭充值弹窗，清空信息
@@ -389,7 +391,7 @@ export default function Layouts({ children }) {
                 />
                 <div className="exitOut" onClick={unSign}>
                   <PoweroffOutlined />
-                  <span style={{ marginLeft:"10px" }}> 退出</span>
+                  <span style={{ marginLeft: "10px" }}> 退出</span>
                 </div>
               </div>
             ) : (
@@ -416,12 +418,12 @@ export default function Layouts({ children }) {
               <div className="layout-add-service">
                 <div className="layout-add-service-text">
                   <div className="add-service-text-box">
-                    <div>{service.phone}</div>
+                    {service["telegram"]}
                     <div className="add-service-text-skype">
-                      {service.skype}
+                      {service["telegram_remark"]}
                     </div>
-                    <div>{service.telegram}</div>
-                    <div className="add-service-text-skype">{service.time}</div>
+                    {/* <div>333</div>
+                    <div className="add-service-text-skype">44</div> */}
                   </div>
                 </div>
               </div>
@@ -646,7 +648,7 @@ export default function Layouts({ children }) {
                         <span className="recharge-message-item-money">
                           {Topupaccount.length > 20
                             ? userInfo?.wallet
-                            : "请输入正确打U账户与选择充U金额"}
+                            : "请输入正确交易单号与交易金额"}
                         </span>
                       </div>
                       <div className="recharge-modal-message-item">

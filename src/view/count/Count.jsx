@@ -50,7 +50,11 @@ export default function Count() {
     const { code, data, msg } = result || {};
     message.destroy();
     if (code === 200) {
-      setDataList([...data]);
+      if (state.active === 2 && data.length > 0) {
+        setDataList([...data.list]);
+      } else {
+        setDataList([...data]);
+      }
     } else {
       message.error(msg);
     }
@@ -118,7 +122,7 @@ export default function Count() {
           {state.active === 5 && (
             <WeekSales loading={loading} dataList={dataList} />
           )}
-           {state.active === 6 && (
+          {state.active === 6 && (
             <CountFronsWx loading={loading} dataList={dataList} />
           )}
         </div>

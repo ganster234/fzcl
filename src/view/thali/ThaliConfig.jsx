@@ -42,8 +42,8 @@ export default function ThaliConfig() {
   const [weeklyCardShow, setWeeklyCardShow] = useState(-1); //选中周卡的15级号
   const [scanOpenShow, setScanOpenShow] = useState(false); //选中open还是扫码账号
   // const [exclusive, setExclusive] = useState(true); //是否独享
-  const [active, setActive] = useState(0); 
-  const [inventory,setinventory] = useState(0)  //库存
+  const [active, setActive] = useState(0);
+  const [inventory, setinventory] = useState(0); //库存
   const [num, setNum] = useState("");
   const navigate = useNavigate();
   const [thaliData, setThaliData] = useState({});
@@ -165,7 +165,7 @@ export default function ThaliConfig() {
   }, [active, thaliData]);
 
   // availableNum计算获取库存
-  const availableNum = useMemo(() => {
+  useMemo(() => {
     let num = 0;
     const is_op = scanOpenShow ? 1 : 0;
     setThaliConfigLoading(true);
@@ -184,7 +184,6 @@ export default function ThaliConfig() {
           setinventory(res.data);
         }
       });
-      console.log(num);
     }
     return num;
   }, [weeklyCardShow, scanOpenShow, active]);
