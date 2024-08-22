@@ -81,3 +81,9 @@
 .headers .exit {
   margin-left: 12px;
 }
+.noe2 {
+  margin-left: 10px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}

@@ -1,12 +1,14 @@
 import React from "react";
+import { message, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { PoweroffOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import useAppStore from "../../store";
 
 import "./Headers.less";
-import { getDownload } from "../../api/home";
+import { getDownload, cleanhuanc } from "../../api/home";
 export default function Headers() {
+  const role = sessionStorage.getItem("role");
   const userInfo = useAppStore((state) => state.userInfo);
   const changServiceShow = useAppStore((state) => state.setServiceShow);
   const changRechargeShow = useAppStore((state) => state.setRechargeShow);
@@ -64,6 +66,25 @@ export default function Headers() {
           充值
         </span>
       </div>
+      {role === "superAdmin" || role === "admin" ? (
+        <Tooltip placement="bottom" title="清理缓存">
+          <img
+            src={require("../../assets/image/headers/shuaxing.png")}
+            alt=""
+            className="noe2"
+            onClick={() => {
+              cleanhuanc().then((res) => {
+                if (res.code) {
+                  message.info(res.message);
+                }
+              });
+            }}
+          />
+        </Tooltip>
+      ) : (
+        <></>
+      )}
+
       <img
         src={require("../../assets/image/headers/customer-service.png")}
         alt=""

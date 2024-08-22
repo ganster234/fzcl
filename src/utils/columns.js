@@ -311,6 +311,11 @@ export const apply_show = [
 
 export const payColumns = [
   {
+    title: "支付订单号",
+    dataIndex: "pay_order_id",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
     title: "账号名称",
     dataIndex: "account",
     render: (record) => <span>{record ? record : "-"}</span>,
