@@ -255,7 +255,7 @@ export default function AppProvider({ children }) {
         {
           key: "/layouts/platform/project",
           element: lazyLoad(lazy(() => import("../view/project/Project.jsx"))),
-          // roles: ["superAdmin"],
+          roles: ["superAdmin"],
           label: "项目管理(Q)",
         },
         {
@@ -263,7 +263,7 @@ export default function AppProvider({ children }) {
           element: lazyLoad(
             lazy(() => import("../view/project/ProjectWx.jsx"))
           ),
-          // roles: ["superAdmin"],
+          roles: ["superAdmin"],
           label: "项目管理(W)",
         },
         {
