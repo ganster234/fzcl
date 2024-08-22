@@ -18,7 +18,6 @@ import {
 } from "../../api/project";
 import { projectColumns } from "../../utils/columns";
 import "./Project.less";
-const { TextArea } = Input;
 
 //可编辑逻辑
 const EditableCell = ({
@@ -31,10 +30,8 @@ const EditableCell = ({
 }) => {
   const [value, setValue] = useState(children);
   const handleChange = (e) => {
-    console.log("触发handleChange", e.target.value, children);
     setValue(e.target.value);
-
-    changeValue(record.id, e.target.value);
+    changeValue(record.id, e.target.value, title);
   };
   const handleBlur = async () => {};
 
@@ -53,9 +50,7 @@ const EditableCell = ({
 
 const EditableTable = forwardRef(({ data, fetchAliases }, ref) => {
   const [editingKey, setEditingKey] = useState("");
-  const [editValue, setEditValue] = useState("");
-  const [editId, setEditId] = useState("");
-
+  const [editValue, setEditValue] = useState({});
   useImperativeHandle(ref, () => ({
     cancel: () => {
       setEditingKey("");
@@ -66,16 +61,25 @@ const EditableTable = forwardRef(({ data, fetchAliases }, ref) => {
   const edit = (record) => {
     setEditingKey(record.id);
   };
-  const changeValue = (id, value) => {
-    setEditValue(value);
-    setEditId(id.toString());
+  const changeValue = (id, value, title) => {
+    const currentData = data.find((item) => item.id === id);
+    if (currentData) {
+      currentData[title] = value;
+    }
+    console.log(currentData, "currentData");
+
+    setEditValue({ ...currentData });
   };
 
   const save = async () => {
+    console.log(editValue, "editValue");
+    const { app_id, id, name, real_id } = editValue;
     try {
       await updateProjectAlias({
-        id: editId,
-        name: editValue,
+        app_id,
+        id: id.toString(),
+        name,
+        real_id,
       });
       message.success("修改成功");
       fetchAliases();
@@ -92,14 +96,47 @@ const EditableTable = forwardRef(({ data, fetchAliases }, ref) => {
 
   const columns = [
     {
-      className: "flex-center",
       title: "别名",
       dataIndex: "name",
       key: "name",
       render: (text, record) =>
         isEditing(record) ? (
           <EditableCell
-            title="别名"
+            title="name"
+            editable
+            record={record}
+            children={text}
+            changeValue={changeValue}
+          />
+        ) : (
+          text
+        ),
+    },
+    {
+      title: "APP_id",
+      dataIndex: "app_id",
+      key: "app_id",
+      render: (text, record) =>
+        isEditing(record) ? (
+          <EditableCell
+            title="app_id"
+            editable
+            record={record}
+            children={text}
+            changeValue={changeValue}
+          />
+        ) : (
+          text
+        ),
+    },
+    {
+      title: "real_id",
+      dataIndex: "real_id",
+      key: "real_id",
+      render: (text, record) =>
+        isEditing(record) ? (
+          <EditableCell
+            title="real_id"
             editable
             record={record}
             children={text}
@@ -187,10 +224,12 @@ export default function Project() {
   };
 
   const handleAddAlias = async (values) => {
+    const { alias, real_id } = values;
     try {
       await addProjectAlias({
         app_id: currentItem.app_id,
-        name: values.text,
+        real_id,
+        name: alias,
       }); // 新增项目别名
       message.success("新增别名成功");
       setIsModalVisible(false);
@@ -350,7 +389,7 @@ export default function Project() {
             onChange={handleTableChange}
             columns={[
               {
-                title: "订单ID",
+                title: "APP_id",
                 dataIndex: "app_id",
               },
               ...projectColumns,
@@ -462,10 +501,18 @@ export default function Project() {
           {modalType === "add" ? (
             <Form form={form} layout="vertical">
               <Form.Item
-                name="text"
+                name="alias"
+                label="别名"
                 rules={[{ required: true, message: "请输入内容!" }]}
               >
-                <TextArea rows={4} />
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="real_id"
+                label="real_id"
+                rules={[{ required: true, message: "请输入内容!" }]}
+              >
+                <Input />
               </Form.Item>
             </Form>
           ) : (
