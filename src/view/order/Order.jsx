@@ -353,12 +353,13 @@ export default function Order() {
                 render: (record) => (
                   <>
                     {record.type === 3 || record.account_type !== 1 ? (
-                      <Button
-                        type="primary"
-                        onClick={() => orderRenew(record.orderId)}
-                      >
-                        续费
-                      </Button>
+                      // <Button
+                      //   type="primary"
+                      //   onClick={() => orderRenew(record.orderId)}
+                      // >
+                      //   续费
+                      // </Button>
+                      <>-</>
                     ) : (
                       <>-</>
                     )}

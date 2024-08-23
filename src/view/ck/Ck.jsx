@@ -298,12 +298,12 @@ export default function Ck() {
                   <>
                     {renew[record.package_id] && (
                       <div className="open-task-package">
-                        <Button
+                        {/* <Button
                           type="primary"
                           onClick={() => renewBtn(record.openid_task_id)}
                         >
                           续费
-                        </Button>
+                        </Button> */}
                         <Button
                           onClick={() => renewUpdate(record.openid_task_id)}
                         >
