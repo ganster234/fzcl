@@ -15,8 +15,11 @@ import {
   addProjectAlias,
   updateProjectAlias,
   getProjectAlias,
+  reporteddata,
 } from "../../api/project";
 import { projectColumns } from "../../utils/columns";
+import ProMolde from "./ProMolde";
+import { useLocation } from "react-router-dom";
 import "./Project.less";
 
 //可编辑逻辑
@@ -179,6 +182,7 @@ const EditableTable = forwardRef(({ data, fetchAliases }, ref) => {
   );
 });
 export default function Project() {
+  const [app_name, setapp_name] = useState(""); //输入查询
   const [loading, setLoading] = useState(false);
   const [popupLoading, setPopupLoading] = useState(false);
   const [total, setTotal] = useState(0); // 总条数
@@ -194,11 +198,15 @@ export default function Project() {
   });
   //弹框
   const editableTableRef = useRef(null);
+  const seedMolde = useRef(null); //子组件弹窗
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalType, setModalType] = useState("");
   const [form] = Form.useForm();
+
   const [currentItem, setCurrentItem] = useState([]); // 设置当前选中的项
   const [aliasTableData, setAliasTableData] = useState([]); // 别名表格数据
+
+  const location = useLocation();
 
   useEffect(() => {
     // 根据 modalType 进行数据加载
@@ -206,6 +214,11 @@ export default function Project() {
       fetchAliases();
     }
   }, [modalType, isModalVisible]);
+
+  useEffect(() => {
+    console.log("Route changed to:", location.pathname);
+    // You can add any logic here that should run on route change
+  }, [location]);
 
   const showModal = (type, item) => {
     if (type === "view") {
@@ -269,15 +282,17 @@ export default function Project() {
       setHeight(getResidueHeightByDOMRect());
     };
     getList();
-  }, [JSON.stringify(tableParams)]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(tableParams), location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 获取list
-  const getList = async () => {
+  const getList = async (val) => {
     setLoading(true);
     const { pageSize, current } = tableParams.pagination;
     let result = await getProjectList({
-      page: current,
-      limit: pageSize,
+      app_name: val === "重置" ? "" : app_name,
+      page: val ? 1 : current,
+      limit: val ? 10 : pageSize,
+      is_qq: location.pathname === "/layouts/platform/project" ? undefined : 2,
     });
     const { code, data, msg } = result || {};
     if (code === 200) {
@@ -322,15 +337,18 @@ export default function Project() {
   };
 
   const inputDetailBlur = async (index, str) => {
-    const { app_id, data } = projectDetails;
+    const { app_id, data, wx_app_id } = projectDetails;
     const item = data[index];
     console.log(item, projectDetails);
     if (str) {
       if (item) {
         setPopupLoading(true);
         let result = await getChangePrice({
-          price_id: projectDetails.app_id,
-          package_id: app_id,
+          price_id:
+            location.pathname === "/layouts/platform/project"
+              ? projectDetails.app_id
+              : wx_app_id,
+          package_id: item.id,
           price: item.distribution_price,
         });
         message.destroy();
@@ -366,12 +384,43 @@ export default function Project() {
     }
     setPopupLoading(false);
   };
-
+  const inquire = (val) => {
+    if (val === "重置") {
+      setapp_name("");
+    }
+    getList(val);
+  };
   return (
     <>
       <div className="project-content">
         <div className="project-content-main">
-          <div className="project-content-main-title">项目管理</div>
+          <div className="project-content-main-title">
+            <p>项目名称查询:</p>
+            <div style={{ display: "flex" }}>
+              <Input
+                value={app_name}
+                onChange={(val) => setapp_name(val.target.value)}
+                style={{ width: "200px" }}
+                placeholder="请输入项目名称"
+                allowClear
+              ></Input>
+              <Button
+                onClick={() => inquire("查询")}
+                style={{ margin: "0 10px" }}
+                type="primary"
+              >
+                查询
+              </Button>
+              <Button
+                style={{ margin: "0 10px" }}
+                onClick={() => inquire("重置")}
+              >
+                重置
+              </Button>
+              <ProMolde ref={seedMolde} getList={getList}></ProMolde>
+            </div>
+          </div>
+
           <Table
             rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
             scroll={{
@@ -403,12 +452,41 @@ export default function Project() {
                       justifyContent: "space-between",
                     }}
                   >
+                    {location.pathname !== "/layouts/platform/project" ? (
+                      <Button
+                        onClick={() => {
+                          reporteddata({
+                            wx_app_id: record.wx_app_id,
+                            app_name: record.app_name,
+                          }).then((res) => {
+                            message.info(res.msg);
+                          });
+                        }}
+                        style={{ marginTop: "5px" }}
+                        size="small"
+                      >
+                        上报
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
+
+                    <Button
+                      type="text"
+                      className="project-edit"
+                      onClick={() => {
+                        seedMolde.current.setaddState("修改项目");
+                        seedMolde.current.childFunction(record);
+                      }}
+                    >
+                      修改
+                    </Button>
                     <Button
                       type="text"
                       className="project-edit"
                       onClick={() => projectEdit(record)}
                     >
-                      编辑
+                      编辑价格
                     </Button>
                     <Button
                       type="text"

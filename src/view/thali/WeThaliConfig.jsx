@@ -42,7 +42,7 @@ export default function ThaliConfig() {
   const [weeklyCardShow, setWeeklyCardShow] = useState(false); //选中周卡的15级号
   const [scanOpenShow, setScanOpenShow] = useState(false); //选中open还是扫码账号
   // const [exclusive, setExclusive] = useState(true); //是否独享
-  const [active, setActive] = useState(0); 
+  const [active, setActive] = useState(0);
   const [inventory, setinventory] = useState(0); //库存
 
   const [num, setNum] = useState("");
@@ -53,6 +53,7 @@ export default function ThaliConfig() {
   const [showAddGroup, setShowAddGroup] = useState(false);
   const [groupList, setGroupList] = useState([]); //分组
   const [groupId, setGroupId] = useState(null); //分组id
+  const [condition, setcondition] = useState(false); //类型显示与隐藏
   // const [insureList] = useState(["1", "2", "3"]); //保险份
   // const [insureActive, setInsureActive] = useState("1"); //保险倍数
   const getDetail = async () => {
@@ -170,26 +171,26 @@ export default function ThaliConfig() {
   }, [active, thaliData]);
 
   // availableNum计算获取库存
-    useEffect(() => {
-      const is_op = scanOpenShow ? 1 : 0;
-      if (thaliData?.pack_id) {
-        setThaliConfigLoading(true);
-        getkucun({
-          is_op,
-          is_qq: 2,
-          priceId: thaliData.id,
-          package_id: thaliData?.pack_id[active]?.package_id,
-          is_shiming: "-1",
-          score: "-1",
-          is_fifteen: "-1",
-        }).then((res) => {
-          setThaliConfigLoading(false);
-          if (res.code === 200) {
-            setinventory(res.data);
-          }
-        });
-      }
-    }, [weeklyCardShow, scanOpenShow, active, thaliData]);
+  useEffect(() => {
+    const is_op = scanOpenShow ? 1 : 0;
+    if (thaliData?.pack_id) {
+      setThaliConfigLoading(true);
+      getkucun({
+        is_op,
+        is_qq: 2,
+        priceId: thaliData.id,
+        package_id: thaliData?.pack_id[active]?.package_id,
+        is_shiming: "-1",
+        score: "-1",
+        is_fifteen: "-1",
+      }).then((res) => {
+        setThaliConfigLoading(false);
+        if (res.code === 200) {
+          setinventory(res.data);
+        }
+      });
+    }
+  }, [weeklyCardShow, scanOpenShow, active, thaliData]);
 
   //总金额
   const totalNum = useMemo(() => {
@@ -355,6 +356,11 @@ export default function ThaliConfig() {
   //切换类型选中项
   const changeActive = (index) => {
     setActive(index);
+    if (thaliData?.pack_id[index]?.package_id === "10006") {
+      setcondition(false);
+    } else {
+      setcondition(true);
+    }
   };
   return (
     <Spin spinning={thaliConfigLoading}>
@@ -420,9 +426,6 @@ export default function ThaliConfig() {
                         提示：
                       </span>
                       本站号码均为新号,如需老号请与客服联系。
-                      <span style={{ fontWeight: "bold" }}>
-                        （进入游戏后不保障该账号已实名，未实名账号不售后）
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -486,29 +489,27 @@ export default function ThaliConfig() {
                   </div>
                 </>
               )} */}
-              {thaliData?.pack_id &&
-                thaliData?.pack_id[active] &&
-                thaliData?.pack_id[active]?.package_id !== 10006 && (
-                  <div className="project-details-item project-details-item-center">
-                    <div className="project-details-item-title">类型：</div>
-                    <div className="project-details-item-thali-info">
-                      <Radio.Group
-                        onChange={(even) => {
-                          setScanOpenShow(even.target.value);
-                        }}
-                        value={scanOpenShow}
-                      >
-                        <Radio value={false}>扫码</Radio>
-                        <Radio value={true}>小程序</Radio>
-                      </Radio.Group>
-                      <span style={{ color: "red" }}>
-                        微信账号，扫码一天只能扫两次
-                        {scanOpenShow &&
-                          "，code有效期20分钟，失效之后请重新扫码提code"}
-                      </span>
-                    </div>
+              {condition && (
+                <div className="project-details-item project-details-item-center">
+                  <div className="project-details-item-title">类型：</div>
+                  <div className="project-details-item-thali-info">
+                    <Radio.Group
+                      onChange={(even) => {
+                        setScanOpenShow(even.target.value);
+                      }}
+                      value={scanOpenShow}
+                    >
+                      <Radio value={false}>扫码</Radio>
+                      <Radio value={true}>小程序</Radio>
+                    </Radio.Group>
+                    <span style={{ color: "red" }}>
+                      W账号，扫码一天只能扫两次
+                      {scanOpenShow &&
+                        "，code有效期20分钟，失效之后请重新扫码提code"}
+                    </span>
                   </div>
-                )}
+                </div>
+              )}
               <div className="project-details-item project-details-item-center">
                 <div className="project-details-item-title">库存：</div>
                 <div className="project-details-item-thali-info">

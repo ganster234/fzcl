@@ -266,13 +266,13 @@ export default function AppProvider({ children }) {
       roles: ["admin", "role", "superAdmin"], //不存在就展示，存在就会过滤权限
       children: [
         {
-          key: "/layouts/platform/project",
+          key: "/layouts/platform/project?type=q",
           element: lazyLoad(lazy(() => import("../project/Project.jsx"))),
           roles: ["superAdmin"],
           label: "项目管理(Q)",
         },
         {
-          key: "/layouts/platform/wechat/project",
+          key: "/layouts/platform/wechat/project?type=w",
           element: lazyLoad(lazy(() => import("../project/ProjectWx.jsx"))),
           roles: ["superAdmin"],
           label: "项目管理(W)",

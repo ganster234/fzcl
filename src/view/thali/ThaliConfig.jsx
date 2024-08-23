@@ -52,6 +52,7 @@ export default function ThaliConfig() {
   const [showAddGroup, setShowAddGroup] = useState(false);
   const [groupList, setGroupList] = useState([]); //分组
   const [groupId, setGroupId] = useState(null); //分组id
+  const [condition, setcondition] = useState(false); //类型显示与隐藏
   // const [insureList] = useState(["1", "2", "3"]); //保险份
   // const [insureActive, setInsureActive] = useState("1"); //保险倍数
   const getDetail = async () => {
@@ -263,25 +264,22 @@ export default function ThaliConfig() {
       console.log(available);
       return message.error("请输入购买数量");
     }
-    // if (num && available < num) {
-    //   return message.error("库存数不足");
-    // }
     if (
       scanOpenShow ||
-      pack_id[active]?.package_id === 10007 ||
-      pack_id[active]?.package_id === 10012
+      pack_id[active]?.package_id === "10007" ||
+      pack_id[active]?.package_id === "10012"
     ) {
-      navigate("/layouts/open", {
+      navigate("/layouts/thali/open", {
         state: { app_id: app_id, num: num },
       });
       return;
     }
     if (
       pack_id[active]?.name &&
-      pack_id[active]?.package_id === 10006 &&
+      pack_id[active]?.package_id === "10006" &&
       app_id
     ) {
-      navigate("/layouts/ck", {
+      navigate("/layouts/thali/ck", {
         state: { app_id: app_id, num: num },
       });
       return;
@@ -348,6 +346,11 @@ export default function ThaliConfig() {
   //切换类型选中项
   const changeActive = (index) => {
     setActive(index);
+    if (thaliData?.pack_id[index]?.package_id === "10006") {
+      setcondition(false);
+    } else {
+      setcondition(true);
+    }
   };
   return (
     <Spin spinning={thaliConfigLoading}>
@@ -416,9 +419,6 @@ export default function ThaliConfig() {
                         提示：
                       </span>
                       本站号码均为新号,如需老号请与客服联系。
-                      <span style={{ fontWeight: "bold" }}>
-                        （进入游戏后不保障该账号已实名，未实名账号不售后）
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -482,22 +482,20 @@ export default function ThaliConfig() {
                   </div>
                 </>
               )} */}
-              {thaliData?.pack_id &&
-                thaliData?.pack_id[active] &&
-                thaliData?.pack_id[active]?.package_id !== 10006 && (
-                  <div className="project-details-item project-details-item-center">
-                    <div className="project-details-item-title">类型：</div>
-                    <div className="project-details-item-thali-info">
-                      <Radio.Group
-                        onChange={(even) => setScanOpenShow(even.target.value)}
-                        value={scanOpenShow}
-                      >
-                        <Radio value={true}>open</Radio>
-                        <Radio value={false}>扫码</Radio>
-                      </Radio.Group>
-                    </div>
+              {condition && (
+                <div className="project-details-item project-details-item-center">
+                  <div className="project-details-item-title">类型：</div>
+                  <div className="project-details-item-thali-info">
+                    <Radio.Group
+                      onChange={(even) => setScanOpenShow(even.target.value)}
+                      value={scanOpenShow}
+                    >
+                      <Radio value={true}>open</Radio>
+                      <Radio value={false}>扫码</Radio>
+                    </Radio.Group>
                   </div>
-                )}
+                </div>
+              )}
               <div className="project-details-item project-details-item-center">
                 <div className="project-details-item-title">库存：</div>
                 <div className="project-details-item-thali-info">

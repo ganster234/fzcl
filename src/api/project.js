@@ -20,6 +20,11 @@ export const getAddProject = (data) => {
   return postData("project/add", data);
 };
 
+//修改项目
+export const setProject = (data) => {
+  return postData("project/update/status", data);
+};
+
 // 获取项目和套餐
 export const getProjectPackList = (data) => {
   return getData("project/price/pack", data);
@@ -40,4 +45,9 @@ export const updateProjectAlias = (data) => {
 //获取项目别名
 export const getProjectAlias = (data) => {
   return getData("project/get/sanname", data);
+};
+
+//上报长沙
+export const reporteddata = (data) => {
+  return getData("set/escalation/wx", data);
 };

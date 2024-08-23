@@ -20,7 +20,7 @@ import {
   setIncome,
   setPasswod,
 } from "../../api/user";
-import { getThaliList } from "../../api/thali";
+import { getThaliList, permissions } from "../../api/thali";
 import { userListColumns } from "../../utils/columns";
 import "./UserList.less";
 
@@ -229,6 +229,21 @@ export default function UserList() {
       message.error(result?.msg);
     }
   };
+
+  const setas = (val) => {
+    //是否设为管理
+    permissions({
+      id: val.id,
+      status: val.permissions === 0 ? 0 : val.permissions === 2 ? 1 : "",
+    }).then((res) => {
+      if (res.code === 200) {
+        getList();
+        message.success("操作成功");
+      } else {
+        message.warning(res.message);
+      }
+    });
+  };
   return (
     <Spin tip="提交中..." spinning={interdictLoading} size="large">
       <ContentLayouts
@@ -394,6 +409,18 @@ export default function UserList() {
                                   重置密码
                                 </Button>
                               </Popconfirm>
+                              <Button
+                                style={{ marginLeft: "5px" }}
+                                size="small"
+                                type="primary"
+                                onClick={() => setas(record)}
+                              >
+                                {record.permissions === 0
+                                  ? "取消管理"
+                                  : record.permissions === 2
+                                  ? "设为管理"
+                                  : "-"}
+                              </Button>
                             </>
                           )}
                         {role && role === "role" && <>--</>}

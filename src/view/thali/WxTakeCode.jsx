@@ -109,7 +109,7 @@ export default function WxTakeCode() {
   // 更新Code
   const setChangeCode = async (orderId) => {
     setCodeLoading(true);
-    let { code, msg } = await setUpdateCode({ orderId });
+    let { code, msg } = await setUpdateCode({ order_id: orderId.join(",") });
     if (code === 200) {
       message.success("申请更新成功");
       setSelectedRowKeys([]);
@@ -130,14 +130,14 @@ export default function WxTakeCode() {
             >
               批量导出
             </Button>
-            <Button
+            {/* <Button
               type="primary"
               style={{ marginLeft: "15px" }}
               disabled={!hasSelected}
               onClick={()=>setChangeCode(selectedRowKeys)}
             >
               批量更新
-            </Button>
+            </Button> */}
           </div>
         }
         content={

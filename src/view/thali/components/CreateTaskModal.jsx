@@ -55,9 +55,7 @@ export default function CreateTaskModal({ taskWxCancel }) {
       let index =
         packList &&
         packList.findIndex((item) => item.wx_app_id === modalState.project);
-      if (index === -1) {
-        return  message.error("该项目没有此套餐，请联系客服开通");
-      }
+
       setTaskLoading(true);
       let result = await getPackDetail({
         price_id: packList[index]?.id,
@@ -181,9 +179,6 @@ export default function CreateTaskModal({ taskWxCancel }) {
   return (
     <>
       <Spin spinning={taskLoading}>
-        <div className="create-task-title">
-          提示：进入游戏后不保障该账号已实名，未实名账号不售后
-        </div>
         <div className="create-task-item">
           <span>项目：</span>
           <Select

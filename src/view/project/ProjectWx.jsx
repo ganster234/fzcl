@@ -16,6 +16,7 @@ import {
   addProjectAlias,
   updateProjectAlias,
   getProjectAlias,
+  reporteddata,
 } from "../../api/project";
 import { projectColumns } from "../../utils/columns";
 
@@ -202,6 +203,7 @@ export default function Project() {
   const [form] = Form.useForm();
   const [currentItem, setCurrentItem] = useState([]); // 设置当前选中的项
   const [aliasTableData, setAliasTableData] = useState([]); // 别名表格数据
+  const [app_name, setapp_name] = useState(""); //输入查询
 
   useEffect(() => {
     // 根据 modalType 进行数据加载
@@ -275,17 +277,18 @@ export default function Project() {
   }, [JSON.stringify(tableParams)]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 获取list
-  const getList = async () => {
+  const getList = async (val) => {
     setLoading(true);
     const { pageSize, current } = tableParams.pagination;
-    let result = await getProjectList({
-      page: current,
-      limit: pageSize,
+    const result = await getProjectList({
+      app_name: val === "重置" ? "" : app_name,
+      page: val ? 1 : current,
+      limit: val ? 10 : pageSize,
       is_qq: 2,
     });
     const { code, data, msg } = result || {};
     if (code === 200) {
-      let list = data?.data;
+      const list = data?.data;
       list.forEach((element, i) => {
         element.data.forEach((item, index) => {
           element["key"] = i;
@@ -369,11 +372,36 @@ export default function Project() {
     }
     setPopupLoading(false);
   };
+  const inquire = (val) => {
+    if (val === "重置") {
+      setapp_name("");
+    }
+    getList(val);
+  };
   return (
     <>
       <div className="project-content">
         <div className="project-content-main">
-          <div className="project-content-main-title">项目管理</div>
+          <div className="project-content-main-title">
+            <p>项目名称查询:</p>
+            <div style={{ display: "flex" }}>
+              <Input
+                value={app_name}
+                onChange={(val) => setapp_name(val.target.value)}
+                style={{ width: "200px" }}
+                placeholder="请输入项目名称"
+                allowClear
+              ></Input>
+              <Button
+                onClick={() => inquire("查询")}
+                style={{ margin: "0 10px" }}
+                type="primary"
+              >
+                查询
+              </Button>
+              <Button onClick={() => inquire("重置")}>重置</Button>
+            </div>
+          </div>
           <Table
             rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
             scroll={{
@@ -417,6 +445,20 @@ export default function Project() {
                       justifyContent: "space-between",
                     }}
                   >
+                    <Button
+                      onClick={() => {
+                        reporteddata({
+                          wx_app_id: record.wx_app_id,
+                          app_name: record.app_name,
+                        }).then((res) => {
+                          message.info(res.msg);
+                        });
+                      }}
+                      style={{ marginTop: "5px" }}
+                      size="small"
+                    >
+                      上报
+                    </Button>
                     <Button
                       type="text"
                       className="project-edit"

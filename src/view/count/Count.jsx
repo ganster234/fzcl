@@ -50,8 +50,8 @@ export default function Count() {
     const { code, data, msg } = result || {};
     message.destroy();
     if (code === 200) {
-      if (state.active === 2 && data.length > 0) {
-        setDataList([...data.list]);
+      if (state.active === 2) {
+        setDataList([...data?.list]);
       } else {
         setDataList([...data]);
       }

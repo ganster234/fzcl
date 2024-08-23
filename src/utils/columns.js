@@ -105,30 +105,8 @@ export const userListColumns = [
     dataIndex: "permissions",
     render: (record) => (
       <div>
-        {record === 0 && "超级管理员"}
-        {record === 1 && "销售"}
+        {record === 0 && "管理员"}
         {record === 2 && "普通用户"}
-      </div>
-    ),
-  },
-  {
-    title: "自动代理",
-    dataIndex: "is_income",
-    render: (record) => (
-      <div>
-        {record === 0 && "普通用户"}
-        {record === 1 && "代理"}
-      </div>
-    ),
-  },
-
-  {
-    title: "手动代理",
-    dataIndex: "income_use",
-    render: (record) => (
-      <div>
-        {record === 0 && "普通用户"}
-        {record === 1 && "代理"}
       </div>
     ),
   },

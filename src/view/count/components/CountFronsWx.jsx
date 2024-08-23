@@ -24,7 +24,7 @@ export default function CountFronsWx({ loading, dataList, total }) {
           今日注册总数：<span>{total?.total_num || "0"}</span>
         </span>
         <span className="count-frons-top-item">
-          今日实名数：<span>{total?.authentication_num || "0"}</span>
+          今日SM数：<span>{total?.authentication_num || "0"}</span>
         </span>
         <span className="count-frons-top-item">
           今日售卖数：<span>{total?.sell_num || "0"}</span>

@@ -59,14 +59,7 @@ export default function CreateOpenModal({ cancelModal, comModal }) {
       const { code, data, msg } = result || {};
       message.destroy();
       if (code === 200) {
-        // let some =
-        //   data?.pack_id &&
-        //   data?.pack_id.some((item) => {
-        //     return item.package_id === 10007 || item.package_id === 10012;
-        //   });
-        // if (!some) {
-        //   message.error("该项目没有此套餐，请联系客服开通");
-        // }
+
         setOpenLoading(false);
         setpackIdList([...data?.pack_id]);
         setProjectDetail({ ...data });
@@ -134,7 +127,7 @@ export default function CreateOpenModal({ cancelModal, comModal }) {
 
   const comBtn = async () => {
     const { packageId, num } = modalState;
-    message.destroy()
+    message.destroy();
     if (!num) {
       return message.error("最低数量为1");
     }
@@ -184,20 +177,6 @@ export default function CreateOpenModal({ cancelModal, comModal }) {
 
   return (
     <Spin spinning={openLoading}>
-      <div style={{ color: "red", padding: "12px 0" }}>
-        提示：
-        <span
-          style={{
-            fontWeight: "bold",
-            textAlign: "center",
-
-            fontSize: "12px",
-          }}
-        >
-          进入游戏后不保障该账号已实名，未实名账号不售后
-        </span>
-      </div>
-
       <div className="create-open-modal-item">
         <span>项目：</span>
         <Select

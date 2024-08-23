@@ -278,9 +278,10 @@ export default function AppProvider({ children }) {
         },
         {
           key: "/layouts/platform/wechat/project",
-          element: lazyLoad(
-            lazy(() => import("../view/project/ProjectWx.jsx"))
-          ),
+          // element: lazyLoad(
+          //   lazy(() => import("../view/project/ProjectWx.jsx"))
+          // ),
+          element: lazyLoad(lazy(() => import("../view/project/Project.jsx"))),
           roles: ["superAdmin"],
           label: "项目管理(W)",
         },

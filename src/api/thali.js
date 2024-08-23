@@ -1,5 +1,10 @@
 import { getData, postData } from "./index";
 
+//设置管理员
+export const permissions = (data) => {
+  return getData("set/permissions", data);
+};
+
 //获取全部套餐
 export const getThaliList = (data) => {
   return getData("appPrice/getAll", data);
@@ -27,5 +32,5 @@ export const getOpenCode = (data) => {
 
 // 微信更新code
 export const setUpdateCode = (data) => {
-  return postData("update/open/code", data);
+  return getData("updateOrderCodeWx", data);
 };
