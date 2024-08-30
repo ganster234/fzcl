@@ -51,9 +51,10 @@ const EditableCell = ({
   return <td {...restProps}>{editable ? inputNode : children}</td>;
 };
 
-const EditableTable = forwardRef(({ data, fetchAliases }, ref) => {
+const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
   const [editingKey, setEditingKey] = useState("");
   const [editValue, setEditValue] = useState({});
+  const location = useLocation();
   useImperativeHandle(ref, () => ({
     cancel: () => {
       setEditingKey("");
@@ -75,11 +76,15 @@ const EditableTable = forwardRef(({ data, fetchAliases }, ref) => {
   };
 
   const save = async () => {
-    console.log(editValue, "editValue");
+    console.log(editValue, currentItem, "editValue");
     const { app_id, id, name, real_id } = editValue;
+
     try {
       await updateProjectAlias({
-        app_id,
+        app_id:
+          location.pathname !== "/layouts/platform/project"
+            ? currentItem.wx_app_id
+            : currentItem.app_id,
         id: id.toString(),
         name,
         real_id,
@@ -212,11 +217,18 @@ export default function Project() {
     // 根据 modalType 进行数据加载
     if (modalType === "view" && isModalVisible) {
       fetchAliases();
+      setTableParams({
+        pagination: {
+          current: 1, //当前页码
+          pageSize: 10, // 每页数据条数
+        },
+      });
     }
   }, [modalType, isModalVisible]);
 
   useEffect(() => {
     console.log("Route changed to:", location.pathname);
+    // window.location.reload();
     // You can add any logic here that should run on route change
   }, [location]);
 
@@ -229,7 +241,12 @@ export default function Project() {
   };
   const fetchAliases = async () => {
     try {
-      const response = await getProjectAlias({ app_id: currentItem.app_id }); // 查询别名接口
+      const response = await getProjectAlias({
+        app_id:
+          location.pathname !== "/layouts/platform/project"
+            ? currentItem.wx_app_id
+            : currentItem.app_id,
+      }); // 查询别名接口
       setAliasTableData(response.data);
     } catch (error) {
       message.error("加载别名失败");
@@ -240,7 +257,10 @@ export default function Project() {
     const { alias, real_id } = values;
     try {
       await addProjectAlias({
-        app_id: currentItem.app_id,
+        app_id:
+          location.pathname !== "/layouts/platform/project"
+            ? currentItem.wx_app_id
+            : currentItem.app_id,
         real_id,
         name: alias,
       }); // 新增项目别名
@@ -296,7 +316,7 @@ export default function Project() {
     });
     const { code, data, msg } = result || {};
     if (code === 200) {
-      let list = data?.data;
+      let list = data?.data ;
       list.forEach((element, i) => {
         element.data.forEach((item, index) => {
           element["key"] = i;
@@ -439,7 +459,10 @@ export default function Project() {
             columns={[
               {
                 title: "APP_id",
-                dataIndex: "app_id",
+                dataIndex:
+                  location.pathname !== "/layouts/platform/project"
+                    ? "wx_app_id"
+                    : "app_id",
               },
               ...projectColumns,
               {
@@ -606,6 +629,7 @@ export default function Project() {
             <EditableTable
               ref={editableTableRef}
               data={aliasTableData}
+              currentItem={currentItem}
               fetchAliases={fetchAliases}
             />
           )}

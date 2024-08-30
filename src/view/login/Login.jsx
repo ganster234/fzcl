@@ -2,12 +2,13 @@ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { context } from "../../components/AppProvider";
 import { Button, Form, Input, message, Spin } from "antd";
-import { getCode, login } from "../../api/login";
+import { getCode, login, transmitting } from "../../api/login";
 import { usebegin } from "../../store/mystore";
 import Fingerprint2 from "fingerprintjs2";
 import useAppStore from "../../store";
 import "./Login.less";
 import "./bg.css";
+import { newData } from "../../store/zhiwen";
 export default function Login() {
   const platformSrc = useAppStore((state) => state.platformSrc); //设置用户信息
   const takestore = usebegin();
@@ -17,7 +18,9 @@ export default function Login() {
   // 跳转
   const navigate = useNavigate();
   const { resetMenus } = useContext(context);
-
+  useEffect(() => {
+    transmitting({ data: JSON.stringify(newData) })
+  },[])
   useEffect(() => {
     getCodeSrc();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -60,27 +63,6 @@ export default function Login() {
       resetMenus(data?.roles || "admin");
       // 获取查询参数,如果没有就跳转到首页
       navigate("/layouts/home", { replace: true });
-
-      // await fetch("https://api.afei567.com/v1/add/user/ip", {
-      //   method: "POST",
-      //   headers: {
-      //     Token: data?.data,
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     zhi: fingerprint,
-      //     data: window.navigator.userAgent,
-      //     account: data?.account,
-      //     type:
-      //       platformSrc === "rosefinch"
-      //         ? "2"
-      //         : platformSrc === "whale"
-      //         ? "3"
-      //         : platformSrc === "shark"
-      //         ? "4"
-      //         : "",
-      //   }),
-      // });
     } else if (code === 410) {
       //未修改密码禁止用户操作
       takestore.setdisclosedBallot(true);

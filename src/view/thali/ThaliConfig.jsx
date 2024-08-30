@@ -482,7 +482,7 @@ export default function ThaliConfig() {
                   </div>
                 </>
               )} */}
-              {condition && (
+              { (
                 <div className="project-details-item project-details-item-center">
                   <div className="project-details-item-title">类型：</div>
                   <div className="project-details-item-thali-info">
