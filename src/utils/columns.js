@@ -287,6 +287,24 @@ export const apply_show = [
   },
 ];
 
+export const iPtable = [
+  {
+    title: "账号",
+    dataIndex: "account",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "备注",
+    dataIndex: "remark",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "创建时间",
+    dataIndex: "create_time",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+];
+
 export const payColumns = [
   {
     title: "支付订单号",

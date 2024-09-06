@@ -305,6 +305,14 @@ export default function AppProvider({ children }) {
           roles: ["admin", "superAdmin"],
           label: "系统设置",
         },
+        {
+          key: "/layouts/platform/ip",
+          element: lazyLoad(
+            lazy(() => import("../view/platform/IP.jsx"))
+          ),
+          roles: [ "superAdmin"],
+          label: "账号白名单",
+        },
       ],
     },
     {

@@ -291,7 +291,7 @@ export default function ThaliConfig() {
       groupid: groupId ? groupId + "" : 0, //分组id
       count: num, //下单数量
       is_insure: selectShow ? "1" : "0", //0不投保 1投保
-      is_fifteen: weeklyCardShow, //是否15级
+      is_fifteen: weeklyCardShow ? weeklyCardShow : '-1', //是否15级
     };
     if (
       thaliInfo.id === 317 &&
