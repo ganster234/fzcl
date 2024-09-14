@@ -5,16 +5,19 @@ import { getUserOpen } from "../../../api/open";
 import { exportRaw } from "../../../utils/utils";
 
 export default function ExportModal({ setExport }) {
+  const userInfo = JSON.parse(sessionStorage.getItem("globalState"))?.state
+    .userInfo;
+  console.log(userInfo, "45545454");
   const [exportLoading, setExportLoading] = useState(false);
   const [state, setState] = useState({
     openid_task_id: "",
-    type: 1,
+    type: 3,
   });
 
   const cancelExport = () => {
     setState({
       openid_task_id: "",
-      type: 1,
+      type: 3,
     });
     setExport(false);
   };
@@ -33,7 +36,8 @@ export default function ExportModal({ setExport }) {
       exportRaw(state.openid_task_id, data, true);
       setState({
         openid_task_id: "",
-        type: 1,
+
+        type: 3,
       });
       setExport(false);
     } else {
@@ -53,7 +57,7 @@ export default function ExportModal({ setExport }) {
           placeholder="请输入任务编号"
         ></Input>
       </div>
-      <div className="export-modal-item">
+      {/* <div className="export-modal-item">
         <Radio.Group
           onChange={(even) => setState({ ...state, type: even.target.value })}
           value={state.type}
@@ -61,7 +65,15 @@ export default function ExportModal({ setExport }) {
           <Radio value={1}>登录器 </Radio>
           <Radio value={3}>open+token格式</Radio>
         </Radio.Group>
-      </div>
+      </div> */}
+      {userInfo.upload_op ? (
+        <p style={{ color: "red" }}>
+          提示：当前操作即将扣除{userInfo.upload_op}元，是否继续？
+        </p>
+      ) : (
+        <></>
+      )}
+
       <div className="export-modal-item export-modal-item-btn">
         <Button onClick={() => cancelExport()}>取消</Button>
         <Button

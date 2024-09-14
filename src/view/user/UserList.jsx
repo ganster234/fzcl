@@ -43,6 +43,9 @@ export default function UserList() {
   const [userProjectLoading, setUserProjectLoading] = useState(false);
   const [userProjectShow, setUserProjectShow] = useState(false);
   const [balance, setBalance] = useState("");
+  const [add_use, setadd_use] = useState(""); //充值额
+  const [pay_use, setpay_use] = useState(""); //消费额
+
   const [moneyItem, setMoneyItem] = useState({});
   const [interdictLoading, setInterdictLoading] = useState(false);
   const [dataList, setDataList] = useState([]);
@@ -112,22 +115,29 @@ export default function UserList() {
   };
 
   const changeMoney = (item) => {
+    setBalance(item.balance);
+    setpay_use(item.pay_use);
+    setadd_use(item.add_use);
     setMoneyItem({ ...item });
     setIsModalOpen(true);
   };
   const moneyHandleOk = async () => {
-    if (!moneyItem.account || !balance) {
+    if (!moneyItem.account || !balance || !add_use || !pay_use) {
       message.destroy();
-      return message.error("请输入修改金额");
+      return message.error("请输入完整信息");
     }
     setConfirmLoading(true);
-    let result = await addBalance({ username: moneyItem.account, balance });
+    let result = await addBalance({
+      username: moneyItem.account,
+      balance,
+      add_use,
+      pay_use,
+    });
     const { code, msg } = result || {};
     message.destroy();
     if (code === 200) {
       message.success(msg);
       setIsModalOpen(false);
-      setBalance(" ");
       getList();
     } else {
       message.success(msg);
@@ -446,12 +456,35 @@ export default function UserList() {
           setIsModalOpen(false);
         }}
       >
-        <Input
-          value={balance}
-          onChange={(even) => setBalance(even.target.value)}
-          style={{ margin: "20px 0" }}
-          placeholder="请输入修改的余额"
-        />
+        <ul className="myyue">
+          <li>
+            <p style={{ width: "80px" }}>余额：</p>
+            <Input
+              value={balance}
+              onChange={(even) => setBalance(even.target.value)}
+              style={{ margin: "5px 0" }}
+              placeholder="请输入修改的余额"
+            />
+          </li>
+          <li>
+            <p style={{ width: "80px" }}>充值额：</p>
+            <Input
+              value={add_use}
+              onChange={(even) => setadd_use(even.target.value)}
+              style={{ margin: "5px 0" }}
+              placeholder="请输入充值额"
+            />
+          </li>
+          <li>
+            <p style={{ width: "80px" }}>消费额：</p>
+            <Input
+              value={pay_use}
+              onChange={(even) => setpay_use(even.target.value)}
+              style={{ margin: "5px 0" }}
+              placeholder="请输入消费额"
+            />
+          </li>
+        </ul>
       </Modal>
       <Modal
         title="项目管理"

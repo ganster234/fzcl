@@ -24,14 +24,9 @@ if (process.env.NODE_ENV !== "development") {
 // 调用isMobile函数，根据返回值执行不同的操作
 if (isMobile()) {
   console.log("手机访问");
-  // 在这里执行手机端的操作
-  // 喜猫:https://ph.jon562.com
-  // 蓝鲸：https://ph.wm611.com
-  // 大白鲨：https://ph.dm722.com
-  window.location.href = "https://ph.xy0312.com";
+  window.location.href = "https://ph.seolkf830.com/";
 } else {
   console.log("屏幕访问");
-  // 在这里执行电脑端的操作
 }
 // setInterval(() => {
 //   alert("当前站已废弃，请访主站点：https://www.ph0629.com/")

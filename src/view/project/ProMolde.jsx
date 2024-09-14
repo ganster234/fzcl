@@ -28,6 +28,7 @@ const Udetails = forwardRef((props, ref) => {
   const [is_app, setis_app] = useState("0");
   const [is_web, setis_web] = useState("0");
   const [is_game, setis_game] = useState("0");
+  const [is_scan, setis_scan] = useState("0"); //是否扫码
   const [id, setid] = useState("0");
   const [addState, setaddState] = useState(false); //新增项目弹窗
 
@@ -41,19 +42,20 @@ const Udetails = forwardRef((props, ref) => {
     console.log("暴露函数2");
   };
   const childFunction = (val) => {
-    console.log("被调用了", val);
     iform.setFieldsValue({
       app_name: val.app_name,
       app_id: val.app_id,
       logo_path: val.logo_path,
       wx_app_id: val.wx_app_id,
       pack_name: val.pack_name,
+      is_scan: val.is_scan,
     });
     settype(Number(val.type));
     setis_app(val.is_app + "");
     setis_web(val.is_web + "");
     setis_game(val.is_game + "");
     setid(val.id + "");
+    setis_scan(val.is_scan + "");
   };
   const newlyincreased = async () => {
     //模态框确定函数
@@ -65,6 +67,7 @@ const Udetails = forwardRef((props, ref) => {
         is_app,
         is_web,
         is_game,
+        is_scan,
       };
       if (addState === "新增Q/W项目") {
         const { code, msg } = await getAddProject(apiData);
@@ -157,6 +160,15 @@ const Udetails = forwardRef((props, ref) => {
             <Radio.Group
               onChange={(val) => setis_app(val.target.value)}
               value={is_app}
+            >
+              <Radio value={"0"}>否</Radio>
+              <Radio value={"1"}>是</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item label="是否扫码">
+            <Radio.Group
+              onChange={(val) => setis_scan(val.target.value)}
+              value={is_scan}
             >
               <Radio value={"0"}>否</Radio>
               <Radio value={"1"}>是</Radio>

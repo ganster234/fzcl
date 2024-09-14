@@ -35,16 +35,17 @@ export default function Register() {
   };
   const onFinish = async (yesFinish) => {
     const { comPwd, password, username } = yesFinish;
-    const regex = /^(?=.*[a-z])(?=.*[A-Z]).{10,}$/;
+    // const regex = /^(?=.*[a-z])(?=.*[A-Z]).{10,}$/;
     if (username.length < 6) {
       return message.error("注册账号至少需得6位");
     }
     if (password !== comPwd) {
       return message.error("两次密码不一致");
     }
-    if (!regex.test(password)) {
-      return message.error("密码至少10位，且必须包含大小写字母");
-    } else {
+    // if (!regex.test(password)) {
+    //   return message.error("密码至少10位，且必须包含大小写字母");
+    // }
+    else {
       setLoading(true);
       let result = await register({
         ...yesFinish,
@@ -60,6 +61,7 @@ export default function Register() {
           type: "error",
           content: msg,
         });
+        getCodeSrc();
         setLoading(false);
       }
     }
@@ -157,7 +159,6 @@ export default function Register() {
               <Input.Password placeholder="请输入登录密码!" />
             </Form.Item>
             <Form.Item
-            
               name="comPwd"
               rules={[
                 {
@@ -166,13 +167,21 @@ export default function Register() {
                 },
               ]}
             >
-              <Input.Password style={{ height:"50px",display:"flex",alignItems:"center",overflow:"hidden" }} placeholder="确认密码!" />
+              <Input.Password
+                style={{
+                  height: "50px",
+                  display: "flex",
+                  alignItems: "center",
+                  overflow: "hidden",
+                }}
+                placeholder="确认密码!"
+              />
             </Form.Item>
             <Form.Item
               name="invitation_code"
               rules={[
                 {
-                  required: false,
+                  required: true,
                   message: "请输入邀请码!",
                 },
               ]}

@@ -6,7 +6,7 @@ import useAppStore from "../../../store";
 
 import { getProjectPackList } from "../../../api/project";
 import { setAddOpen } from "../../../api/open";
-import { getPackDetail } from "../../../api/thali";
+import { getPackDetail, getkucun } from "../../../api/thali";
 import { areaList } from "../../../utils/area";
 
 import "./CreateTaskModal.less";
@@ -26,6 +26,7 @@ export default function CreateTaskModal({ taskWxCancel }) {
     num: null, //数量
     areaCode: null, //地区
   });
+  const [availableNum, setavailableNum] = useState(0);
 
   useEffect(() => {
     const getPackList = async () => {
@@ -66,12 +67,12 @@ export default function CreateTaskModal({ taskWxCancel }) {
       const { code, data, msg } = result || {};
       message.destroy();
       if (code === 200) {
-        let some =
-          data?.pack_id &&
-          data?.pack_id.some((item) => item.package_id === 10006);
-        if (!some) {
-          message.error("该项目没有此套餐，请联系客服开通");
-        }
+        // let some =
+        //   data?.pack_id &&
+        //   data?.pack_id.some((item) => item.package_id === 10006);
+        // if (!some) {
+        //   message.error("该项目没有此套餐，请联系客服开通1213");
+        // }
         setProjectDetail({ ...data });
       } else {
         message.error(msg);
@@ -88,15 +89,20 @@ export default function CreateTaskModal({ taskWxCancel }) {
     return (option?.children ?? "").toLowerCase().includes(input.toLowerCase());
   };
 
-  const inventory = useMemo(() => {
-    let availableNum = 0;
-    if (projectDetail.pack_id) {
-      let index = projectDetail?.pack_id.findIndex(
-        (item) => item.package_id === 10006
-      );
-      availableNum = projectDetail?.pack_id[index]?.availableNum;
+  useMemo(() => {
+    if (projectDetail.id) {
+      getkucun({
+        is_op: 1,
+        is_qq: 2,
+        priceId: projectDetail.id,
+        package_id: "10000",
+        is_shiming: "-1",
+        score: "-1",
+        is_fifteen: "-1",
+      }).then((res) => {
+        setavailableNum(res.data);
+      });
     }
-    return availableNum;
   }, [projectDetail]);
 
   const totalPrice = useMemo(() => {
@@ -241,7 +247,7 @@ export default function CreateTaskModal({ taskWxCancel }) {
 
         <div className="create-task-item">
           <span>库存：</span>
-          <span className="create-task-item-price">{inventory || 0}</span>
+          <span className="create-task-item-price">{availableNum || 0}</span>
         </div>
 
         <div className="create-task-item">

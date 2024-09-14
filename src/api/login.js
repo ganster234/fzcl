@@ -12,5 +12,5 @@ export const register = (data) => { return postData('register', data) }
 //获取用户信息 
 export const getUser = (data) => { return getData('userInfo', data) }
 
-//发送用户设备
+//发送用户设备信息
 export const transmitting = (data) => { return postData('add/user/ip', data) }

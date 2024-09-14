@@ -4,7 +4,7 @@ import useAppStore from "../../../store";
 import { useLocation } from "react-router";
 
 import { getProjectPackList } from "../../../api/project";
-import { getPackDetail } from "../../../api/thali";
+import { getPackDetail, getkucun } from "../../../api/thali";
 import { setAddOpen } from "../../../api/open";
 import { areaList } from "../../../utils/area";
 
@@ -23,6 +23,7 @@ export default function CreateOpenModal({ cancelModal, comModal }) {
   const [projectDetail, setProjectDetail] = useState({});
   //下拉框选项
   const [packList, setPackList] = useState([]);
+  const [availableNum, setavailableNum] = useState(0);
 
   useEffect(() => {
     async function getSelectList() {
@@ -58,7 +59,6 @@ export default function CreateOpenModal({ cancelModal, comModal }) {
       const { code, data, msg } = result || {};
       message.destroy();
       if (code === 200) {
-
         setProjectDetail({ ...data });
       } else {
         message.error(msg);
@@ -81,15 +81,20 @@ export default function CreateOpenModal({ cancelModal, comModal }) {
     return price;
   }, [projectDetail]);
 
-  const inventory = useMemo(() => {
-    let availableNum = 0;
-    if (projectDetail.pack_id) {
-      let index = projectDetail?.pack_id.findIndex(
-        (item) => item.name === "CK"
-      );
-      availableNum = projectDetail?.pack_id[index]?.availableNum;
+  useMemo(() => {
+    if (projectDetail.id) {
+      getkucun({
+        is_op: 1,
+        is_qq: 1,
+        priceId: projectDetail.id,
+        package_id: "10000",
+        is_shiming: "-1",
+        score: "-1",
+        is_fifteen: "-1",
+      }).then((res) => {
+        setavailableNum(res.data);
+      });
     }
-    return availableNum;
   }, [projectDetail]);
 
   const totalPrice = useMemo(() => {
@@ -234,7 +239,9 @@ export default function CreateOpenModal({ cancelModal, comModal }) {
 
       <div className="create-open-modal-item">
         <span>库存：</span>
-        <span className="create-open-modal-item-price">{inventory || 0}</span>
+        <span className="create-open-modal-item-price">
+          {availableNum || 0}
+        </span>
       </div>
       <div className="create-open-modal-item">
         <span>单价：</span>

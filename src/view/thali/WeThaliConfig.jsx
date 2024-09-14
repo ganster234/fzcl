@@ -40,7 +40,7 @@ export default function ThaliConfig() {
   const [thaliConfigLoading, setThaliConfigLoading] = useState(false);
   const [selectShow] = useState(false); //保险选中
   const [weeklyCardShow, setWeeklyCardShow] = useState(false); //选中周卡的15级号
-  const [scanOpenShow, setScanOpenShow] = useState(false); //选中open还是扫码账号
+  const [scanOpenShow, setScanOpenShow] = useState(true); //选中open还是扫码账号
   // const [exclusive, setExclusive] = useState(true); //是否独享
   const [active, setActive] = useState(0);
   const [inventory, setinventory] = useState(0); //库存
@@ -489,17 +489,22 @@ export default function ThaliConfig() {
                   </div>
                 </>
               )} */}
-              { (
+              {
                 <div className="project-details-item project-details-item-center">
                   <div className="project-details-item-title">类型：</div>
                   <div className="project-details-item-thali-info">
                     <Radio.Group
                       onChange={(even) => {
+                        console.log(thaliData);
                         setScanOpenShow(even.target.value);
                       }}
                       value={scanOpenShow}
                     >
-                      <Radio value={false}>扫码</Radio>
+                      {thaliData.is_scan === 1 ? (
+                        <Radio value={false}>扫码</Radio>
+                      ) : (
+                        <></>
+                      )}
                       <Radio value={true}>小程序</Radio>
                     </Radio.Group>
                     <span style={{ color: "red" }}>
@@ -509,7 +514,7 @@ export default function ThaliConfig() {
                     </span>
                   </div>
                 </div>
-              )}
+              }
               <div className="project-details-item project-details-item-center">
                 <div className="project-details-item-title">库存：</div>
                 <div className="project-details-item-thali-info">

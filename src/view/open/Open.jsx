@@ -264,6 +264,10 @@ export default function Open() {
                 width: 200,
               },
               {
+                title: "创建时间",
+                dataIndex: "create_time",
+              },
+              {
                 title: "任务编号（双击复制）",
                 width: 300,
                 dataIndex: "openid_task_id",

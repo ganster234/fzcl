@@ -1,9 +1,21 @@
+.myyue {
+  list-style: none;
+  li {
+    display: flex;
+    align-items: center;
+    .myp {
+      width: "180px"
+    }
+  }
+}
+
 .user-list-top {
   padding: 24px 32px 16px 32px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
   .user-list-input {
     display: flex;
     align-items: flex-end;
@@ -11,9 +23,11 @@
     font-family: Microsoft YaHei-Regular, Microsoft YaHei;
     font-weight: 400;
     color: #666666;
+
     .user-list-input-item {
       margin-left: 15px;
     }
+
     .user-list-input-item-title {
       margin-bottom: 8px;
     }
@@ -24,24 +38,31 @@
   padding: 32px;
   box-sizing: border-box;
 }
+
 .user-list {
   border: 1px solid #e8e8e8;
   border-radius: 4px;
+
   .ant-table-body {
     overflow: auto !important;
   }
+
   .ant-pagination {
     justify-content: center !important;
   }
+
   .ant-table-cell {
     text-align: center;
   }
-  .ant-table-thead > tr > .ant-table-cell {
+
+  .ant-table-thead>tr>.ant-table-cell {
     text-align: center !important;
   }
+
   .odd {
     background-color: #f0f6ff;
   }
+
   .even {
     background-color: rgba(250, 250, 250, 1);
   }
@@ -50,12 +71,13 @@
 .user-list-modal-list-item {
   display: flex;
   flex-direction: column;
-  margin-bottom:20px;
+  margin-bottom: 20px;
+
   .user-list-modal-list-item-title {
     font-size: 14px;
     font-family: PingFang SC-Regular, PingFang SC;
     font-weight: 400;
     color: #212121;
-    margin-bottom:8px;
+    margin-bottom: 8px;
   }
 }

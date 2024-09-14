@@ -442,7 +442,7 @@ export default function Layouts({ children }) {
               <Spin spinning={rechargeLoading}>
                 <div className="recharge-modal-box">
                   <div className="recharge-modal-wx">
-                    1、充值金额只能用于胖虎消费。USTD转账(USTD转账
+                    1、充值金额只能用于平台消费。USTD转账(USTD转账
                     {userInfo?.rate}折)。
                     <span style={{ color: "red" }}>
                       2.若充值出现任何问题可联系客服处理
@@ -646,13 +646,14 @@ export default function Layouts({ children }) {
                       <div className="recharge-modal-message-item">
                         <span>收U账户：</span>
                         <span className="recharge-message-item-money">
-                          {Topupaccount.length > 20
+                          {/* {Topupaccount.length > 20
                             ? userInfo?.wallet
-                            : "请输入正确交易单号与交易金额"}
+                            : "请输入正确交易单号与交易金额"} */}
+                          {userInfo?.wallet}
                         </span>
                       </div>
                       <div className="recharge-modal-message-item">
-                        <span>打U账户：</span>
+                        <span>交易单号：</span>
                         <Input
                           value={Topupaccount}
                           onChange={(even) => {

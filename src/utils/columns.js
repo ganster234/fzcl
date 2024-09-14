@@ -425,10 +425,7 @@ export const openColumns = [
     title: "已完成数量",
     dataIndex: "requests_num",
   },
-  {
-    title: "已完成数量",
-    dataIndex: "create_time",
-  },
+
 ];
 
 export const trustColumns = [

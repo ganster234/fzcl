@@ -152,12 +152,12 @@ export default function WxCkTop({ state, changeState, ckQueryReset }) {
           >
             ck导出
           </Button>
-          <Button
+          {/* <Button
             style={{ marginLeft: "15px", borderRadius: "26px" }}
             onClick={() => setSaleWxCk(true)}
           >
             售后
-          </Button>
+          </Button> */}
         </div>
       </div>
       <Modal

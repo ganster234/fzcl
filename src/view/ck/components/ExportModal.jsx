@@ -54,7 +54,7 @@ export default function ExportModal({ setExport }) {
           placeholder="请输入任务编号"
         ></Input>
       </div>
-      <div className="export-modal-item">
+      {/* <div className="export-modal-item">
         <Radio.Group
           onChange={(even) => setState({ ...state, type: even.target.value })}
           value={state.type}
@@ -62,7 +62,7 @@ export default function ExportModal({ setExport }) {
           <Radio value={1}>登录器 </Radio>
           <Radio value={3}>open+token格式</Radio>
         </Radio.Group>
-      </div>
+      </div> */}
       <div className="export-modal-item export-modal-item-btn">
         <Button onClick={() => cancelExport()}>取消</Button>
         <Button

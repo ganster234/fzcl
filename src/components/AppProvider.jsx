@@ -352,14 +352,14 @@ export default function AppProvider({ children }) {
       label: "添加项目",
       roles: ["admin", "role", "agent", "superAdmin"],
     },
-    {
-      key: "/layouts/add/applyfor",
-      iconActive: require("../assets/image/sidermenu/add-project.png"),
-      icon: require("../assets/image/sidermenu/add-project-active.png"),
-      element: lazyLoad(lazy(() => import("../view/applyforlist"))),
-      label: "申请项目列表",
-      roles: ["admin", "superAdmin"],
-    },
+    // {
+    //   key: "/layouts/add/applyfor",
+    //   iconActive: require("../assets/image/sidermenu/add-project.png"),
+    //   icon: require("../assets/image/sidermenu/add-project-active.png"),
+    //   element: lazyLoad(lazy(() => import("../view/applyforlist"))),
+    //   label: "申请项目列表",
+    //   roles: ["admin", "superAdmin"],
+    // },
     {
       key: "/layouts/mail",
       iconActive: require("../assets/image/sidermenu/mail.png"),

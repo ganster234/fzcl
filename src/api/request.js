@@ -2,19 +2,19 @@
 import axios from "axios";
 import { message } from "antd";
 // 默认地址
-// const baseURL = "http://192.168.1.59/v1/";
-const baseURL = "http://47.96.77.255:9400/v1/";  
-// const baseURL = "https://api.seolkf830.com/v1/";  
+// const baseURL = "http://192.168.1.239:9011/v1/";
+// const baseURL = "http://47.96.77.255:9400/v1/";
+const baseURL = "https://api.seolkf830.com/v1/";
 
-//post请求头的设置
+//post请求头的设置 test456   
 axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";
-// 跨域
+// 跨域  fadjfkasd
 axios.defaults.crossDomain = true;
 
 // 1.利用axios去创建一个axios实列
 
 const request = axios.create({
-  // 配置对象
+  // 配置对象 test1234567890
   // 基础路径，发送请求的时候路径当中会出现API，不用手写
   baseURL,
   // 请求超时过60秒

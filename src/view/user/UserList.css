@@ -1,0 +1,69 @@
+.myyue {
+  list-style: none;
+}
+.myyue li {
+  display: flex;
+  align-items: center;
+}
+.myyue li .myp {
+  width: "180px";
+}
+.user-list-top {
+  padding: 24px 32px 16px 32px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.user-list-top .user-list-input {
+  display: flex;
+  align-items: flex-end;
+  font-size: 14px;
+  font-family: Microsoft YaHei-Regular, Microsoft YaHei;
+  font-weight: 400;
+  color: #666666;
+}
+.user-list-top .user-list-input .user-list-input-item {
+  margin-left: 15px;
+}
+.user-list-top .user-list-input .user-list-input-item-title {
+  margin-bottom: 8px;
+}
+.user-content {
+  padding: 32px;
+  box-sizing: border-box;
+}
+.user-list {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+}
+.user-list .ant-table-body {
+  overflow: auto !important;
+}
+.user-list .ant-pagination {
+  justify-content: center !important;
+}
+.user-list .ant-table-cell {
+  text-align: center;
+}
+.user-list .ant-table-thead > tr > .ant-table-cell {
+  text-align: center !important;
+}
+.user-list .odd {
+  background-color: #f0f6ff;
+}
+.user-list .even {
+  background-color: #fafafa;
+}
+.user-list-modal-list-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.user-list-modal-list-item .user-list-modal-list-item-title {
+  font-size: 14px;
+  font-family: PingFang SC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #212121;
+  margin-bottom: 8px;
+}

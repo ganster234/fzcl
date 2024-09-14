@@ -13,6 +13,7 @@ export default function Headers() {
   const changServiceShow = useAppStore((state) => state.setServiceShow);
   const changRechargeShow = useAppStore((state) => state.setRechargeShow);
   const navigate = useNavigate();
+  const url = JSON.parse(sessionStorage.getItem("globalState"));
   const [service, setService] = useState({});
   useEffect(() => {
     getDetail();
@@ -41,13 +42,34 @@ export default function Headers() {
   };
   return (
     <div className="headers">
-      {/* <div className="contact">我的联系方式：11111</div> */}
+      {url?.state?.service?.apk_download && (
+        <div
+          className="contact"
+          onClick={() => {
+            window.open(url?.state?.service?.apk_download);
+          }}
+        >
+          上号器下载
+        </div>
+      )}
+      {url?.state?.service?.pc_download && (
+        <p
+          onClick={() => {
+            window.open(url?.state?.service?.pc_download);
+          }}
+          style={{ marginLeft: "10px", cursor: "pointer", color: "#4978fe" }}
+        >
+          PC上号器下载
+        </p>
+      )}
+
       <div
         style={{
           textAlign: "right",
           fontSize: "16px",
           fontWeight: "900",
           color: "red",
+          marginLeft: "20px",
         }}
       >
         <p>客服：{service["telegram"]}</p>
@@ -84,7 +106,16 @@ export default function Headers() {
       ) : (
         <></>
       )}
-
+      <Tooltip placement="bottom" title="视频教程">
+        <img
+          src={require("../../assets/image/headers/viode.png")}
+          alt=""
+          className="noe2"
+          onClick={() => {
+            window.open(url?.state?.service?.video_addr);
+          }}
+        />
+      </Tooltip>
       <img
         src={require("../../assets/image/headers/customer-service.png")}
         alt=""
@@ -101,13 +132,19 @@ export default function Headers() {
         className="head-message"
         onClick={() => jump("/layouts/mail")}
       />
-      <div className="user-name">你好，用户{userInfo?.account}</div>
-      {userInfo?.invitation_code && (
+
+      <Tooltip
+        placement="bottom"
+        title={`邀请码：${userInfo?.invitation_code || "暂无"}`}
+      >
+        <div className="user-name">你好，用户{userInfo?.account}</div>
+      </Tooltip>
+      {/* {userInfo?.invitation_code && (
         <div className="invitation-code-box">
           <span>邀请码:</span>
           <span className="invitation-code">{userInfo?.invitation_code}</span>
         </div>
-      )}
+      )} */}
       <div className="exit-main" onClick={unSign}>
         <PoweroffOutlined />
         <span className="exit">退出</span>

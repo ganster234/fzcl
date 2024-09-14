@@ -40,7 +40,7 @@ export default function ThaliConfig() {
   const [thaliConfigLoading, setThaliConfigLoading] = useState(false);
   const [selectShow] = useState(false); //保险选中
   const [weeklyCardShow, setWeeklyCardShow] = useState(-1); //选中周卡的15级号
-  const [scanOpenShow, setScanOpenShow] = useState(false); //选中open还是扫码账号
+  const [scanOpenShow, setScanOpenShow] = useState(true); //选中open还是扫码账号
   // const [exclusive, setExclusive] = useState(true); //是否独享
   const [active, setActive] = useState(0);
   const [inventory, setinventory] = useState(0); //库存
@@ -291,7 +291,7 @@ export default function ThaliConfig() {
       groupid: groupId ? groupId + "" : 0, //分组id
       count: num, //下单数量
       is_insure: selectShow ? "1" : "0", //0不投保 1投保
-      is_fifteen: weeklyCardShow ? weeklyCardShow : '-1', //是否15级
+      is_fifteen: weeklyCardShow ? weeklyCardShow : "-1", //是否15级
     };
     if (
       thaliInfo.id === 317 &&
@@ -482,20 +482,27 @@ export default function ThaliConfig() {
                   </div>
                 </>
               )} */}
-              { (
+              {
                 <div className="project-details-item project-details-item-center">
                   <div className="project-details-item-title">类型：</div>
                   <div className="project-details-item-thali-info">
                     <Radio.Group
-                      onChange={(even) => setScanOpenShow(even.target.value)}
+                      onChange={(even) => {
+                        setScanOpenShow(even.target.value);
+                      }}
                       value={scanOpenShow}
                     >
                       <Radio value={true}>open</Radio>
-                      <Radio value={false}>扫码</Radio>
+                      {/* thaliData.is_scan === 1 */}
+                      {true ? (
+                        <Radio value={false}>扫码</Radio>
+                      ) : (
+                        <></>
+                      )}
                     </Radio.Group>
                   </div>
                 </div>
-              )}
+              }
               <div className="project-details-item project-details-item-center">
                 <div className="project-details-item-title">库存：</div>
                 <div className="project-details-item-thali-info">

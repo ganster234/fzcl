@@ -58,14 +58,14 @@ export default function ExportWxCk({closeExport}) {
         ></Input>
       </div>
       <div className="wx-ck-export-item">
-        <Radio.Group
+        {/* <Radio.Group
           onChange={(even) => setState({ ...state, type: even.target.value })}
           value={state.type}
         >
           <Radio value={1}> 登录器 </Radio>
-          {/* <Radio value={2}> 东鹏登录器 </Radio> */}
+          <Radio value={2}> 东鹏登录器 </Radio>
           <Radio value={3}>open+token格式</Radio>
-        </Radio.Group>
+        </Radio.Group> */}
       </div>
       <div className="wx-ck-export-item wx-ck-export-item-btn">
         <Button onClick={() => cancelExport()}>取消</Button>
