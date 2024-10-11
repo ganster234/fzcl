@@ -139,12 +139,14 @@ export default function Headers() {
       >
         <div className="user-name">你好，用户{userInfo?.account}</div>
       </Tooltip>
-      {/* {userInfo?.invitation_code && (
+      {userInfo?.invitation_code && (
         <div className="invitation-code-box">
           <span>邀请码:</span>
-          <span className="invitation-code">{userInfo?.invitation_code}</span>
+          <span className="invitation-code">
+            {userInfo?.invitation_code || "暂无"}
+          </span>
         </div>
-      )} */}
+      )}
       <div className="exit-main" onClick={unSign}>
         <PoweroffOutlined />
         <span className="exit">退出</span>

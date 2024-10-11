@@ -2,7 +2,7 @@
 import axios from "axios";
 import { message } from "antd";
 // 默认地址
-// const baseURL = "http://192.168.1.239:9011/v1/";
+// const baseURL = "http://192.168.1.59:9000/v1/";
 // const baseURL = "http://47.96.77.255:9400/v1/";
 const baseURL = "https://api.seolkf830.com/v1/";
 

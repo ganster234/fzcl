@@ -19,7 +19,7 @@ export default function Equipment() {
   const [mch_wx_key, setmch_wx_key] = useState(""); //商户号
   const [wx_app_id, setwx_app_id] = useState(""); //wx_app_id
   const [xuliehao, setxuliehao] = useState(""); //序列号
-  const [notify_url,setnotify_url] = useState("") //回调地址
+  const [notify_url, setnotify_url] = useState(""); //回调地址
 
   const showModal = () => {
     setpaydesignation("");
@@ -60,12 +60,25 @@ export default function Equipment() {
         });
       }
     } else {
-      if (payway === "" && paydesignation === "") {
+      if (
+        paydesignation === "" ||
+        price === "" ||
+        remark === "" ||
+        payway === ""
+      ) {
         message.warning("请完成填写相关内容");
       } else {
         addpayprice({
           pay_name: paydesignation,
           pay_type: payway,
+          url: payway,
+          price,
+          remark,
+          mch_wx_key,
+          wx_app_id,
+          xuliehao,
+          notify_url,
+          is_use: 0,
         }).then((result) => {
           const { code, msg } = result || {};
           if (code === 200) {
@@ -239,7 +252,8 @@ export default function Equipment() {
               onChange={(val) => setpayway(val.target.value)}
             ></Input>
           </li>
-          {isModalOpen === "修改支付" ? (
+          {/* isModalOpen === "修改支付"  */}
+          {true ? (
             <>
               <li>
                 <p>充值额：</p>

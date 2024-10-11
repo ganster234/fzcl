@@ -439,7 +439,7 @@ export default function ThaliConfig() {
                         <div
                           key={index}
                           onClick={() => {
-                            setScanOpenShow(false);
+                            // setScanOpenShow(false);
                             changeActive(index);
                             setWeeklyCardShow(false);
                           }}
@@ -500,11 +500,8 @@ export default function ThaliConfig() {
                       }}
                       value={scanOpenShow}
                     >
-                      {thaliData.is_scan === 1 ? (
-                        <Radio value={false}>扫码</Radio>
-                      ) : (
-                        <></>
-                      )}
+                      <Radio value={false}>扫码</Radio>
+
                       <Radio value={true}>小程序</Radio>
                     </Radio.Group>
                     <span style={{ color: "red" }}>

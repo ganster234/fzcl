@@ -432,7 +432,7 @@ export default function ThaliConfig() {
                         <div
                           key={index}
                           onClick={() => {
-                            setScanOpenShow(false);
+                            // setScanOpenShow(false);
                             changeActive(index);
                             setWeeklyCardShow(false);
                           }}
@@ -493,8 +493,7 @@ export default function ThaliConfig() {
                       value={scanOpenShow}
                     >
                       <Radio value={true}>open</Radio>
-                      {/* thaliData.is_scan === 1 */}
-                      {true ? (
+                      {thaliData.is_scan === 1 ? (
                         <Radio value={false}>扫码</Radio>
                       ) : (
                         <></>

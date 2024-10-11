@@ -5,7 +5,7 @@ import React, {
   forwardRef,
   useRef,
 } from "react";
-import { Table, message, Spin, Button, Modal, Form, Input } from "antd";
+import { Table, message, Spin, Button, Modal, Form, Input, Switch } from "antd";
 import { Popup } from "antd-mobile";
 import { getResidueHeightByDOMRect } from "../../utils/utils";
 import {
@@ -316,7 +316,7 @@ export default function Project() {
     });
     const { code, data, msg } = result || {};
     if (code === 200) {
-      let list = data?.data ;
+      let list = data?.data;
       list.forEach((element, i) => {
         element.data.forEach((item, index) => {
           element["key"] = i;
@@ -572,7 +572,7 @@ export default function Project() {
                         />
                       </span>
                     </span>
-                    <span
+                    {/* <span
                       onClick={() => inputDetailBlur(index)}
                       className="popup-details-item-right"
                     >
@@ -592,9 +592,18 @@ export default function Project() {
                             : { color: "red" }
                         }
                       >
-                        {subItem?.is_share === 0 ? "启用" : "禁用"}
+                        {subItem?.is_share === 0 ? "启用123" : "禁用"}
                       </span>
-                    </span>
+                    </span> */}
+                    <Switch
+                      onChange={() => {
+                        inputDetailBlur(index);
+                      }}
+                      checked={subItem?.is_share === 0 ? false : true}
+                      checkedChildren="启用"
+                      unCheckedChildren="禁用"
+                      defaultChecked
+                    />
                   </div>
                 );
               })}
