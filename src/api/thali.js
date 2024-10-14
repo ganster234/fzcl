@@ -17,12 +17,12 @@ export const getPackDetail = (data) => {
 
 //下单
 export const getPlaceOrder = (data) => {
-  return postData("pay/create", data);
+  return postData("OuproTableDetailAdd", data);
 };
 
 //获取库存
 export const getkucun = (data) => {
-  return getData("OuproByGet", data);
+  return postData("OuproByGet", data);
 };
 
 // 微信导出code

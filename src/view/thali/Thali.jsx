@@ -54,12 +54,11 @@ export default function Thali(props) {
   const [is_qq, setIs_qq] = useState(3); //联合项目类型
 
   const navigate = useNavigate();
-
+  const whetherAPP =
+    location.pathname === "/layouts/thali/thail"
+      ? { Web: 1, App: 0 }
+      : { Web: 0, App: 1 };
   useEffect(() => {
-    const whetherAPP =
-      location.pathname === "/layouts/thali/thail"
-        ? { Web: 1, App: 0 }
-        : { Web: 0, App: 1 };
     getList(whetherAPP);
   }, [location, is_qq]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -96,14 +95,14 @@ export default function Thali(props) {
       if (is_qq === 4) {
         navigate("/layouts/wechat/thail/config");
       } else {
-        navigate("/layouts/thali/config");
+        navigate(`/layouts/thali/config?data=${JSON.stringify(whetherAPP)}`);
       }
     }
   };
 
-  const onChange = (e) => {
-    setRadioValue(e.target.value);
-  };
+  // const onChange = (e) => {
+  //   setRadioValue(e.target.value);
+  // };
   // const onChangeTabs = (key) => {
   //   setActiveKey(key);
   // };

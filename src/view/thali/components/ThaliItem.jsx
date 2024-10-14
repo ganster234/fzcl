@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function ThaliItem({ changeStatus, data }) {
+  console.log(data,'dadada');
   const setStatus = () => {
     changeStatus();
   };
