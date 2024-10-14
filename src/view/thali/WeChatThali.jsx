@@ -52,12 +52,11 @@ export default function Thali() {
   const setThaliInfo = useAppStore((state) => state.getThaliInfo);
 
   const navigate = useNavigate();
-
+  const whetherAPP =
+    location.pathname === "/layouts/wechat/thail"
+      ? { Web: 1, App: 0 }
+      : { Web: 0, App: 1 };
   useEffect(() => {
-    const whetherAPP =
-      location.pathname === "/layouts/wechat/thail"
-        ? { is_web: 1, is_app: 0 }
-        : { is_web: 0, is_app: 1 };
     getList(whetherAPP);
   }, [location]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -67,13 +66,17 @@ export default function Thali() {
 
   const getList = async (val) => {
     setThaliLoading(true);
-    let result = await getThaliList({ is_qq: 2,...val });
+    let result = await getThaliList({
+      Pagenum: "1",
+      Pagesize: "1000",
+      Type: 2,
+      ...val,
+    });
     const { code, data } = result || {};
-    if (code === 200) {
-      const { appPriceList } = data || {};
+    if (code) {
       let subList =
-        appPriceList &&
-        appPriceList.map((item) => {
+        data &&
+        data.map((item) => {
           return { ...item, status: false };
         });
       setList([...subList]);
@@ -86,16 +89,18 @@ export default function Thali() {
     const subList = screenData;
     if (true) {
       setThaliInfo(subList[index]);
-      navigate("/layouts/wechat/thail/config");
+      navigate(
+        `/layouts/wechat/thail/config?data=${JSON.stringify(whetherAPP)}`
+      );
     }
   };
 
-  const onChange = (e) => {
-    setRadioValue(e.target.value);
-  };
-  const onChangeTabs = (key) => {
-    setActiveKey(key);
-  };
+  // const onChange = (e) => {
+  //   setRadioValue(e.target.value);
+  // };
+  // const onChangeTabs = (key) => {
+  //   setActiveKey(key);
+  // };
   const screenList = (subList) => {
     let arr = [];
     if (radioValue === "whole" && activeKey === "whole") {

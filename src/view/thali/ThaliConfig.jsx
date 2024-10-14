@@ -41,7 +41,7 @@ export default function ThaliConfig() {
   // const [exclusive, setExclusive] = useState(true); //是否独享
   const [active, setActive] = useState(0);
   const [inventory, setinventory] = useState(0); //库存
-  const [num, setNum] = useState("");
+  const [num, setNum] = useState(1);
   const navigate = useNavigate();
   const [thaliData, setThaliData] = useState({});
   const [addGroup, setAddGroup] = useState(""); //分组名字
@@ -52,8 +52,14 @@ export default function ThaliConfig() {
   const [condition, setcondition] = useState(false); //类型显示与隐藏
   // const [insureList] = useState(["1", "2", "3"]); //保险份
   // const [insureActive, setInsureActive] = useState("1"); //保险倍数
+  const Userid = sessionStorage.getItem("user");
+  // 获取路径参数
+  const hash = window.location.hash;
+  const [path, queryString] = hash.split("?");
+  const queryParams = new URLSearchParams(queryString);
+  const querData = queryParams.get("data");
+  ///////
   const getDetail = async () => {
-    console.log(thaliInfo, "thaliInfothaliInfothaliInfo");
     const { Device_Sid } = thaliInfo;
     if (!Device_Sid) {
       return;
@@ -72,9 +78,10 @@ export default function ThaliConfig() {
   };
   // 获取分组
   const getGroupList = async () => {
-    let result = await getGroupListNoPage();
+    let result = await getGroupListNoPage({ Sid: Userid });
+    console.log(result);
     message.destroy();
-    if (result?.code === 200) {
+    if (result?.code) {
       setGroupList([...result?.data]);
     } else {
       message.error(result?.msg);
@@ -87,65 +94,22 @@ export default function ThaliConfig() {
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // const purchase = () => {
-  //   if (
-  //     thaliData &&
-  //     thaliData.pack_id &&
-  //     thaliData.pack_id[active].name &&
-  //     (thaliData.pack_id[active].name.includes("周卡") ||
-  //       thaliData.pack_id[active].name.includes("月卡"))
-  //   ) {
-  //     setSelectShow(true);
-  //   } else {
-  //     message.destroy();
-  //     return message.error("目前只有月卡和周卡支持购买保险");
-  //   }
-  // };
-
   // 计算获取价格单价
   const price = useMemo(() => {
     let num = 0;
-    if (thaliData.pack_id && thaliData.pack_id[active]) {
-      num = thaliData.pack_id[active]?.price;
+    if (thaliData.money) {
+      num = thaliData?.money[active]?.Device_money;
     }
     return num;
   }, [active, thaliData]);
 
   const activeWeeklyCard = useMemo(() => {
     let show = null;
-    if (thaliData?.pack_id && thaliData?.pack_id[active]) {
-      // if (thaliData?.pack_id[active].package_id === 10001) {
-      //   // 信用分大于等于300
-      //   show = "";
-      //   setWeeklyCardShow(true);
-      // } else if (thaliData?.pack_id[active].package_id === 10013) {
-      //   // 信用分大于等于300,该账号只有您单独使用
-      //   show = "";
-      //   setWeeklyCardShow(true);
-      // }
-    }
-
     return show;
   }, [active]);
 
-  // //获取保险金额
-  // const insurePrice = useMemo(() => {
-  //   let num = 0;
-  //   if (
-  //     thaliData.pack_id &&
-  //     thaliData.pack_id[active] &&
-  //     (thaliData.pack_id[active].name.includes("周卡") ||
-  //       thaliData.pack_id[active].name.includes("月卡"))
-  //   ) {
-  //     if (userInfo?.insure) {
-  //       num = thaliData.pack_id[active]?.price * Number(userInfo?.insure);
-  //     }
-  //   }
-  //   return num;
-  // }, [active, thaliData]);
   //计算获取类型
   const projectName = useMemo(() => {
-    console.log(thaliData, "thaliDatathaliData");
     let num = "-";
     if (thaliData?.money?.length > 0) {
       num = thaliData.money[active]?.Device_name;
@@ -155,21 +119,16 @@ export default function ThaliConfig() {
 
   // availableNum计算获取库存
   useEffect(() => {
-    const is_op = scanOpenShow ? 1 : 0;
     if (thaliData?.Device_Sid) {
       setThaliConfigLoading(true);
       getkucun({
-        is_op,
-        is_qq: 1,
-        priceId: thaliData.id,
-        package_id: thaliData?.pack_id[active]?.package_id,
-        is_shiming: "-1",
-        score: "-1",
-        is_fifteen: "-1",
+        Sid: thaliData?.Device_Sid,
+        Type: active + 1 + "",
       }).then((res) => {
+        console.log(res, "resres");
         setThaliConfigLoading(false);
-        if (res.code === 200) {
-          setinventory(res.data);
+        if (res.code) {
+          setinventory(res.data[0]?.Device_kc);
         }
       });
     }
@@ -184,42 +143,15 @@ export default function ThaliConfig() {
     return totalNumber;
   }, [num, price]);
 
-  //insureNum保险
-  // const insureNum = useMemo(() => {
-  //   let insureNum = 0.0;
-  //   if (num && num > 0 && insureActive) {
-  //     insureNum = num * (insurePrice * insureActive);
-  //   }
-  //   return insureNum;
-  // }, [num, insureActive, active, thaliData]);
-
   // 应付金额
   const shouldNum = useMemo(() => {
     let totalNumber = 0;
-    const { discount } = userInfo;
-    // activeWeeklyCard && 王者15级号加1元
-    if (weeklyCardShow && thaliInfo.id === 317) {
-      if (num && num > 0 && price && price > 0) {
-        // if (selectShow) {
-        //   let discountPrice = num * price * Number(discount);
-        //   totalNumber = discountPrice + Number(num); //num * (insurePrice * insureActive)
-        // } else {
-        totalNumber = num * price * Number(discount) + Number(num);
-        // }
-      }
-    } else {
-      if (num && num > 0 && price && price > 0) {
-        // if (selectShow) {
-        //   let discountPrice = num * price * Number(discount);
-        //   totalNumber = discountPrice; //num * (insurePrice * insureActive)
-        // } else {
-        totalNumber = num * price * Number(discount);
-        // }
-      }
+    if (num > 0 && thaliData.money) {
+      totalNumber = num * Number(thaliData?.money[active]?.Device_money);
     }
 
     return totalNumber;
-  }, [num, price, selectShow, weeklyCardShow]); //insureActive,
+  }, [num, price, selectShow, weeklyCardShow, active, thaliData]); //insureActive,
 
   const backPage = () => {
     setThaliInfo({});
@@ -227,81 +159,54 @@ export default function ThaliConfig() {
   };
   //下单
   const placeOrder = async () => {
-    // thaliData项目id
-    const { id, pack_id, app_id } = thaliData;
-    message.destroy();
-    if (!id) {
-      return;
-    }
-    const { package_id } = pack_id[active];
-    let available = 0;
-    if (thaliData.id === 317 && pack_id[active].package_id === 10001) {
-      if (weeklyCardShow) {
-        available = pack_id[active]?.achieve_availableNum;
-      } else {
-        available = pack_id[active]?.availableNum;
-      }
-    } else {
-      available = pack_id[active]?.availableNum;
-    }
-    if (!package_id) {
-      return;
-    }
-
-    if (!num) {
-      console.log(available);
-      return message.error("请输入购买数量");
-    }
-    if (
-      scanOpenShow ||
-      pack_id[active]?.package_id === "10007" ||
-      pack_id[active]?.package_id === "10012"
-    ) {
-      navigate("/layouts/thali/open", {
-        state: { app_id: app_id, num: num },
-      });
-      return;
-    }
-    if (
-      pack_id[active]?.name &&
-      pack_id[active]?.package_id === "10006" &&
-      app_id
-    ) {
-      navigate("/layouts/thali/ck", {
-        state: { app_id: app_id, num: num },
-      });
-      return;
-    }
-
+    const Type =
+      thaliData.money[active].Device_id === "4"
+        ? "2"
+        : scanOpenShow
+        ? "1"
+        : "3";
+    const Typename =
+      Type === "1" ? "open" : Type === "2" ? "ck" : Type === "3" ? "扫码" : "";
+    const fenzu = groupList.filter((item) => {
+      return groupId === item.Device_gid;
+    });
+    // console.log(thaliData, thaliData.money[active].Device_id);
     let param = {
-      priceId: id + "", //项目id
-      packageId: package_id + "", //套餐id
-      groupid: groupId ? groupId + "" : 0, //分组id
-      count: num, //下单数量
-      is_insure: selectShow ? "1" : "0", //0不投保 1投保
-      is_fifteen: weeklyCardShow ? weeklyCardShow : "-1", //是否15级
+      Userid, //用户sid
+      Username: userInfo.Device_name, //用户名称
+      Psid: thaliData.Device_Sid, //项目sid
+      Pid: thaliData?.Device_appid, //项目id
+      Pname: thaliData.Device_name, //项目名称
+      Type, //提取项目id  1 open  2 ck  3 sm 4 xcx
+      Typename, //提取项目名称
+      Kc: inventory, //库存
+      Dj: price, //单价
+      Gid: groupId, //分组id
+      Gname: fenzu[0]?.Device_Name || "", //分组名称
+      Num: num, //数量
+      Pbid: thaliData?.money[active]?.Device_id, //卡结算单位id
+      Pbname: thaliData?.money[active]?.Device_name, //卡结算单名名称
+      Ly: JSON.parse(querData).Web === 1 ? "web" : "app", //来源app/web
     };
-    // if (
-    //   thaliInfo.id === 317 &&
-    //   (pack_id[active]?.package_id === 10001 ||
-    //     pack_id[active]?.package_id === 10013)
-    // ) {
-    //   param.weeklyCardShow = 1;
-    // }
-    setThaliConfigLoading(true);
-    let result = await getPlaceOrder(param);
-    const { code, data, msg } = result || {};
-    message.destroy();
-    if (code === 200) {
-      message.success("购买成功");
-      setOrderDetail([...data?.orderIdList]);
-      getDetail();
-      setOrderModal(true);
+    if (num > 0) {
+      setThaliConfigLoading(true);
+      let result = await getPlaceOrder(param);
+      const { code, data, msg } = result || {};
+      message.destroy();
+      if (code === 200) {
+        message.success("购买成功");
+        setOrderDetail([result.orderId]);
+        getDetail();
+        setOrderModal(true); //生成订单列表
+      } else {
+        message.error(msg);
+      }
+      setThaliConfigLoading(false);
     } else {
-      message.error(msg);
+      message.error("数量至少为一个");
     }
-    setThaliConfigLoading(false);
   };
+  ///////////////////------//////////////////////
   //新增分组
   const setGroup = async () => {
     if (!addGroup) {
@@ -309,7 +214,7 @@ export default function ThaliConfig() {
       return message.error("请输入新增分组名");
     }
     setAddGroupLoading(true);
-    let result = await postAddGroup({ name: addGroup });
+    let result = await postAddGroup({ Sid: Userid, name: addGroup });
     if (result?.code === 200) {
       message.success("新增成功");
       setShowAddGroup(false);
@@ -322,12 +227,13 @@ export default function ThaliConfig() {
   };
   //下载订单
   const generateOrder = () => {
-    let orderStrList = "";
-    orderDetail &&
-      orderDetail.forEach((item) => {
-        orderStrList += item.order_id + "----" + item.account + "\n";
-      });
-    exportRaw("订单列表", orderStrList, true);
+    // let orderStrList = "";
+    // orderDetail &&
+    //   orderDetail.forEach((item) => {
+    //     orderStrList += item.order_id + "----" + item.account + "\n";
+    //   });
+    console.log(orderDetail);
+    // exportRaw("订单列表", orderStrList, true);
     setOrderDetail([]);
     setOrderModal(false);
   };
@@ -471,27 +377,28 @@ export default function ThaliConfig() {
                   </div>
                 </>
               )} */}
-              {
-                <div className="project-details-item project-details-item-center">
-                  <div className="project-details-item-title">类型：</div>
-                  <div className="project-details-item-thali-info">
-                    <Radio.Group
-                      onChange={(even) => {
-                        setScanOpenShow(even.target.value);
-                      }}
-                      value={scanOpenShow}
-                    >
-                      <Radio value={true}>open</Radio>
-                      <Radio value={false}>扫码</Radio>
-                      {/* {thaliData.is_scan === 1 ? (
+              {thaliData?.money &&
+                thaliData?.money[active]?.Device_id !== "4" && (
+                  <div className="project-details-item project-details-item-center">
+                    <div className="project-details-item-title">类型：</div>
+                    <div className="project-details-item-thali-info">
+                      <Radio.Group
+                        onChange={(even) => {
+                          setScanOpenShow(even.target.value);
+                        }}
+                        value={scanOpenShow}
+                      >
+                        <Radio value={true}>open</Radio>
+                        <Radio value={false}>扫码</Radio>
+                        {/* {thaliData.is_scan === 1 ? (
                         <Radio value={false}>扫码</Radio>
                       ) : (
                         <></>
                       )} */}
-                    </Radio.Group>
+                      </Radio.Group>
+                    </div>
                   </div>
-                </div>
-              }
+                )}
               <div className="project-details-item project-details-item-center">
                 <div className="project-details-item-title">库存：</div>
                 <div className="project-details-item-thali-info">
@@ -534,8 +441,8 @@ export default function ThaliConfig() {
                     {groupList &&
                       groupList.map((item) => {
                         return (
-                          <Option key={item.id} value={item.id}>
-                            {item.group_name}
+                          <Option key={item.Device_gid} value={item.Device_gid}>
+                            {item.Device_Name}
                           </Option>
                         );
                       })}

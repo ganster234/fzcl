@@ -154,10 +154,12 @@ export default function Layouts({ children }) {
 
   // 获取以及更新用户信息
   const getUserInfo = async () => {
-    let result = await getUser();
+    const Userid = sessionStorage.getItem("user");
+    let result = await getUser({ Sid: Userid });
+    // console.log(result, "resultresultresult");
     const { code, data, msg } = result || {};
-    if (code === 200) {
-      setUserInfo(data);
+    if (code) {
+      setUserInfo(data[0]);
     } else {
       messageApi.destroy();
       messageApi.open({
