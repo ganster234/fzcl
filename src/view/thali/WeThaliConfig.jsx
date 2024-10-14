@@ -194,6 +194,7 @@ export default function ThaliConfig() {
       Pbid: thaliData?.money[active]?.Device_id, //卡结算单位id
       Pbname: thaliData?.money[active]?.Device_name, //卡结算单名名称
       Ly: JSON.parse(querData).Web === 1 ? "web" : "app", //来源app/web
+      Lytype: "2", //来源 q:1 v:2
     };
     if (num > 0) {
       setThaliConfigLoading(true);

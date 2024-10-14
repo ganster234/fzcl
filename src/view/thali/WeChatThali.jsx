@@ -138,8 +138,9 @@ export default function Thali() {
     let arr = [];
     list.forEach((elem) => {
       if (
-        elem.appName &&
-        (elem.appName.includes(projectName) || elem.appName === projectName)
+        elem.Device_name &&
+        (elem.Device_name.includes(projectName) ||
+          elem.Device_name === projectName)
       ) {
         arr.push(elem);
       }

@@ -171,7 +171,7 @@ export default function Layouts({ children }) {
   //获取登陆器
   const getDetail = async () => {
     let result = await getDownload();
-    if (result?.code === 200) {
+    if (result?.code) {
       setService(result?.data);
     }
   };

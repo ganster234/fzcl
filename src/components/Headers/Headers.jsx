@@ -16,12 +16,13 @@ export default function Headers() {
   const url = JSON.parse(sessionStorage.getItem("globalState"));
   const [service, setService] = useState({});
   useEffect(() => {
+    console.log(userInfo);
     getDetail();
   }, []);
 
   const getDetail = async () => {
     let result = await getDownload();
-    if (result?.code === 200) {
+    if (result?.code) {
       setService(result?.data);
     }
   };
@@ -81,31 +82,13 @@ export default function Headers() {
             alt=""
             className="headers-money-icon"
           />
-          <span className="balance-title">余额：{userInfo?.balance}</span>
+          <span className="balance-title">余额：{userInfo?.Device_money}</span>
         </span>
         <div className="balance-line"></div>
         <span className="recharge" onClick={() => changRechargeShow(true)}>
           充值
         </span>
       </div>
-      {role === "superAdmin" || role === "admin" ? (
-        <Tooltip placement="bottom" title="清理缓存">
-          <img
-            src={require("../../assets/image/headers/shuaxing.png")}
-            alt=""
-            className="noe2"
-            onClick={() => {
-              cleanhuanc().then((res) => {
-                if (res.code) {
-                  message.info(res.message);
-                }
-              });
-            }}
-          />
-        </Tooltip>
-      ) : (
-        <></>
-      )}
       <Tooltip placement="bottom" title="视频教程">
         <img
           src={require("../../assets/image/headers/viode.png")}
@@ -135,15 +118,15 @@ export default function Headers() {
 
       <Tooltip
         placement="bottom"
-        title={`邀请码：${userInfo?.invitation_code || "暂无"}`}
+        title={`邀请码：${userInfo?.Device_yqmsg || "暂无"}`}
       >
-        <div className="user-name">你好，用户{userInfo?.account}</div>
+        <div className="user-name">你好，用户{userInfo?.Device_name}</div>
       </Tooltip>
-      {userInfo?.invitation_code && (
+      {userInfo?.Device_yqmsg && (
         <div className="invitation-code-box">
           <span>邀请码:</span>
           <span className="invitation-code">
-            {userInfo?.invitation_code || "暂无"}
+            {userInfo?.Device_yqmsg || "暂无"}
           </span>
         </div>
       )}

@@ -87,7 +87,7 @@ export default function HomeRight() {
     //获取登陆器
     const getDetail = async () => {
       let result = await getDownload();
-      if (result?.code === 200) {
+      if (result?.code) {
         setDownloadDetail({ ...result?.data });
         setService(result?.data);
       }
