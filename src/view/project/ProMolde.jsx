@@ -42,47 +42,70 @@ const Udetails = forwardRef((props, ref) => {
     console.log("暴露函数2");
   };
   const childFunction = (val) => {
+    console.log(val, "childFunction");
+
     iform.setFieldsValue({
-      app_name: val.app_name,
-      app_id: val.app_id,
-      logo_path: val.logo_path,
-      wx_app_id: val.wx_app_id,
-      pack_name: val.pack_name,
-      is_scan: val.is_scan,
+      // app_name: val.app_name,
+      // app_id: val.app_id,
+      // logo_path: val.logo_path,
+      // wx_app_id: val.wx_app_id,
+      // pack_name: val.pack_name,
+      // is_scan: val.is_scan,
+      app_name: val.Device_name,
+      app_id: val.Device_appid,
+      logo_path: val.Device_url,
+      wx_app_id: val.Device_appidwx,
+      pack_name: val.Device_bag,
+      is_scan: val.Device_sm,
     });
-    settype(Number(val.type));
-    setis_app(val.is_app + "");
-    setis_web(val.is_web + "");
-    setis_game(val.is_game + "");
-    setid(val.id + "");
-    setis_scan(val.is_scan + "");
+    settype(Number(val.Device_type));
+    setis_app(val.Device_app + "");
+    setis_web(val.Device_web + "");
+    setis_game(val.Device_game + "");
+    setid(val.Device_Sid + "");
+    setis_scan(val.Device_sm + "");
   };
   const newlyincreased = async () => {
     //模态框确定函数
     try {
-      const values = await iform.validateFields();
+      const { app_name, app_id, wx_app_id, logo_path, pack_name } =
+        await iform.validateFields();
+
       const apiData = {
-        ...values,
-        type: type + "",
-        is_app,
-        is_web,
-        is_game,
-        is_scan,
+        // ...values,
+        // type: type + "",
+        // is_app,
+        // is_web,
+        // is_game,
+        // is_scan,
+        Name: app_name, //项目名称
+        Appid: app_id, //Appid
+        Appidwx: wx_app_id, //wxAppid
+        Url: logo_path,
+        Type: type.toString(), //项目类型 0 全部 1 Q 2 W
+        App: is_app, //app 1不是  0 是
+        Sm: is_scan, //sm 1不是  0 是
+        Web: is_web, //网页 1不是  0 是
+        Game: is_game, //tx游戏 1不是  0 是
+        Bag: pack_name, //包名
       };
+
       if (addState === "新增Q/W项目") {
         const { code, msg } = await getAddProject(apiData);
-        if (code === 200) {
+        // eslint-disable-next-line eqeqeq
+        if (code == 200) {
           setaddState(false);
           props.getList();
         }
         message.info(msg);
       } else {
         const newapiData = {
-          id,
+          Sid: id,
           ...apiData,
         };
         const { code, msg } = await setProject(newapiData);
-        if (code === 200) {
+        // eslint-disable-next-line eqeqeq
+        if (code == 200) {
           setaddState(false);
           props.getList();
         }
@@ -113,27 +136,33 @@ const Udetails = forwardRef((props, ref) => {
         <Form className=" fromItem " form={iform} layout="vertical">
           <Form.Item
             name="app_name"
-            label="项目名"
+            label="项目名称"
             rules={[{ required: true, message: "请输入内容!" }]}
           >
             <Input />
           </Form.Item>
           {type === 1 ? (
-            <Form.Item
-              name="app_id"
-              label="app_id"
-              rules={[{ required: true, message: "请输入内容!" }]}
-            >
-              <Input />
-            </Form.Item>
+            <>
+              <Form.Item
+                name="app_id"
+                label="app_id"
+                rules={[{ required: true, message: "请输入内容!" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item></Form.Item>
+            </>
           ) : type === 2 ? (
-            <Form.Item
-              name="wx_app_id"
-              label="wx_app_id"
-              rules={[{ required: true, message: "请输入内容!" }]}
-            >
-              <Input />
-            </Form.Item>
+            <>
+              <Form.Item
+                name="wx_app_id"
+                label="wx_app_id"
+                rules={[{ required: true, message: "请输入内容!" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item></Form.Item>
+            </>
           ) : (
             <Lfrome></Lfrome>
           )}
@@ -161,8 +190,10 @@ const Udetails = forwardRef((props, ref) => {
               onChange={(val) => setis_app(val.target.value)}
               value={is_app}
             >
-              <Radio value={"0"}>否</Radio>
-              <Radio value={"1"}>是</Radio>
+              {/* <Radio value={"0"}>否</Radio>
+              <Radio value={"1"}>是</Radio> */}
+              <Radio value={"2"}>否</Radio>
+              <Radio value={"0"}>是</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="是否扫码">
@@ -170,8 +201,10 @@ const Udetails = forwardRef((props, ref) => {
               onChange={(val) => setis_scan(val.target.value)}
               value={is_scan}
             >
-              <Radio value={"0"}>否</Radio>
-              <Radio value={"1"}>是</Radio>
+              {/* <Radio value={"0"}>否</Radio>
+              <Radio value={"1"}>是</Radio> */}
+              <Radio value={"1"}>否</Radio>
+              <Radio value={"0"}>是</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="是否网页">
@@ -179,8 +212,10 @@ const Udetails = forwardRef((props, ref) => {
               onChange={(val) => setis_web(val.target.value)}
               value={is_web}
             >
-              <Radio value={"0"}>否</Radio>
-              <Radio value={"1"}>是</Radio>
+              {/* <Radio value={"0"}>否</Radio>
+              <Radio value={"1"}>是</Radio> */}
+              <Radio value={"1"}>否</Radio>
+              <Radio value={"0"}>是</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="是否腾讯游戏">
@@ -188,8 +223,10 @@ const Udetails = forwardRef((props, ref) => {
               onChange={(val) => setis_game(val.target.value)}
               value={is_game}
             >
-              <Radio value={"0"}>否</Radio>
-              <Radio value={"1"}>是</Radio>
+              {/* <Radio value={"0"}>否</Radio>
+              <Radio value={"1"}>是</Radio> */}
+              <Radio value={"1"}>否</Radio>
+              <Radio value={"0"}>是</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item name="pack_name" label="包名">

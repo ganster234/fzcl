@@ -43,23 +43,23 @@ export const settlement = [
 export const projectColumns = [
   {
     title: "项目名称",
-    dataIndex: "app_name",
+    dataIndex: "Device_name",
   },
   // {
   //   title: "日卡老号",
   //   dataIndex: "distribution_price0",
   // },
   {
-    title: "日卡新号",
-    dataIndex: "distribution_price1",
+    title: "日卡",
+    dataIndex: "Device_day",
   },
   {
     title: "周卡",
-    dataIndex: "distribution_price2",
+    dataIndex: "Device_week",
   },
   {
     title: "月卡",
-    dataIndex: "distribution_price3",
+    dataIndex: "Device_month",
   },
   // {
   //   title: "信用分300",
@@ -425,7 +425,6 @@ export const openColumns = [
     title: "已完成数量",
     dataIndex: "requests_num",
   },
-
 ];
 
 export const trustColumns = [
