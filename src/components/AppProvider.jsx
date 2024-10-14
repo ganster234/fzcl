@@ -125,31 +125,26 @@ export default function AppProvider({ children }) {
       iconActive: require("../assets/image/sidermenu/thali.png"),
       icon: require("../assets/image/sidermenu/thali-active.png"),
       label: "套餐(Q)",
-      roles: ["admin", "role", "agent", "superAdmin"],
       children: [
         {
           key: "/layouts/thali/thail",
           element: lazyLoad(lazy(() => import("../view/thali/Thali.jsx"))),
-          roles: ["admin", "role", "agent", "superAdmin"],
           label: "网页",
         },
         {
           key: "/layouts/thali/app",
           element: lazyLoad(lazy(() => import("../view/thali/Thali.jsx"))),
-          roles: ["admin", "role", "agent", "superAdmin"],
           label: "APP",
         },
         {
           key: "/layouts/thali/open",
           element: lazyLoad(lazy(() => import("../view/open/Open.jsx"))),
           label: "提open",
-          roles: ["admin", "role", "agent", "superAdmin"],
         },
         {
           key: "/layouts/thali/ck",
           element: lazyLoad(lazy(() => import("../view/ck/Ck.jsx"))),
           label: "提ck",
-          roles: ["admin", "role", "agent", "superAdmin"],
         },
       ],
     },
@@ -158,14 +153,12 @@ export default function AppProvider({ children }) {
       iconActive: require("../assets/image/sidermenu/thali-wx.png"),
       icon: require("../assets/image/sidermenu/thali-wx-active.png"),
       label: "套餐(W)",
-      roles: ["admin", "role", "agent", "superAdmin"],
       children: [
         {
           key: "/layouts/wechat/thail",
           element: lazyLoad(
             lazy(() => import("../view/thali/WeChatThali.jsx"))
           ),
-          roles: ["admin", "role", "agent", "superAdmin"],
           label: "网页",
         },
         {
@@ -173,13 +166,11 @@ export default function AppProvider({ children }) {
           element: lazyLoad(
             lazy(() => import("../view/thali/WeChatThali.jsx"))
           ),
-          roles: ["admin", "role", "agent", "superAdmin"],
           label: "APP",
         },
         {
           key: "/layouts/wechat/take/code",
           element: lazyLoad(lazy(() => import("../view/thali/WxTakeCode.jsx"))),
-          roles: ["admin", "role", "agent", "superAdmin"],
           label: "导出code",
         },
         {
@@ -379,7 +370,8 @@ export default function AppProvider({ children }) {
   let defaultMenus = [];
   let defaultRoutes = [];
   let roles = sessionStorage.getItem("role");
-  if (roles) {
+  // roles;
+  if (true) {
     defaultMenus = findRoles(menusList, roles);
     if (defaultMenus && defaultMenus.length > 0) {
       defaultRoutes = flatRoutes(defaultMenus);

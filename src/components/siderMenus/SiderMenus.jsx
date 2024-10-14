@@ -137,15 +137,18 @@ export default function SiderMenus() {
   }, [pathname]);
   return (
     <div className="sider-box">
-      <img
+      {/* <img
         src={require(`../../assets/image/sidermenu/cili.png`)}
         alt=""
         className="logobox"
-      />
-      <div style={{ backgroundColor: "#2662DA" }} className="sider-menus">
+      /> */}
+      <h2 className="logobox"> 小飞侠系统🎈</h2>
+      {/* style={{ backgroundColor: "#2662DA" }} */}
+      <div className="sider-menus">
+        {/* style={{ width: "100%", background: "#2662DA" }} */}
         <Menu
+          theme="dark"
           onClick={handleClick}
-          style={{ width: "100%", background: "#2662DA" }}
           defaultOpenKeys={[...openKeys]}
           selectedKeys={[...openKeys]}
           defaultSelectedKeys={[...openKeys]}

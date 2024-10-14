@@ -2,42 +2,42 @@ import dayjs from "dayjs";
 export const urlConfigColumns = [
   {
     title: "url名称",
-    dataIndex: "name",
+    dataIndex: "Device_name",
   },
   {
     title: "状态",
     // dataIndex: "is_use",
-    dataIndex: "is_share",
+    dataIndex: "Device_state",
     render: (record) => (
       <div>
-        {record === 0 && "开启"}
-        {record === 1 && "关闭"}
+        {record === "0" && "开启"}
+        {record === "1" && "关闭"}
       </div>
     ),
   },
   {
     title: "url地址",
-    dataIndex: "value",
+    dataIndex: "Device_url",
   },
 ];
 export const settlement = [
   {
     title: "支付名",
-    dataIndex: "pay_name",
+    dataIndex: "Device_name",
   },
   {
     title: "状态",
-    dataIndex: "is_use",
+    dataIndex: "Device_state",
     render: (record) => (
       <div>
-        {record === 0 && "开启"}
-        {record === 1 && "关闭"}
+        {record === "0" && "开启"}
+        {record === "1" && "关闭"}
       </div>
     ),
   },
   {
     title: "支付类型",
-    dataIndex: "pay_type",
+    dataIndex: "Device_type",
   },
 ];
 export const projectColumns = [

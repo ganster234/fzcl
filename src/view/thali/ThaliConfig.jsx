@@ -23,9 +23,6 @@ import Insurance from "./components/Insurance";
 import "./ThaliConfig.less";
 //图片
 import thaliActive from "../../assets/image/thali/thali-active.png";
-// import thaliSelect from "../../assets/image/thali/thali-select.png";
-// import thaliSelectActive from "../../assets/image/thali/thali-select-active.png";
-// import thaliSelectShare from "../../assets/image/thali/thali-select-share.png";
 
 const { Option } = Select;
 // 批量新增，批量取消托管接口还没对接
@@ -56,17 +53,18 @@ export default function ThaliConfig() {
   // const [insureList] = useState(["1", "2", "3"]); //保险份
   // const [insureActive, setInsureActive] = useState("1"); //保险倍数
   const getDetail = async () => {
-    const { appId, id } = thaliInfo;
-    if (!appId && !id) {
+    console.log(thaliInfo, "thaliInfothaliInfothaliInfo");
+    const { Device_Sid } = thaliInfo;
+    if (!Device_Sid) {
       return;
     }
     setThaliConfigLoading(true);
-    let result = await getPackDetail({ price_id: id, app_id: appId });
-    const { code, data, msg } = result || {};
+    let result = await getPackDetail({ Sid: Device_Sid });
+    const { code, data, msg, money } = result || {};
     message.destroy();
-    if (code === 200) {
+    if (code) {
       //初始化
-      setThaliData({ ...data });
+      setThaliData({ ...data[0], money });
     } else {
       message.error(msg);
     }
@@ -147,20 +145,10 @@ export default function ThaliConfig() {
   // }, [active, thaliData]);
   //计算获取类型
   const projectName = useMemo(() => {
-    let num = 0;
-    // if (
-    //   thaliData &&
-    //   thaliData.pack_id &&
-    //   thaliData.pack_id[active].name &&
-    //   (thaliData.pack_id[active].name.includes("周卡") ||
-    //     thaliData.pack_id[active].name.includes("月卡"))
-    // ) {
-    //   setSelectShow(true);
-    // } else {
-    //   setSelectShow(false);
-    // }
-    if (thaliData.pack_id && thaliData.pack_id[active]) {
-      num = thaliData.pack_id[active]?.name;
+    console.log(thaliData, "thaliDatathaliData");
+    let num = "-";
+    if (thaliData?.money?.length > 0) {
+      num = thaliData.money[active]?.Device_name;
     }
     return num;
   }, [active, thaliData]);
@@ -168,7 +156,7 @@ export default function ThaliConfig() {
   // availableNum计算获取库存
   useEffect(() => {
     const is_op = scanOpenShow ? 1 : 0;
-    if (thaliData?.pack_id) {
+    if (thaliData?.Device_Sid) {
       setThaliConfigLoading(true);
       getkucun({
         is_op,
@@ -293,13 +281,13 @@ export default function ThaliConfig() {
       is_insure: selectShow ? "1" : "0", //0不投保 1投保
       is_fifteen: weeklyCardShow ? weeklyCardShow : "-1", //是否15级
     };
-    if (
-      thaliInfo.id === 317 &&
-      (pack_id[active]?.package_id === 10001 ||
-        pack_id[active]?.package_id === 10013)
-    ) {
-      param.weeklyCardShow = 1;
-    }
+    // if (
+    //   thaliInfo.id === 317 &&
+    //   (pack_id[active]?.package_id === 10001 ||
+    //     pack_id[active]?.package_id === 10013)
+    // ) {
+    //   param.weeklyCardShow = 1;
+    // }
     setThaliConfigLoading(true);
     let result = await getPlaceOrder(param);
     const { code, data, msg } = result || {};
@@ -346,11 +334,12 @@ export default function ThaliConfig() {
   //切换类型选中项
   const changeActive = (index) => {
     setActive(index);
-    if (thaliData?.pack_id[index]?.package_id === "10006") {
-      setcondition(false);
-    } else {
-      setcondition(true);
-    }
+    setcondition(false);
+    // if (thaliData?.pack_id[index]?.package_id === "10006") {
+    //   setcondition(false);
+    // } else {
+    //   setcondition(true);
+    // }
   };
   return (
     <Spin spinning={thaliConfigLoading}>
@@ -365,7 +354,7 @@ export default function ThaliConfig() {
               <div className="project-details-item project-details-item-center">
                 <div className="project-details-item-title">项目名称：</div>
                 <div className="project-details-item-thali-info">
-                  {thaliData?.app_name}
+                  {thaliData?.Device_name}
                 </div>
               </div>
               <div className="project-details-item">
@@ -426,8 +415,8 @@ export default function ThaliConfig() {
               <div className="project-details-item project-details-item-center">
                 <div className="project-details-item-title">选择类型：</div>
                 <div className="project-details-item-types">
-                  {thaliData?.pack_id &&
-                    thaliData?.pack_id.map((item, index) => {
+                  {thaliData?.money &&
+                    thaliData?.money.map((item, index) => {
                       return (
                         <div
                           key={index}
@@ -442,7 +431,7 @@ export default function ThaliConfig() {
                               : "project-details-item-types-item"
                           }
                         >
-                          {item.name}
+                          {item.Device_name}
                           {active === index && (
                             <img
                               src={thaliActive}
@@ -493,11 +482,12 @@ export default function ThaliConfig() {
                       value={scanOpenShow}
                     >
                       <Radio value={true}>open</Radio>
-                      {thaliData.is_scan === 1 ? (
+                      <Radio value={false}>扫码</Radio>
+                      {/* {thaliData.is_scan === 1 ? (
                         <Radio value={false}>扫码</Radio>
                       ) : (
                         <></>
-                      )}
+                      )} */}
                     </Radio.Group>
                   </div>
                 </div>
@@ -574,12 +564,12 @@ export default function ThaliConfig() {
               <div className="total-amount-item">
                 <div className="total-amount-item-left">
                   <img
-                    src={thaliData?.logo_path}
+                    src={thaliData?.Device_url}
                     alt=""
                     className="total-amount-item-path"
                   />
                   <span className="total-amount-item-left-text">
-                    {thaliData?.app_name || "-"}
+                    {thaliData?.Device_name || "-"}
                   </span>
                 </div>
               </div>
@@ -615,11 +605,6 @@ export default function ThaliConfig() {
               <Popconfirm
                 title="提示"
                 description={() => {
-                  if (thaliInfo.id === 386) {
-                    if (thaliData?.pack_id[active].package_id === 10006) {
-                      return `您购买的是CK账号?`;
-                    }
-                  }
                   return `您购买的是${scanOpenShow ? "open" : "扫码"}账号?`;
                 }}
                 onConfirm={() => placeOrder()}

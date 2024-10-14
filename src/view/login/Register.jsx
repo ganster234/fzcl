@@ -4,7 +4,6 @@ import { Button, Form, Input, message, Spin } from "antd";
 import { getCode, register } from "../../api/login";
 
 import "./Login.less";
-import "./bg.css";
 
 export default function Register() {
   const [codeSrc, setCodeSrc] = useState("");
@@ -13,26 +12,26 @@ export default function Register() {
   // 跳转
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getCodeSrc();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // useEffect(() => {
+  //   getCodeSrc();
+  // }, []); // eslint-disable-line react-hooks/exhaustive-deps
   //获取验证码
-  const getCodeSrc = async () => {
-    let result = await getCode();
-    const { code, data } = result || {};
-    if (code === 200) {
-      if (data?.img) {
-        setCodeSrc(data?.img);
-        setKey(data?.key);
-      }
-    } else {
-      message.destroy();
-      message.open({
-        type: "error",
-        content: result.msg,
-      });
-    }
-  };
+  // const getCodeSrc = async () => {
+  //   let result = await getCode();
+  //   const { code, data } = result || {};
+  //   if (code === 200) {
+  //     if (data?.img) {
+  //       setCodeSrc(data?.img);
+  //       setKey(data?.key);
+  //     }
+  //   } else {
+  //     message.destroy();
+  //     message.open({
+  //       type: "error",
+  //       content: result.msg,
+  //     });
+  //   }
+  // };
   const onFinish = async (yesFinish) => {
     const { comPwd, password, username } = yesFinish;
     // const regex = /^(?=.*[a-z])(?=.*[A-Z]).{10,}$/;
@@ -61,7 +60,7 @@ export default function Register() {
           type: "error",
           content: msg,
         });
-        getCodeSrc();
+        // getCodeSrc();
         setLoading(false);
       }
     }
@@ -115,7 +114,7 @@ export default function Register() {
               注册
             </span>
           </div> */}
-          <img src={require("../../assets/image/login.png")} alt="" />
+          {/* <img src={require("../../assets/image/login.png")} alt="" /> */}
           <p className="yonghu">
             用户注册<span></span>
           </p>
@@ -189,7 +188,7 @@ export default function Register() {
               <Input placeholder="邀请码!" />
             </Form.Item>
             <Form.Item>
-              <div className=" imgcodeBOX ">
+              {/* <div className=" imgcodeBOX ">
                 <Form.Item
                   name="code"
                   rules={[
@@ -207,17 +206,11 @@ export default function Register() {
                   alt=""
                   onClick={getCodeSrc}
                 />
-              </div>
+              </div> */}
               <div className="clickLgzc">
                 <p>
                   已有账号
-                  <span
-                    onClick={() => {
-                      navigate("/");
-                    }}
-                  >
-                    点此登录
-                  </span>
+                  <span onClick={() => navigate("/")}>点此登录</span>
                 </p>
               </div>
             </Form.Item>

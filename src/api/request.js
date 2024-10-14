@@ -4,7 +4,7 @@ import { message } from "antd";
 // 默认地址
 // const baseURL = "http://192.168.1.59:9000/v1/";
 // const baseURL = "http://47.96.77.255:9400/v1/";
-const baseURL = "https://api.seolkf830.com/v1/";
+const baseURL = "http://47.98.164.131/api/";
 
 //post请求头的设置 test456   
 axios.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8";

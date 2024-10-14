@@ -117,7 +117,10 @@ export default function Layouts({ children }) {
   useEffect(() => {
     if (rechargeShow) {
       setRechargeLoading(true);
-      getPayList({ is_use: "0" }).then((result) => {
+      getPayList({ State: "" }).then((result) => {
+        setRechargeLoading(false);
+        setpattern(result?.data);
+        ///////临时//////////
         if (result?.code === 200) {
           setRechargeLoading(false);
           setpattern(result?.data);
@@ -359,13 +362,13 @@ export default function Layouts({ children }) {
   }, [JSON.stringify(kamiState)]);
 
   // 今日不显示
-  const doNotDisplay = async () => {
-    let result = await setUpdateTime();
-    if (result?.code === 200) {
-      setNoticShow(false);
-      getUserInfo();
-    }
-  };
+  // const doNotDisplay = async () => {
+  //   let result = await setUpdateTime();
+  //   if (result?.code === 200) {
+  //     setNoticShow(false);
+  //     getUserInfo();
+  //   }
+  // };
   return (
     <>
       {/* "calc(100vh - 60px)" */}
@@ -385,10 +388,11 @@ export default function Layouts({ children }) {
           >
             {tourl === "/layouts/home" ? (
               <div className="homepageNav">
-                <img
+                {/* <img
                   src="https://js-ad.a.yximgs.com/kos/nlav11074/IMAGES/new_white_logo.svg"
                   alt=""
-                />
+                /> */}
+                <p></p>
                 <div className="exitOut" onClick={unSign}>
                   <PoweroffOutlined />
                   <span style={{ marginLeft: "10px" }}> 退出</span>
@@ -406,6 +410,7 @@ export default function Layouts({ children }) {
               flexDirection: "column",
             }}
           >
+            <div class="background"></div>
             {children}
             <Modal
               title="添加客服"
@@ -465,7 +470,7 @@ export default function Layouts({ children }) {
                   <div className="recharge-modal-message-item">
                     <span>充值账户：</span>
                     <span className="recharge-message-item-user-info">
-                      {userInfo?.account || "用户110"}
+                      {userInfo?.account || "用户--"}
                     </span>
                   </div>
                   <div className="recharge-modal-message-item">

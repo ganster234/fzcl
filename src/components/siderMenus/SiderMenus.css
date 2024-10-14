@@ -21,6 +21,9 @@
 }
 .logobox {
   width: 200px;
+  height: 66px;
+  text-align: center;
+  line-height: 66px;
 }
 .logo-platform {
   margin: 17px 0;
@@ -34,10 +37,6 @@
 .ant-menu-submenu,
 .ant-menu-sub {
   color: #c3cfe2;
-}
-.ant-menu-sub,
-.ant-menu-item {
-  background-color: #2662DA;
 }
 .ant-menu-item-active {
   color: #fff;

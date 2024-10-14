@@ -7,8 +7,8 @@ export default function Different() {
     <>
       <div className="maxBox">
         <div className="totoTEx">
-          <h1>快手达人生态营销平台</h1>
-          <h3>让内容和生意一拍即合</h3>
+          <h1>WelCome</h1>
+          <h3>欢迎回家</h3>
           <button
             className="btn32"
             onClick={() => {
@@ -18,12 +18,6 @@ export default function Different() {
             立 即 开 始
           </button>
         </div>
-        {/* <video
-          className="myviode"
-          autoPlay
-          loop
-          src={require("../../assets/image/shoviod.mp4")}
-        ></video> */}
         <div className="myviode"></div>
       </div>
     </>

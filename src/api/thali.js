@@ -7,12 +7,12 @@ export const permissions = (data) => {
 
 //获取全部套餐
 export const getThaliList = (data) => {
-  return getData("appPrice/getAll", data);
+  return postData("OuproTableGet", data);
 };
 
 //获取套餐详情
 export const getPackDetail = (data) => {
-  return getData("project/pack/detail", data);
+  return postData("OuproTableDetailGet", data);
 };
 
 //下单
@@ -22,7 +22,7 @@ export const getPlaceOrder = (data) => {
 
 //获取库存
 export const getkucun = (data) => {
-  return getData("getStcokAll", data);
+  return getData("OuproByGet", data);
 };
 
 // 微信导出code

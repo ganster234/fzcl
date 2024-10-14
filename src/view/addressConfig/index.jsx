@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { message, Table, Select, Switch, Button, Modal, Input } from "antd";
+import { message, Table,  Switch, Button, Modal, Input } from "antd";
 import {
   getUrlList,
   addConfigUrl,
   setConfigUrl,
-  openOrCloseTheUrl,
 } from "../../api/addressConfig";
 
 import { getResidueHeightByDOMRect } from "../../utils/utils";
@@ -36,8 +35,8 @@ export default function Equipment() {
         message.warning("请完成填写相关内容");
       } else {
         setConfigUrl({
-          id: my_id,
-          value: urlValue,
+          Sid: my_id,
+          Url: urlValue,
         }).then((result) => {
           const { code, msg } = result || {};
           if (code === 200) {
@@ -53,12 +52,12 @@ export default function Equipment() {
       if (urlKey === "" && urlName === "" && urlValue === "") {
         message.warning("请完成填写相关内容");
       } else {
-        console.log(urlKey, "urlKey", urlName, "urlName", urlValue, "urlValue");
+        // console.log(urlKey, "urlKey", urlName, "urlName", urlValue, "urlValue");
 
         addConfigUrl({
-          name: urlName,
+          Urlname: urlName,
           key: urlKey,
-          value: urlValue,
+          Url: urlValue,
         }).then((result) => {
           const { code, msg } = result || {};
           if (code === 200) {
@@ -92,7 +91,7 @@ export default function Equipment() {
   const getList = async () => {
     let result = await getUrlList();
     const { code, msg, data } = result || {};
-    if (code === 200) {
+    if (code) {
       setDataList(data);
     } else {
       message.destroy();
@@ -153,7 +152,7 @@ export default function Equipment() {
             y: height,
           }}
           pagination={false}
-          rowKey="id"
+          rowKey="Device_Sid"
           dataSource={dataList}
           columns={[
             ...urlConfigColumns,
@@ -162,26 +161,20 @@ export default function Equipment() {
               render: (record) => (
                 <>
                   <Switch
-                    checked={record.is_share === 0 ? true : false}
+                    checked={record.Device_state === "0" ? true : false}
                     checkedChildren="开启"
                     unCheckedChildren="关闭"
                     defaultChecked
                     onChange={() => {
                       setLoading(true);
-                      const is_share = record.is_share === 0 ? 1 : 0;
-                      openOrCloseTheUrl({
-                        id: record.id.toString(),
-                        status: is_share,
+                      const is_share = record.Device_state === "0" ? "1" : "0";
+                      setConfigUrl({
+                        Sid: record.Device_Sid,
+                        State: is_share,
                       }).then((result) => {
-                        const { code, msg } = result || {};
-                        if (code === 200) {
-                          getList();
-                          message.success("修改成功");
-                          setLoading(false);
-                        } else {
-                          setLoading(false);
-                          message.error(msg);
-                        }
+                        getList();
+                        message.success("修改成功");
+                        setLoading(false);
                       });
                     }}
                   />
@@ -194,8 +187,8 @@ export default function Equipment() {
                 <>
                   <Button
                     onClick={() => {
-                      setUrlValue(record.value);
-                      setmy_id(record.id.toString());
+                      setUrlValue(record.Device_url);
+                      setmy_id(record.Device_Sid);
                       setIsModalOpen("修改配置url");
                     }}
                   >

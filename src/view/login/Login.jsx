@@ -2,89 +2,70 @@ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { context } from "../../components/AppProvider";
 import { Button, Form, Input, message, Spin } from "antd";
-import { getCode, login, transmitting } from "../../api/login";
+// getCode,transmitting
+import { login } from "../../api/login";
 import { usebegin } from "../../store/mystore";
-import Fingerprint2 from "fingerprintjs2";
-import useAppStore from "../../store";
+// import Fingerprint2 from "fingerprintjs2";
+// import useAppStore from "../../store";
 import "./Login.less";
-import "./bg.css";
-import { newData } from "../../store/zhiwen";
+// import { newData } from "../../store/zhiwen";
 export default function Login() {
-  const platformSrc = useAppStore((state) => state.platformSrc); //设置用户信息
+  // const platformSrc = useAppStore((state) => state.platformSrc); //设置用户信息
   const takestore = usebegin();
-  const [codeSrc, setCodeSrc] = useState("");
-  const [loginKey, setKey] = useState("");
   const [loading, setLoading] = useState(false);
   // 跳转
   const navigate = useNavigate();
   const { resetMenus } = useContext(context);
   useEffect(() => {
-    transmitting({ data: JSON.stringify(newData) })
-  },[])
-  useEffect(() => {
-    getCodeSrc();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  //获取验证码
-  const getCodeSrc = async () => {
-    let result = await getCode();
-    const { code, data } = result || {};
-    if (code === 200) {
-      if (data?.img) {
-        setCodeSrc(data?.img);
-        setKey(data?.key);
-      }
-    } else {
-      message.destroy();
-      message.open({
-        type: "error",
-        content: result.msg,
-      });
-    }
-  };
+    // transmitting({ data: JSON.stringify(newData) });
+  }, []);
+
   const onFinish = async (yesFinish) => {
     setLoading(true);
-    let result = await login({ ...yesFinish, checkToken: loginKey });
-    const fingerprint = await new Promise((resolve) => {
-      Fingerprint2.get((components) => {
-        const values = components.map((component) => component.value);
-        const fingerprint = Fingerprint2.x64hash128(values.join(""), 31);
-        resolve(fingerprint);
-      });
-    });
+    let result = await login({ ...yesFinish });
+    // const fingerprint = await new Promise((resolve) => {
+    //   Fingerprint2.get((components) => {
+    //     const values = components.map((component) => component.value);
+    //     const fingerprint = Fingerprint2.x64hash128(values.join(""), 31);
+    //     resolve(fingerprint);
+    //   });
+    // });
     const { code, data, msg } = result || {};
-    if (code === 200) {
+    if (code === "200") {
       //登录成功
       takestore.setdisclosedBallot(false);
       setLoading(false);
-      sessionStorage.setItem("token", data?.data);
-      // 刷新页面导致路由以及丢失menu的关键
-      sessionStorage.setItem("role", data?.roles || "admin");
-      //重置路由菜关键点
-      resetMenus(data?.roles || "admin");
+      sessionStorage.setItem("token", '');
+      sessionStorage.setItem("user", data[0].Device_Sid);
+      // 刷新页面导致路由以及丢失menu的关键  暂时写死的超级管理员
+      sessionStorage.setItem("role", data[0].Device_Roles || "role");
+      //重置路由菜关键点    暂时写死的超级管理员
+      resetMenus(data[0].Device_Roles || "role");
       // 获取查询参数,如果没有就跳转到首页
       navigate("/layouts/home", { replace: true });
-    } else if (code === 410) {
-      //未修改密码禁止用户操作
-      takestore.setdisclosedBallot(true);
-      // console.log(result);
-      setLoading(false);
-      sessionStorage.setItem("token", data.data);
-      // 刷新页面导致路由以及丢失menu的关键
-      sessionStorage.setItem("role", data?.roles || "admin");
-      //重置路由菜关键点
-      resetMenus(data?.roles || "admin");
-      // 获取查询参数,如果没有就跳转到首页
-      navigate("/layouts/user/modify", { replace: true });
-      message.open({
-        type: "warning",
-        content: msg,
-      });
-    } else {
+    }
+    // else if (code === 410) {
+    //   //未修改密码禁止用户操作
+    //   takestore.setdisclosedBallot(true);
+    //   // console.log(result);
+    //   setLoading(false);
+    //   sessionStorage.setItem("token", data.data);
+    //   // 刷新页面导致路由以及丢失menu的关键
+    //   sessionStorage.setItem("role", data?.roles || "admin");
+    //   //重置路由菜关键点
+    //   resetMenus(data?.roles || "admin");
+    //   // 获取查询参数,如果没有就跳转到首页
+    //   navigate("/layouts/user/modify", { replace: true });
+    //   message.open({
+    //     type: "warning",
+    //     content: msg,
+    //   });
+    // }
+    else {
       message.open({
         type: "error",
         content: msg,
       });
-      getCodeSrc();
       setLoading(false);
     }
   };
@@ -94,36 +75,7 @@ export default function Login() {
   };
   return (
     <Spin spinning={loading}>
-      {/* login background */}
       <div className="login background">
-        <>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-          <strong></strong>
-        </>
         <div style={{ zIndex: "20" }} className="login-form">
           {/* <span className="login-form-title-item login-form-title-user">
               用户登录
@@ -137,6 +89,7 @@ export default function Login() {
               注册
             </span> */}
           {/* <img src={require("../../assets/image/login.png")} alt="" /> */}
+
           <p className="yonghu">
             用户登录<span></span>
           </p>
@@ -157,7 +110,7 @@ export default function Login() {
             layout="vertical"
           >
             <Form.Item
-              name="account"
+              name="User"
               rules={[
                 {
                   required: true,
@@ -168,7 +121,7 @@ export default function Login() {
               <Input placeholder="请输入账号!" />
             </Form.Item>
             <Form.Item
-              name="password"
+              name="Pass"
               rules={[
                 {
                   required: true,
@@ -176,28 +129,9 @@ export default function Login() {
                 },
               ]}
             >
-              <Input.Password placeholder="请输入登录密码!" />
+              <Input.Password size="small" placeholder="请输入登录密码!" />
             </Form.Item>
             <Form.Item>
-              <div className=" imgcodeBOX ">
-                <Form.Item
-                  name="verifyCode"
-                  rules={[
-                    {
-                      required: true,
-                      message: "请输入验证码!",
-                    },
-                  ]}
-                >
-                  <Input placeholder="请输入验证码!" />
-                </Form.Item>
-                <img
-                  className=" codeImg "
-                  src={codeSrc}
-                  alt=""
-                  onClick={getCodeSrc}
-                />
-              </div>
               <div className="clickLgzc">
                 <p>
                   没有账号

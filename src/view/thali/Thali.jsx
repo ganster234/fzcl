@@ -58,8 +58,8 @@ export default function Thali(props) {
   useEffect(() => {
     const whetherAPP =
       location.pathname === "/layouts/thali/thail"
-        ? { is_web: 1, is_app: 0 }
-        : { is_web: 0, is_app: 1 };
+        ? { Web: 1, App: 0 }
+        : { Web: 0, App: 1 };
     getList(whetherAPP);
   }, [location, is_qq]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -69,13 +69,17 @@ export default function Thali(props) {
 
   const getList = async (val) => {
     setThaliLoading(true);
-    let result = await getThaliList({ is_qq: props.is_qq ? is_qq : undefined,...val });
+    let result = await getThaliList({
+      Pagenum: "1",
+      Pagesize: "1000",
+      Type: props.is_qq ? is_qq : 1,
+      ...val,
+    });
     const { code, data } = result || {};
-    if (code === 200) {
-      const { appPriceList } = data || {};
+    if (code) {
       let subList =
-        appPriceList &&
-        appPriceList.map((item) => {
+        data &&
+        data.map((item) => {
           return { ...item, status: false };
         });
       setList([...subList]);

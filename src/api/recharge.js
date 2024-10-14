@@ -17,4 +17,4 @@ export const getPayUsdt = (data) => { return getData('pay/usdt', data) }
 export const getCard = (data) => { return postData('add/card', data) }
 
 //支付数据
-export const getPayList = (data) => { return getData('payList', data) }
+export const getPayList = (data) => { return postData("SymoneyGet", data); }

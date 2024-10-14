@@ -6,7 +6,7 @@ import { settlement } from "../../utils/columns";
 import "./mod.less";
 export default function Equipment() {
   const [dataList, setDataList] = useState([]); //表格数据
-  const [goldWay, setGoldWay] = useState("-1"); //选项选中的值
+  const [goldWay, setGoldWay] = useState(""); //选项选中的值
   const [height, setHeight] = useState(600); //表格高度
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState("");
@@ -20,10 +20,18 @@ export default function Equipment() {
   const [wx_app_id, setwx_app_id] = useState(""); //wx_app_id
   const [xuliehao, setxuliehao] = useState(""); //序列号
   const [notify_url, setnotify_url] = useState(""); //回调地址
+  const [fenclass, setfenclass] = useState({}); //分类
 
   const showModal = () => {
     setpaydesignation("");
     setpayway("");
+    setprice("");
+    setremark("");
+    setmy_id("");
+    setmch_wx_key("");
+    setwx_app_id("");
+    setxuliehao("");
+    setnotify_url("");
     setIsModalOpen("新增支付");
   };
 
@@ -38,21 +46,21 @@ export default function Equipment() {
         message.warning("请完成填写相关内容");
       } else {
         setpayprice({
-          id: my_id + "",
-          pay_name: paydesignation,
-          url: payway,
-          price,
-          remark,
-          mch_wx_key,
-          wx_app_id,
-          xuliehao,
-          notify_url,
+          Sid: my_id + "",
+          Type: fenclass.Device_type,
+          Name: paydesignation,
+          Money: price,
+          Remark: remark,
+          Bussid: mch_wx_key,
+          Appid: wx_app_id,
+          Number: xuliehao,
+          Api: notify_url,
+          Url: payway,
         }).then((result) => {
           const { code, msg } = result || {};
           if (code === 200) {
             getList();
             setIsModalOpen("");
-            setremark("");
             message.success("修改成功");
           } else {
             message.error(msg);
@@ -69,24 +77,21 @@ export default function Equipment() {
         message.warning("请完成填写相关内容");
       } else {
         addpayprice({
-          pay_name: paydesignation,
-          pay_type: payway,
-          url: payway,
-          price,
-          remark,
-          mch_wx_key,
-          wx_app_id,
-          xuliehao,
-          notify_url,
-          is_use: 0,
+          ///////////
+          Name: paydesignation,
+          Type: payway,
+          Money: price,
+          Remark: remark,
+          Bussid: mch_wx_key,
+          Appid: wx_app_id,
+          Number: xuliehao,
+          Api: notify_url,
         }).then((result) => {
           const { code, msg } = result || {};
           if (code === 200) {
             getList();
             message.success("新增成功");
             setIsModalOpen("");
-            setpaydesignation("");
-            setpayway("");
           } else {
             message.error(msg);
           }
@@ -108,9 +113,9 @@ export default function Equipment() {
   }, [goldWay]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getList = async () => {
-    let result = await payprice({ is_use: goldWay });
+    let result = await payprice({ State: goldWay });
     const { code, msg, data } = result || {};
-    if (code === 200) {
+    if (code) {
       setDataList(data);
     } else {
       message.destroy();
@@ -143,7 +148,7 @@ export default function Equipment() {
                 setGoldWay(v);
               }}
               options={[
-                { value: "-1", label: "全部" },
+                { value: "", label: "全部" },
                 { value: "0", label: "开启" },
                 { value: "1", label: "关闭" },
               ]}
@@ -171,7 +176,7 @@ export default function Equipment() {
             y: height,
           }}
           pagination={false}
-          rowKey="id"
+          rowKey="Device_Sid"
           dataSource={dataList}
           columns={[
             ...settlement,
@@ -180,14 +185,17 @@ export default function Equipment() {
               render: (record) => (
                 <>
                   <Switch
-                    checked={record.is_use === 0 ? true : false}
+                    checked={record.Device_state === "0" ? true : false}
                     checkedChildren="开启"
                     unCheckedChildren="关闭"
                     defaultChecked
                     onChange={() => {
                       setLoading(true);
-                      const is_use = record.is_use === 0 ? 1 : 0;
-                      setpayprice({ is_use, id: record.id }).then((result) => {
+                      const is_use = record.Device_state === "0" ? "1" : "0";
+                      setpayprice({
+                        State: is_use,
+                        Sid: record.Device_Sid,
+                      }).then((result) => {
                         const { code, msg } = result || {};
                         if (code === 200) {
                           getList();
@@ -209,16 +217,17 @@ export default function Equipment() {
                 <>
                   <Button
                     onClick={() => {
-                      setpaydesignation(record.pay_name);
-                      setpayway(record.url);
-                      setprice(record.price);
-                      setremark(record.remark);
-                      setmy_id(record.id);
-                      setmch_wx_key(record.mch_wx_key);
-                      setwx_app_id(record.wx_app_id);
-                      setxuliehao(record.xuliehao);
-                      setnotify_url(record.notify_url);
-                      console.log(record, "record");
+                      // console.log(record, "recordrecord");
+                      setpaydesignation(record.Device_name);
+                      setpayway(record.Device_url);
+                      setprice(record.Device_money);
+                      setremark(record.Device_remark);
+                      setmy_id(record.Device_Sid);
+                      setmch_wx_key(record.Device_bussid);
+                      setwx_app_id(record.Device_appid);
+                      setxuliehao(record.Device_munber);
+                      setnotify_url(record.Device_api);
+                      setfenclass(record);
                       setIsModalOpen("修改支付");
                     }}
                   >
@@ -277,7 +286,7 @@ export default function Equipment() {
                 ></Input>
               </li>
               <li>
-                <p>wx_app_id：</p>
+                <p>app_id：</p>
                 <Input
                   value={wx_app_id}
                   onChange={(val) => setwx_app_id(val.target.value)}
