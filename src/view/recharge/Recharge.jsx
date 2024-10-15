@@ -71,11 +71,13 @@ export default function Recharge() {
       Pagenum: account ? 1 : current, //页数
       Pagesize: account ? 10 : pageSize, //显示数
     });
-    const { code, msg, data } = result || {};
+    const { code, msg, data, pagenum, total } = result || {};
     if (code) {
       setDataList([...data]);
       // setTotal(data?.total);
       // setTotalMoney(data?.total_money);
+      setTotal(pagenum);
+      setTotalMoney(total);
     } else {
       message.destroy();
       message.error(msg);

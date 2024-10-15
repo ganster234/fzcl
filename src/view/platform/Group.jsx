@@ -45,8 +45,8 @@ export default function Group() {
     const { current, pageSize } = tableParams.pagination;
     setLoading(true);
     let result = await getGroupList({
-      page: current,
-      limit: pageSize,
+      Pagenum: current,
+      Pagesize: pageSize,
       name: str ? "" : groupName,
       Sid: userInfo.Device_Sid, //用户sid
     });
@@ -120,19 +120,21 @@ export default function Group() {
   };
 
   const confirmDelete = async (record) => {
-    if (!record.id) {
+    // return console.log(record, "record", record.Device_sid);
+
+    if (!record.Device_sid) {
       return;
     }
     let result = await getDelGroup({
       // id: record.id
-      Sid: userInfo.Device_Sid, //用户sid
-      Gid: record.Device_sid, //分组sid
+      Sid: record.Device_sid, //用户sid
+      Gid: record.Device_gsid, //分组sid
     });
     message.destroy();
     // eslint-disable-next-line eqeqeq
     if (result?.code == 200) {
       message.success(result?.msg);
-      getList();
+      await getList();
     } else {
       message.error(result?.msg);
     }

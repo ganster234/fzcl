@@ -12,7 +12,7 @@ export const postAddGroup = (data) => {
 
 //删除分组分页
 export const getDelGroup = (data) => {
-  return postData("del/group", data);
+  return postData("OuGroDel", data);
 };
 
 //获取分组列表不分页
