@@ -16,13 +16,15 @@ const ContentLayouts = React.lazy(async () => {
 });
 
 export default function WxThaliCk() {
+  const Userid = sessionStorage.getItem("user");
   const [wxCkLoading, setWxCkLoading] = useState(false);
   const [height, setHeight] = useState(550);
   const [state, setState] = useState({
-    start_time: new Date(),
-    end_time: new Date(),
-    open_task_id: "", //任务编号
-    name: "", //用户名称
+    Stime: new Date(),
+    Etime: new Date(),
+    Sid: "", //任务编号
+    Username: "", //用户名称
+    Type: "2", //1op,2ck
   });
   const [total, setTotal] = useState(0); // 总条数
   const [dataList, setDataList] = useState([]);
@@ -50,21 +52,34 @@ export default function WxThaliCk() {
     const { name, open_task_id, start_time, end_time } = state;
     setWxCkLoading(true);
     let param = {
-      is_op: "2", //1：open,2ck
-      is_qq: "2", //没有这个参数就是QQ，有就是微信
-      name: str ? "" : name,
-      open_task_id: str ? "" : open_task_id,
-      page: str ? 1 : current,
-      limit: str ? 10 : pageSize,
-      start_time: dayjs(str ? new Date() : start_time).format("YYYY-MM-DD"),
-      end_time: dayjs(str ? new Date() : end_time).format("YYYY-MM-DD"),
+      ...state,
+      Userid,
+      // 判断有无参数进来有就取没有就取本页面的
+      Sid: state.Sid,
+      Pagenum: current + "",
+      Pagesize: pageSize + "",
+      Stime: state.Stime && dayjs(state.Stime).format("YYYY-MM-DD"),
+      Etime: state.Stime && dayjs(state.Etime).format("YYYY-MM-DD"),
+      Lytype: "2",
     };
+    if (str) {
+      param = {
+        ...param,
+        Userid,
+        page: 1,
+        Sid: "", //任务编号
+        Username: "", //用户名称
+        Stime: "",
+        Etime: "",
+        Type: "2",
+      };
+    }
     let result = await getOpenList(param);
     const { code, data, msg } = result || {};
     message.destroy();
-    if (code === 200) {
-      setDataList([...data?.data]);
-      setTotal(data?.total);
+    if (code) {
+      setDataList([...data]);
+      setTotal(Number(result.pagenum));
     } else {
       message.error(msg);
     }
@@ -92,7 +107,7 @@ export default function WxThaliCk() {
 
   const query = (str) => {
     const { current, pageSize } = tableParams.pagination;
-    if (current === 1 && pageSize === 10) {
+    if (current === 1) {
       getWxList(str);
     } else {
       getWxList(str);
@@ -136,7 +151,7 @@ export default function WxThaliCk() {
             <Table
               rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
               scroll={{
-                x: 1500,
+                x: 1000,
                 y: height,
               }}
               rowKey={() => Math.random()}
@@ -150,22 +165,21 @@ export default function WxThaliCk() {
               onChange={handleTableChange}
               columns={[
                 {
-                  title: "ID",
-                  dataIndex: "id",
-                  width: 100,
+                  title: "创建时间",
+                  dataIndex: "Device_time",
                 },
                 {
-                  title: "创建时间",
-                  dataIndex: "create_time",
+                  title: "用户名称",
+                  dataIndex: "Device_user",
                 },
                 {
                   title: "任务编号（双击复制）",
                   width: 300,
-                  dataIndex: "openid_task_id",
+                  dataIndex: "Device_Sid",
                   render: (record) => (
                     <span
                       onDoubleClick={() => copy(record)}
-                      className="wx-ckid-task-id"
+                      className="openid-task-id"
                     >
                       {record}
                     </span>
@@ -174,20 +188,7 @@ export default function WxThaliCk() {
                 ...openColumns,
                 {
                   title: "任务状态",
-                  dataIndex: "status",
-                  render: (record) => (
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <div
-                        className={
-                          record
-                            ? "wx-ck-task-status wx-ck-task-status-active"
-                            : "wx-ck-task-status"
-                        }
-                      >
-                        {record ? "已完成" : "进行中"}
-                      </div>
-                    </div>
-                  ),
+                  dataIndex: "Device_remark",
                 },
               ]}
               dataSource={dataList}

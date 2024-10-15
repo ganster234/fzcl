@@ -14,6 +14,7 @@ const ContentLayouts = React.lazy(async () => {
 });
 
 export default function Payment() {
+  const Userid = sessionStorage.getItem("user");
   const [height, setHeight] = useState(550);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0); // 总条数
@@ -45,19 +46,19 @@ export default function Payment() {
     const { current, pageSize } = tableParams.pagination;
     setLoading(true);
     let result = await getPayList({
-      ...state,
-      start_time:
-        state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
-      end_time: state.end_time && dayjs(state.end_time).format("YYYY-MM-DD"),
-      page: current,
-      limit: pageSize,
-      account: account ? "" : state.account,
+      Userid,
+      Stime: state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
+      Etime: state.end_time && dayjs(state.end_time).format("YYYY-MM-DD"),
+      Pagenum: current,
+      Pagesize: pageSize,
+      // account: account ? "" : state.account,
     });
     const { code, data, msg } = result || {};
-    if (code === 200) {
-      setDataList([...data?.list.data]);
-      setTotal(data?.list.total);
-      setaggregate(data?.total);
+    if (code) {
+      console.log(result, "resultresultresult");
+      setDataList([...data]);
+      // setTotal(data?.list.total);
+      // setaggregate(data?.total);
     } else {
       message.destroy();
       message.error(msg);
@@ -181,7 +182,7 @@ export default function Payment() {
             )}
             rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
             scroll={{
-              x: 1500,
+              x: 1000,
               y: height,
             }}
             rowKey={(record) => record.id}

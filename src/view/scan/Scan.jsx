@@ -17,6 +17,7 @@ const ScanHead = React.lazy(async () => {
 });
 // 扫码日志
 export default function Scan() {
+  const Userid = sessionStorage.getItem("user");
   const [height, setHeight] = useState(550);
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
@@ -60,23 +61,23 @@ export default function Scan() {
     const { app_id, order_id, account, first_auth, auth_state } = state;
     setLoading(true);
     let result = await getSanList({
-      ...state,
-      app_id: str ? "" : app_id,
-      order_id: str ? "" : order_id,
-      account: str ? "" : account,
-      first_auth: str ? "" : first_auth,
-      auth_state: str ? "" : auth_state,
-      start_time: dayjs(str ? new Date() : state.start_time).format(
-        "YYYY-MM-DD"
-      ),
-      end_time: dayjs(str ? new Date() : state.end_time).format("YYYY-MM-DD"),
-      page: str ? 1 : current,
-      limit: str ? 10 : pageSize,
+      // ...state,
+      Usersid: Userid,
+      Appid: str ? "" : app_id,
+      // Name: str ? "" : order_id,
+      Name: str ? "" : account,
+      Type: str ? "" : first_auth,
+      State: str ? "" : auth_state,
+      Stime: dayjs(str ? new Date() : state.start_time).format("YYYY-MM-DD"),
+      Etime: dayjs(str ? new Date() : state.end_time).format("YYYY-MM-DD"),
+      Pagenum: str ? "1" : current + "",
+      Pagesize: str ? "10" : pageSize + "",
     });
     const { code, data, msg } = result || {};
-    if (code === 200) {
-      setDataList([...data?.data]);
-      setTotal(data?.total);
+    if (code) {
+      setDataList([...data]);
+      console.log(Number(result?.pagenum));
+      setTotal(Number(result?.pagenum));
     } else {
       message.destroy();
       message.error(msg);
@@ -147,7 +148,7 @@ export default function Scan() {
               x: 1500,
               y: height,
             }}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.Device_Sid}
             loading={loading}
             pagination={{
               ...tableParams.pagination,

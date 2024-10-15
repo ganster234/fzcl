@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, message, Modal, Input,Button } from "antd";
+import { Table, message, Modal, Input, Button } from "antd";
 import { useSearchParams, useLocation } from "react-router-dom";
 
 import { getResidueHeightByDOMRect } from "../../utils/utils";
@@ -12,7 +12,6 @@ import {
 } from "../../api/open";
 import { openColumns } from "../../utils/columns";
 import OpenTop from "./components/OpenTop";
-import CreateOpenModal from "./components/CreateOpenModal";
 import ExportModal from "./components/ExportModal";
 import dayjs from "dayjs";
 import "./Open.less";
@@ -29,15 +28,14 @@ export default function Open() {
   const [saleShow, setSaleShow] = useState(false); //售后
   const [saleNumber, setSaleNumber] = useState("");
   const [saleConfirmLoading, setSaleConfirmLoading] = useState(false);
-  const location = useLocation();
-  const [showOpen, setShowOpen] = useState(false); //创建open
   const [exportOpen, setExportOpen] = useState(false);
+  const Userid = sessionStorage.getItem("user");
   const [state, setState] = useState({
-    start_time: new Date(),
-    end_time: new Date(),
-    open_task_id: "", //任务编号
-    name: "", //用户名称
-    is_op: "1", //1op,2ck
+    Stime: new Date(),
+    Etime: new Date(),
+    Sid: "", //任务编号
+    Username: "", //用户名称
+    Type: "1", //1op,2ck
   });
   const [total, setTotal] = useState(0); // 总条数
   const [dataList, setDataList] = useState([]);
@@ -56,10 +54,6 @@ export default function Open() {
     };
     (() => {
       openList();
-      const { state } = location;
-      if (state?.app_id && state?.num) {
-        setShowOpen(true);
-      }
     })();
   }, [JSON.stringify(tableParams)]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -69,33 +63,33 @@ export default function Open() {
     setLoading(true);
     let param = {
       ...state,
+      Userid,
       // 判断有无参数进来有就取没有就取本页面的
-      open_task_id: search.get("open_task_id")
-        ? search.get("open_task_id")
-        : state.open_task_id,
-      page: current,
-      limit: pageSize,
-      start_time:
-        state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
-      end_time: state.start_time && dayjs(state.end_time).format("YYYY-MM-DD"),
+      Sid: search.get("Sid") ? search.get("Sid") : state.Sid,
+      Pagenum: current + "",
+      Pagesize: pageSize + "",
+      Stime: state.Stime && dayjs(state.Stime).format("YYYY-MM-DD"),
+      Etime: state.Stime && dayjs(state.Etime).format("YYYY-MM-DD"),
+      Lytype: "1",
     };
     if (str) {
       param = {
         ...param,
+        Userid,
         page: 1,
-        open_task_id: "", //任务编号
-        name: "", //用户名称
-        start_time: "",
-        end_time: "",
-        is_op: "1",
+        Sid: "", //任务编号
+        Username: "", //用户名称
+        Stime: "",
+        Etime: "",
+        Type: "1",
       };
     }
     let result = await getOpenList(param);
     const { code, data, msg } = result || {};
     message.destroy();
-    if (code === 200) {
-      setDataList([...data?.data]);
-      setTotal(data?.total);
+    if (code) {
+      setDataList([...data]);
+      setTotal(Number(result.pagenum));
     } else {
       message.error(msg);
     }
@@ -108,7 +102,7 @@ export default function Open() {
   //查询或者是重置，是第一页就直接调用接口，不是第一页就改变页数触发请求
   const changeCurrentGetList = (str) => {
     const { pagination } = tableParams;
-    if (pagination.current === 1 && pagination.pageSize === 10) {
+    if (pagination.current === 1) {
       openList(str);
     } else {
       setTableParams(() => {
@@ -125,10 +119,10 @@ export default function Open() {
   const openReset = () => {
     setState({
       ...state,
-      start_time: new Date(),
-      end_time: new Date(),
-      open_task_id: "", //任务编号
-      name: "", //用户名称
+      Stime: new Date(),
+      Etime: new Date(),
+      Sid: "", //任务编号
+      Username: "", //用户名称
     });
     changeCurrentGetList("str");
   };
@@ -159,20 +153,10 @@ export default function Open() {
     copyInput.remove(); //删除动态创建的节点
   };
 
-  const changeModal = () => {
-    setShowOpen(true);
-  };
   const changeExport = () => {
     setExportOpen(true);
   };
 
-  const cancelModal = () => {
-    setShowOpen(false);
-  };
-  const comModal = () => {
-    setShowOpen(false);
-    openList();
-  };
   const setExport = (data) => {
     setExportOpen(data);
   };
@@ -218,7 +202,7 @@ export default function Open() {
       return message.error("订单ID不存在,请联系客服");
     }
     setLoading(true);
-    let { code, msg } = await setRenewUpdate({openid_task_id});
+    let { code, msg } = await setRenewUpdate({ openid_task_id });
     if (code === 200) {
       message.success("更新open中,请稍等片刻");
       openList();
@@ -235,7 +219,6 @@ export default function Open() {
           setStatus={setStatus}
           openQuery={openQuery}
           openReset={openReset}
-          changeModal={changeModal}
           changeExport={changeExport}
           saleChange={saleChange}
         />
@@ -245,7 +228,7 @@ export default function Open() {
           <Table
             rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
             scroll={{
-              x: 1500,
+              x: 1000,
               y: height,
             }}
             rowKey={() => Math.random()}
@@ -259,18 +242,17 @@ export default function Open() {
             onChange={handleTableChange}
             columns={[
               {
-                title: "ID",
-                dataIndex: "id",
-                width: 200,
+                title: "创建时间",
+                dataIndex: "Device_time",
               },
               {
-                title: "创建时间",
-                dataIndex: "create_time",
+                title: "用户名称",
+                dataIndex: "Device_user",
               },
               {
                 title: "任务编号（双击复制）",
                 width: 300,
-                dataIndex: "openid_task_id",
+                dataIndex: "Device_Sid",
                 render: (record) => (
                   <span
                     onDoubleClick={() => copy(record)}
@@ -281,63 +263,37 @@ export default function Open() {
                 ),
               },
               ...openColumns,
-
               {
                 title: "任务状态",
-                dataIndex: "status",
-                render: (record) => (
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <div
-                      className={
-                        record
-                          ? "open-task-status open-task-status-active"
-                          : "open-task-status"
-                      }
-                    >
-                      {record ? "已完成" : "进行中"}
-                    </div>
-                  </div>
-                ),
+                dataIndex: "Device_remark",
               },
-              {
-                title: "操作",
-                width: 220,
-                render: (record) => (
-                  <>
-                    {renew[record.package_id] && (
-                      <div className="open-task-package">
-                        {/* <Button
-                          type="primary"
-                          onClick={() => renewBtn(record.openid_task_id)}
-                        >
-                          续费
-                        </Button> */}
-                        <Button
-                          onClick={() => renewUpdate(record.openid_task_id)}
-                        >
-                          更新open
-                        </Button>
-                      </div>
-                    )}
-                    {!renew[record.package_id] && "-"}
-                  </>
-                ),
-              },
+              // {
+              //   title: "操作",
+              //   width: 220,
+              //   render: (record) => (
+              //     <>
+              //       { (
+              //         <div className="open-task-package">
+              //           {/* <Button
+              //             type="primary"
+              //             onClick={() => renewBtn(record.openid_task_id)}
+              //           >
+              //             续费
+              //           </Button> */}
+              //           <Button
+              //             onClick={() => renewUpdate(record.openid_task_id)}
+              //           >
+              //             更新open
+              //           </Button>
+              //         </div>
+              //       )}
+              //     </>
+              //   ),
+              // },
             ]}
             dataSource={dataList}
           />
-          <Modal
-            title="创建任务"
-            open={showOpen}
-            width={400}
-            footer={null}
-            destroyOnClose
-            onCancel={() => setShowOpen(false)}
-          >
-            {showOpen && (
-              <CreateOpenModal cancelModal={cancelModal} comModal={comModal} />
-            )}
-          </Modal>
+
           <Modal
             title="open导出"
             open={exportOpen}

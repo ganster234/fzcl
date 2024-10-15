@@ -12,7 +12,6 @@ import {
 } from "../../api/open";
 import { openColumns } from "../../utils/columns";
 import OpenTop from "./components/CkTop";
-import CreateOpenModal from "./components/CreateCkModal";
 import ExportModal from "./components/ExportModal";
 import dayjs from "dayjs";
 import "./Ck.less";
@@ -26,18 +25,16 @@ const ContentLayouts = React.lazy(async () => {
 export default function Ck() {
   const [height, setHeight] = useState(550);
   const [loading, setLoading] = useState(false);
-  const [showOpen, setShowOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [saleShow, setSaleShow] = useState(false); //售后
   const [saleNumber, setSaleNumber] = useState("");
   const [saleConfirmLoading, setSaleConfirmLoading] = useState(false);
-  const location = useLocation();
   const [state, setState] = useState({
-    start_time: new Date(),
-    end_time: new Date(),
-    open_task_id: "", //任务编号
-    name: "", //用户名称
-    is_op: "2", //1op,2ck
+    Stime: new Date(),
+    Etime: new Date(),
+    Sid: "", //任务编号
+    Username: "", //用户名称
+    Type: "2", //1op,2ck
   });
   const [total, setTotal] = useState(0); // 总条数
   const [dataList, setDataList] = useState([]);
@@ -47,6 +44,7 @@ export default function Ck() {
       pageSize: 10, // 每页数据条数
     },
   });
+  const Userid = sessionStorage.getItem("user");
 
   useEffect(() => {
     //高度自适应
@@ -55,10 +53,6 @@ export default function Ck() {
       setHeight(getResidueHeightByDOMRect());
     };
     (() => {
-      const { state } = location;
-      if (state?.app_id && state?.num) {
-        setShowOpen(true);
-      }
       openList();
     })();
   }, [JSON.stringify(tableParams)]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -69,32 +63,33 @@ export default function Ck() {
     setLoading(true);
     let param = {
       ...state,
-      page: str ? 1 : current,
-      limit: str ? 10 : pageSize,
-      start_time:
-        state.start_time &&
-        dayjs(str ? new Date() : state.start_time).format("YYYY-MM-DD"),
-      end_time:
-        state.start_time &&
-        dayjs(str ? new Date() : state.end_time).format("YYYY-MM-DD"),
+      Userid,
+      // 判断有无参数进来有就取没有就取本页面的
+      Sid:  state.Sid,
+      Pagenum: current + "",
+      Pagesize: pageSize + "",
+      Stime: state.Stime && dayjs(state.Stime).format("YYYY-MM-DD"),
+      Etime: state.Stime && dayjs(state.Etime).format("YYYY-MM-DD"),
+      Lytype: "1",
     };
     if (str) {
       param = {
         ...param,
+        Userid,
         page: 1,
-        open_task_id: "", //任务编号
-        name: "", //用户名称
-        start_time: "",
-        end_time: "",
-        is_op: "2",
+        Sid: "", //任务编号
+        Username: "", //用户名称
+        Stime: "",
+        Etime: "",
+        Type: "2",
       };
     }
     let result = await getOpenList(param);
     const { code, data, msg } = result || {};
     message.destroy();
-    if (code === 200) {
-      setDataList([...data?.data]);
-      setTotal(data?.total);
+    if (code) {
+      setDataList([...data]);
+      setTotal(Number(result.pagenum));
     } else {
       message.error(msg);
     }
@@ -124,10 +119,10 @@ export default function Ck() {
   const openReset = () => {
     setState({
       ...state,
-      start_time: new Date(),
-      end_time: new Date(),
-      open_task_id: "", //任务编号
-      name: "", //用户名称
+      Stime: new Date(),
+      Etime: new Date(),
+      Sid: "", //任务编号
+      Username: "", //用户名称
     });
     changeCurrentGetList("str");
   };
@@ -158,24 +153,13 @@ export default function Ck() {
     copyInput.remove(); //删除动态创建的节点
   };
 
-  const changeModal = () => {
-    setShowOpen(true);
-  };
   const changeExport = () => {
     setExportOpen(true);
   };
 
-  const cancelModal = () => {
-    setShowOpen(false);
-  };
-  const comModal = () => {
-    setShowOpen(false);
-    openList();
-  };
   const setExport = (data) => {
     setExportOpen(data);
   };
-
   const saleChange = (data) => {
     setSaleShow(data);
   };
@@ -235,7 +219,6 @@ export default function Ck() {
           setStatus={setStatus}
           openQuery={openQuery}
           openReset={openReset}
-          changeModal={changeModal}
           changeExport={changeExport}
           saleChange={saleChange}
         />
@@ -245,7 +228,7 @@ export default function Ck() {
           <Table
             rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
             scroll={{
-              x: 1500,
+              x: 1000,
               y: height,
             }}
             rowKey={() => Math.random()}
@@ -259,17 +242,17 @@ export default function Ck() {
             onChange={handleTableChange}
             columns={[
               {
-                title: "ID",
-                dataIndex: "id",
+                title: "创建时间",
+                dataIndex: "Device_time",
               },
               {
-                title: "创建时间",
-                dataIndex: "create_time",
+                title: "用户名称",
+                dataIndex: "Device_user",
               },
               {
                 title: "任务编号（双击复制）",
                 width: 300,
-                dataIndex: "openid_task_id",
+                dataIndex: "Device_Sid",
                 render: (record) => (
                   <span
                     onDoubleClick={() => copy(record)}
@@ -282,58 +265,35 @@ export default function Ck() {
               ...openColumns,
               {
                 title: "任务状态",
-                dataIndex: "status",
-                render: (record) => (
-                  <div
-                    className={
-                      record
-                        ? "open-task-status open-task-status-active"
-                        : "open-task-status"
-                    }
-                  >
-                    {record ? "已完成" : "进行中"}
-                  </div>
-                ),
+                dataIndex: "Device_remark",
               },
-              {
-                title: "操作",
-                width: 220,
-                render: (record) => (
-                  <>
-                    {renew[record.package_id] && (
-                      <div className="open-task-package">
-                        {/* <Button
-                          type="primary"
-                          onClick={() => renewBtn(record.openid_task_id)}
-                        >
-                          续费
-                        </Button> */}
-                        <Button
-                          onClick={() => renewUpdate(record.openid_task_id)}
-                        >
-                          更新open
-                        </Button>
-                      </div>
-                    )}
-                    {!renew[record.package_id] && "-"}
-                  </>
-                ),
-              },
+              // {
+              //   title: "操作",
+              //   width: 220,
+              //   render: (record) => (
+              //     <>
+              //       {renew[record.package_id] && (
+              //         <div className="open-task-package">
+              //           {/* <Button
+              //             type="primary"
+              //             onClick={() => renewBtn(record.openid_task_id)}
+              //           >
+              //             续费
+              //           </Button> */}
+              //           <Button
+              //             onClick={() => renewUpdate(record.openid_task_id)}
+              //           >
+              //             更新open
+              //           </Button>
+              //         </div>
+              //       )}
+              //       {!renew[record.package_id] && "-"}
+              //     </>
+              //   ),
+              // },
             ]}
             dataSource={dataList}
           />
-          <Modal
-            title="创建任务"
-            open={showOpen}
-            width={400}
-            footer={null}
-            destroyOnClose
-            onCancel={() => setShowOpen(false)}
-          >
-            {showOpen && (
-              <CreateOpenModal cancelModal={cancelModal} comModal={comModal} />
-            )}
-          </Modal>
           <Modal
             title="ck导出"
             open={exportOpen}

@@ -1,45 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { Input, Button, DatePicker, Modal, message } from "antd";
 import { SyncOutlined, SearchOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 
 import { setAftermarket } from "../../../api/open";
-import CreateTaskModal from "./CreateTaskModal";
 import ExportWxCk from "./ExportWxCk";
 
 import "./WxCkTop.less";
 
 export default function WxCkTop({ state, changeState, ckQueryReset }) {
-  const location = useLocation();
-  const [createTask, setCreateTask] = useState(false);
   const [exportWxCk, setExportWxCk] = useState(false);
   const [saleWxCk, setSaleWxCk] = useState(false);
   const [saleWxCkNumber, setSaleWxCkNumber] = useState("");
   const [saleWxCkConfirmLoading, setSaleWxCkConfirmLoading] = useState(false);
   
-  useEffect(() => {
-    const { state } = location;
-    if (state?.app_id && state?.num) {
-      setCreateTask(true);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const { state } = location;
+  //   if (state?.app_id && state?.num) {
+  //     setCreateTask(true);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const endDisabledDay = (current) => {
-    return current && (current < dayjs(state.start_time) || current > dayjs());
+    return current && (current < dayjs(state.Stime) || current > dayjs());
   };
 
   const disabledDate = (current) => {
     return current && current > dayjs();
   };
 
-  const taskWxCancel = (str) => {
-    setCreateTask(false);
-    if (str) {
-      ckQueryReset("reset");
-    }
-  };
 
   const comSale = async () => {
     if (!saleWxCkNumber) {
@@ -68,13 +58,13 @@ export default function WxCkTop({ state, changeState, ckQueryReset }) {
             <div className="wx-ck-top-input-item-texts">起止日期：</div>
             <div className="wx-ck-top-date-picker">
               <DatePicker
-                value={dayjs(state?.start_time)}
+                value={dayjs(state?.Stime)}
                 disabledDate={disabledDate}
                 onChange={(value) => {
                   if (value) {
-                    changeState("start_time", value);
+                    changeState("Stime", value);
                   } else {
-                    changeState("start_time", new Date());
+                    changeState("Stime", new Date());
                   }
                 }}
                 className="search-date-picker"
@@ -84,13 +74,13 @@ export default function WxCkTop({ state, changeState, ckQueryReset }) {
               />
               <span className="wx-ck-least">至</span>
               <DatePicker
-                value={dayjs(state?.end_time)}
+                value={dayjs(state?.Etime)}
                 disabledDate={endDisabledDay}
                 onChange={(value) => {
                   if (value) {
-                    changeState("end_time", value);
+                    changeState("Etime", value);
                   } else {
-                    changeState("end_time", new Date());
+                    changeState("Etime", new Date());
                   }
                 }}
                 className="search-date-picker"
@@ -103,7 +93,7 @@ export default function WxCkTop({ state, changeState, ckQueryReset }) {
           <div className="wx-ck-top-input-item">
             <div className="wx-ck-top-input-item-texts">用户名称：</div>
             <Input
-              value={state?.name}
+              value={state?.Username}
               onChange={(even) => changeState("name", even.target.value)}
               style={{ width: "220px", height: "32px" }}
               placeholder="请输入用户名称"
@@ -112,7 +102,7 @@ export default function WxCkTop({ state, changeState, ckQueryReset }) {
           <div className="wx-ck-top-input-item">
             <div className="wx-ck-top-input-item-texts">任务编号：</div>
             <Input
-              value={state?.open_task_id}
+              value={state?.Sid}
               onChange={(even) =>
                 changeState("open_task_id", even.target.value)
               }
@@ -139,13 +129,6 @@ export default function WxCkTop({ state, changeState, ckQueryReset }) {
         </div>
         <div className="create-wx-ck-export">
           <Button
-            type="primary"
-            className="create-btn"
-            onClick={() => setCreateTask(true)}
-          >
-            创建任务
-          </Button>
-          <Button
             className="wx-ck-export"
             style={{ color: "#ff9100" }}
             onClick={() => setExportWxCk(true)}
@@ -160,16 +143,6 @@ export default function WxCkTop({ state, changeState, ckQueryReset }) {
           </Button> */}
         </div>
       </div>
-      <Modal
-        title="创建任务"
-        open={createTask}
-        width={400}
-        footer={null}
-        destroyOnClose
-        onCancel={() => setCreateTask(false)}
-      >
-        {createTask && <CreateTaskModal taskWxCancel={taskWxCancel} />}
-      </Modal>
       <Modal
         title="ck导出"
         open={exportWxCk}

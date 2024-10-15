@@ -168,55 +168,42 @@ export const priceManageColumns = [
 export const scanColumns = [
   {
     title: "appid",
-    dataIndex: "app_id",
-  },
-  {
-    title: "账号",
-    dataIndex: "account",
-    render: (record) => <div>{record || "-"}</div>,
+    dataIndex: "Device_appid",
   },
   {
     title: "项目名称",
-    dataIndex: "app_name",
+    dataIndex: "Device_name",
     render: (record) => <div>{record || "-"}</div>,
   },
   {
     title: "订单号",
-    dataIndex: "order_id",
+    dataIndex: "Device_psid",
   },
   {
     title: "套餐名",
-    dataIndex: "package_name",
+    dataIndex: "Device_pname",
+    render: (record) => <div>{record || "-"}</div>,
+  },
+  {
+    title: "套餐类型",
+    dataIndex: "Device_tcname",
     render: (record) => <div>{record || "-"}</div>,
   },
   {
     title: "扫码类型",
-    dataIndex: "first_auth",
-    render: (record) => (
-      <span className={record ? "scan-type first" : "scan-type repeat"}>
-        {record ? "首次扫码" : "复扫"}
-      </span>
-    ),
+    dataIndex: "Device_type",
   },
   {
     title: "扫码状态",
-    dataIndex: "auth_state",
-    render: (record) => (
-      <span
-        className={record ? "scan-type scan-success" : "scan-type scan-fail"}
-      >
-        {record ? "扫码成功" : "扫码失败"}
-      </span>
-    ),
+    dataIndex: "Device_state",
   },
   {
-    title: "扫码类型",
-    width: 200,
-    dataIndex: "auth_message",
+    title: "备注",
+    dataIndex: "Device_remark",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 
@@ -307,41 +294,41 @@ export const iPtable = [
 
 export const payColumns = [
   {
-    title: "支付订单号",
-    dataIndex: "pay_order_id",
-    render: (record) => <span>{record ? record : "-"}</span>,
-  },
-  {
-    title: "账号名称",
-    dataIndex: "account",
+    title: "任务编号",
+    dataIndex: "Device_Sid",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "项目名称",
-    dataIndex: "app_name",
+    dataIndex: "Device_name",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "账号名称",
+    dataIndex: "Device_user",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "套餐名称",
-    dataIndex: "package_name",
+    dataIndex: "Device_pname",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "订单数量",
-    dataIndex: "order_num",
+    dataIndex: "Device_num",
     render: (record) => <span>{record ? record : "0"}</span>,
   },
   {
     title: "支付金额",
-    dataIndex: "pay_balance",
+    dataIndex: "Device_money",
   },
   {
     title: "剩余金额",
-    dataIndex: "sum_balance",
+    dataIndex: "Device_yemoney",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 
@@ -410,22 +397,17 @@ export const groupColumns = [
 
 export const openColumns = [
   {
-    title: "用户名称",
-    dataIndex: "account",
-  },
-  {
     title: "任务名称",
-    dataIndex: "name",
+    dataIndex: "Device_name",
   },
   {
     title: "任务数量",
-    dataIndex: "num",
+    dataIndex: "Device_num",
   },
   {
     title: "已完成数量",
-    dataIndex: "requests_num",
+    dataIndex: "Device_wcnum",
   },
-
 ];
 
 export const trustColumns = [
