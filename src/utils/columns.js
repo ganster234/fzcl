@@ -94,39 +94,39 @@ export const projectColumns = [
 export const userListColumns = [
   {
     title: "账号",
-    dataIndex: "account",
+    dataIndex: "Device_name",
   },
   {
     title: "邀请人",
-    dataIndex: "inviter_code",
+    dataIndex: "Device_yname",
   },
   {
     title: "权限",
-    dataIndex: "permissions",
-    render: (record) => (
-      <div>
-        {record === 0 && "管理员"}
-        {record === 2 && "普通用户"}
-      </div>
-    ),
+    dataIndex: "Device_type",
+    // render: (record) => (
+    //   <div>
+    //     {record === 0 && "管理员"}
+    //     {record === 2 && "普通用户"}
+    //   </div>
+    // ),
   },
   {
     title: "是否禁用",
-    dataIndex: "disable",
-    render: (record) => (
-      <div>
-        {record === 0 && "正常"}
-        {record === 1 && "禁用"}
-      </div>
-    ),
+    dataIndex: "Device_state",
+    // render: (record) => (
+    //   <div>
+    //     {record === 0 && "正常"}
+    //     {record === 1 && "禁用"}
+    //   </div>
+    // ),
   },
   {
     title: "余额",
-    dataIndex: "balance",
+    dataIndex: "Device_money",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 
@@ -290,17 +290,17 @@ export const apply_show = [
 export const iPtable = [
   {
     title: "账号",
-    dataIndex: "account",
+    dataIndex: "Device_Name",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "备注",
-    dataIndex: "remark",
+    dataIndex: "Device_Remark",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_Time",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
 ];
@@ -396,15 +396,15 @@ export const rechargeColumns = [
 export const groupColumns = [
   {
     title: "ID",
-    dataIndex: "id",
+    dataIndex: "Device_gid",
   },
   {
     title: "分组名称",
-    dataIndex: "group_name",
+    dataIndex: "Device_Name",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 

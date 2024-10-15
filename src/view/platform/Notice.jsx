@@ -14,8 +14,11 @@ export default function Notice() {
   const getNoticeData = async () => {
     let result = await getNotice();
     message.destroy();
-    if (result?.code===200) {
-      setState(() => ({ ...result?.data }));
+    // return console.log(result, "result");
+
+    // eslint-disable-next-line eqeqeq
+    if (result?.code == 200) {
+      setState(() => ({ ...result?.data[0] }));
     } else {
       message.error(result?.msg);
     }
@@ -28,15 +31,16 @@ export default function Notice() {
   }, []);
 
   const renew = async () => {
-    if (!state.id) {
-      return;
-    }
+    // if (!state.Device_Remark) {
+    //   return;
+    // }
     setLoading(true);
-    let result = await postUpdateNotice({ ...state });
+    let result = await postUpdateNotice({ Remark: state.Device_Remark });
     message.destroy();
-    if (result?.code===200) {
-      message.success('发布成功');
-      getNoticeData();
+    // eslint-disable-next-line eqeqeq
+    if (result?.code == 200) {
+      message.success("发布成功");
+      await getNoticeData();
     } else {
       message.error(result?.msg);
     }
@@ -49,7 +53,7 @@ export default function Notice() {
         <div className="notice-content-title">公告内容：</div>
         <div className="notice-textarea-btn">
           <TextArea
-            value={state.notice}
+            value={state.Device_Remark}
             style={{
               height: 260,
               padding: 24,
@@ -57,7 +61,7 @@ export default function Notice() {
             }}
             onChange={(even) =>
               setState((data) => {
-                return { ...data, notice: even.target.value };
+                return { ...data, Device_Remark: even.target.value };
               })
             }
           />

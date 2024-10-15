@@ -15,7 +15,7 @@ export const getChangePrice = (data) => {
   return postData("OuproMainBaUp", data);
 };
 
-// 添加项目
+// 新增项目
 export const getAddProject = (data) => {
   return postData("OuproAdd", data);
 };
@@ -40,7 +40,7 @@ export const getProjectPackList = (data) => {
 
 //添加项目页面的接口
 export const setAddApplication = (data) => {
-  return postData("add/application", data);
+  return postData("OuprowebAdd", data);
 };
 //新增项目别名
 export const addProjectAlias = (data) => {
@@ -57,5 +57,5 @@ export const getProjectAlias = (data) => {
 
 //上报长沙
 export const reporteddata = (data) => {
-  return getData("set/escalation/wx", data);
+  return postData("OuproMainUpUpLoad", data);
 };

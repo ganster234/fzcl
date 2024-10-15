@@ -23,6 +23,7 @@ import { projectColumns } from "../../utils/columns";
 import ProMolde from "./ProMolde";
 import { useLocation } from "react-router-dom";
 import "./Project.less";
+import useAppStore from "../../store";
 
 //可编辑逻辑
 const EditableCell = ({
@@ -90,24 +91,13 @@ const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
     } = editValue;
 
     try {
-      await updateProjectAlias(
-        //   {
-        //   app_id:
-        //     location.pathname !== "/layouts/platform/project"
-        //       ? currentItem.wx_app_id
-        //       : currentItem.app_id,
-        //   id: id.toString(),
-        //   name,
-        //   real_id,
-        // }
-        {
-          Sid: Device_Sid,
-          Psid: Device_Psid,
-          Rid: Device_realid,
-          Aid: Device_appid, //app_id
-          Name: Device_name,
-        }
-      );
+      await updateProjectAlias({
+        Sid: Device_Sid,
+        Psid: Device_Psid,
+        Rid: Device_realid,
+        Aid: Device_appid, //app_id
+        Name: Device_name,
+      });
       message.success("修改成功");
       await fetchAliases();
       // 刷新数据
@@ -231,6 +221,7 @@ export default function Project() {
   const [aliasTableData, setAliasTableData] = useState([]); // 别名表格数据
 
   const location = useLocation();
+  const userInfo = useAppStore((state) => state.userInfo);
 
   useEffect(() => {
     // 根据 modalType 进行数据加载
@@ -262,10 +253,6 @@ export default function Project() {
   const fetchAliases = async () => {
     try {
       const response = await getProjectAlias({
-        // app_id:
-        //   location.pathname !== "/layouts/platform/project"
-        //     ? currentItem.wx_app_id
-        //     : currentItem.app_id,
         Psid: currentItem.Device_Sid,
       }); // 查询别名接口
       setAliasTableData(response.data);
@@ -276,27 +263,21 @@ export default function Project() {
 
   const handleAddAlias = async (values) => {
     console.log("handleAddAlias", values);
-    console.log(currentItem, "currentItem");
-
+    console.log(userInfo, "userInfo", currentItem);
     const { alias, real_id } = values;
     try {
-      await addProjectAlias(
-        //   {
-        //   app_id:
-        //     location.pathname !== "/layouts/platform/project"
-        //       ? currentItem.wx_app_id
-        //       : currentItem.app_id,
-        //   real_id,
-        //   name: alias,
-        // }
-        {
-          Sid: currentItem.Device_Psid, //用户sid
-          // Psid: currentItem.Device_Psid, //项目sid
-          Name: alias, //别名
-          Rid: real_id, //real_id
-          Aid: currentItem.Device_appid, //APP_id
-        }
-      ); // 新增项目别名
+      const AddAliasParams = {
+        Sid: userInfo.Device_Sid, //用户sid
+        Psid: currentItem.Device_Sid, //项目sid
+        Name: alias, //别名
+        Rid: real_id, //real_id
+        Aid:
+          location.pathname === "/layouts/platform/project"
+            ? currentItem.Device_appid
+            : currentItem.Device_wxappid,
+      };
+      // return console.log(AddAliasParams, "AddAliasParams");
+      await addProjectAlias({ ...AddAliasParams }); // 新增项目别名
       message.success("新增别名成功");
       await fetchAliases(); // 刷新别名数据
       setIsModalVisible(false);
@@ -345,7 +326,7 @@ export default function Project() {
       Name: val === "重置" ? "" : app_name,
       Pagenum: val ? 1 : current,
       Pagesize: val ? 10 : pageSize,
-      Type: "1",
+      Type: location.pathname === "/layouts/platform/project" ? "1" : "2", // "Type": "1", //0 全部 1 Q 2 W
     });
     const { code, data, msg } = result || {};
     // eslint-disable-next-line eqeqeq
@@ -410,19 +391,9 @@ export default function Project() {
       State: subItem.Device_state,
     };
     console.log(editData, "editData");
-    let result = await getChangePrice(
-      //   {
-      //   price_id:
-      //     location.pathname === "/layouts/platform/project"
-      //       ? projectDetails.app_id
-      //       : wx_app_id,
-      //   package_id: item.id,
-      //   price: item.distribution_price,
-      // }
-      {
-        ...editData,
-      }
-    );
+    let result = await getChangePrice({
+      ...editData,
+    });
     message.destroy();
     // eslint-disable-next-line eqeqeq
     if (result?.code == 200) {
@@ -432,6 +403,7 @@ export default function Project() {
       message.error(result?.msg || "");
     }
     setPopupLoading(false);
+    getList();
     // }
     // } else {
     // if (item) {
@@ -477,6 +449,22 @@ export default function Project() {
     } else {
       message.error(msg || "");
     }
+  };
+  const handleClickReport = async (record) => {
+    const res = await reporteddata({
+      Sid: record.Device_Sid,
+    });
+    // eslint-disable-next-line eqeqeq
+    if (res?.code == 200) {
+      message.success("上报成功");
+    } else {
+      message.error(res?.msg || "");
+    }
+    console.log(res);
+
+    // .then((res) => {
+    //   message.info(res.msg);
+    // });
   };
   return (
     <>
@@ -528,9 +516,9 @@ export default function Project() {
               {
                 title: "APP_id",
                 dataIndex:
-                  location.pathname === "/layouts/platform/project"
-                    ? "Device_appid"
-                    : "Device_wxappid",
+                  location.pathname !== "/layouts/platform/project"
+                    ? "Device_wxappid"
+                    : "Device_appid",
               },
 
               ...projectColumns,
@@ -546,13 +534,9 @@ export default function Project() {
                   >
                     {location.pathname !== "/layouts/platform/project" ? (
                       <Button
+                        type="text"
                         onClick={() => {
-                          reporteddata({
-                            wx_app_id: record.wx_app_id,
-                            app_name: record.app_name,
-                          }).then((res) => {
-                            message.info(res.msg);
-                          });
+                          handleClickReport(record);
                         }}
                         style={{ marginTop: "5px" }}
                         size="small"

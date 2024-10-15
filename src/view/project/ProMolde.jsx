@@ -43,7 +43,6 @@ const Udetails = forwardRef((props, ref) => {
   };
   const childFunction = (val) => {
     console.log(val, "childFunction");
-
     iform.setFieldsValue({
       // app_name: val.app_name,
       // app_id: val.app_id,
@@ -89,6 +88,7 @@ const Udetails = forwardRef((props, ref) => {
         Game: is_game, //tx游戏 1不是  0 是
         Bag: pack_name, //包名
       };
+      // return console.log(apiData, "apiData");
 
       if (addState === "新增Q/W项目") {
         const { code, msg } = await getAddProject(apiData);
@@ -192,7 +192,7 @@ const Udetails = forwardRef((props, ref) => {
             >
               {/* <Radio value={"0"}>否</Radio>
               <Radio value={"1"}>是</Radio> */}
-              <Radio value={"2"}>否</Radio>
+              <Radio value={"1"}>否</Radio>
               <Radio value={"0"}>是</Radio>
             </Radio.Group>
           </Form.Item>

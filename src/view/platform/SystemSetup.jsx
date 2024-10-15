@@ -8,6 +8,8 @@ import "./SystemSetup.less";
 
 export default function SystemSetup() {
   const setUserInfo = useAppStore((state) => state.getUserInfo);
+  const userInfo = useAppStore((state) => state.userInfo);
+
   const [state, setState] = useState({});
   const [fields, setFields] = useState([]);
   const [setupLoading, setSetupLoading] = useState(false);
@@ -16,26 +18,34 @@ export default function SystemSetup() {
     getRateList();
   }, []);
   const onChange = (key) => {
+    console.log(key, "key");
     getRateList(key);
   };
-  const getRateList = async (val) => {
+  const getRateList = async (val = "0") => {
     setSetupLoading(true);
     try {
       const result = await getRate({
-        group: val,
+        Type: val,
       });
-      if (result?.code === 200) {
+      // eslint-disable-next-line eqeqeq
+      if (result?.code == 200) {
+        console.log(result.data, "result");
         const fieldsData = result.data.map((item, index) => ({
-          id: item.id,
-          label: item.remark,
-          key: item.notice, // Assuming the key should be unique, possibly `config_id`
-          config_id: item.config_id,
-          value: item.notice,
-          type: item.remark.includes("地址") ? "input" : "inputNumber",
+          // id: item.id,
+          // label: item.remark,
+          // key: item.notice,
+          // config_id: item.config_id,
+          // value: item.notice,
+          // type: item.remark.includes("地址") ? "input" : "inputNumber",
+          id: item.Device_Sid,
+          label: item.Device_Name,
+          key: item.Device_Sid,
+          value: item.Device_Value,
+          type: item.Device_Name.includes("地址") ? "input" : "inputNumber",
         }));
         const newState = {};
         fieldsData.forEach((field) => {
-          newState[`${field.id}Id`] = field.config_id;
+          // newState[`${field.id}Id`] = field.config_id;
           newState[field.id] = field.value;
         });
         setFields(fieldsData);
@@ -51,13 +61,18 @@ export default function SystemSetup() {
   };
 
   const setSetup = async () => {
-    const param = fields.map(({ key, id }) => ({
-      config_id: state[`${id}Id`],
-      notice: state[id],
+    const param = fields.map(({ id }) => ({
+      // config_id: state[`${id}Id`],
+      // notice: state[id],
+      Sid: id,
+      Name: userInfo.Device_name,
+      Key: state[id],
     }));
+    // return console.log(param, "param", fields);
+
     setSetupLoading(true);
     try {
-      const result = await getRateUpdate({ noticeList: param });
+      const result = await getRateUpdate({ list: param });
       if (result?.code === 200) {
         message.success("修改成功");
         getUserInfo();
@@ -73,9 +88,12 @@ export default function SystemSetup() {
 
   const getUserInfo = async () => {
     try {
-      const result = await getUser();
-      if (result?.code === 200) {
-        setUserInfo(result.data);
+      const result = await getUser({
+        Sid: userInfo.Device_Sid, //用户sid
+      });
+      // eslint-disable-next-line eqeqeq
+      if (result?.code == 200) {
+        setUserInfo(result.data[0]);
       } else {
         message.error(result?.msg);
       }
@@ -106,11 +124,11 @@ export default function SystemSetup() {
             defaultActiveKey="1"
             items={[
               {
-                key: "1",
+                key: "0",
                 label: "系统配置",
               },
               {
-                key: "2",
+                key: "1",
                 label: "接口配置",
               },
             ]}

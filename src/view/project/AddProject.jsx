@@ -2,11 +2,14 @@ import React, { useState, useRef } from "react";
 import { Button, Form, Input, message, Spin, Select } from "antd";
 
 import { setAddApplication } from "../../api/project";
+import useAppStore from "../../store";
 
 import "./AddProject.less";
 
 // 未对接完成
 export default function AddProject() {
+  const userInfo = useAppStore((state) => state.userInfo); //用户信息
+
   const addForm = useRef();
   const [addProjectLoading, setAddProjectLoading] = useState(false);
   const [type, setType] = useState("0");
@@ -20,10 +23,22 @@ export default function AddProject() {
     console.log("Failed:", errorInfo);
   };
 
-  const setAddApp = async (param, type) => {
+  const setAddApp = async (param) => {
     setAddProjectLoading(true);
-    let result = await setAddApplication({ ...param, type });
-    if (result?.code === 200) {
+    // return console.log("param, ", param, "type", type, typeof type);
+    const { app_name, url } = param;
+    let result = await setAddApplication(
+      // { ...param, type }
+      {
+        Name: app_name, //项目名称
+        Url: url, //项目地址
+        Type: type, //0全部  1 q  2 w
+        Usersid: userInfo.Device_Sid, //用户sid
+        Username: userInfo.Device_name, //用户账号
+      }
+    );
+    // eslint-disable-next-line eqeqeq
+    if (result?.code == 200) {
       message.success("提交成功");
       addForm.current.resetFields();
     } else {

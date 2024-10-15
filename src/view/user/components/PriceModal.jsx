@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, InputNumber, Select,  message } from "antd";
+import { Button, Form, InputNumber, Select, message } from "antd";
 import { getUserAll } from "../../../api/user";
 import { getProjectPackList } from "../../../api/project";
 const { Option } = Select;
@@ -19,7 +19,7 @@ const tailLayout = {
   },
 };
 
-export default function PriceModal({getFinish}) {
+export default function PriceModal({ getFinish }) {
   const [form] = Form.useForm();
   const [userList, setUserList] = useState([]); //用户
   const [pack, setPack] = useState([]); //项目类型
@@ -28,7 +28,7 @@ export default function PriceModal({getFinish}) {
   useEffect(() => {
     async function getUserListAll() {
       let result = await getUserAll();
-      if (result?.code===200) {
+      if (result?.code === 200) {
         if (result?.data && result.data.length > 0) {
           setUserList([...result?.data]);
         }
@@ -40,7 +40,7 @@ export default function PriceModal({getFinish}) {
     async function getProjectPack() {
       let result = await getProjectPackList();
       const { code, data, msg } = result || {};
-      if (code===200) {
+      if (code === 200) {
         if (data.pack && data.pack.length > 0) {
           setPack([...data?.pack]);
         }
@@ -52,12 +52,12 @@ export default function PriceModal({getFinish}) {
         message.error(msg);
       }
     }
-    getUserListAll();
-    getProjectPack();
+    // getUserListAll();
+    // getProjectPack();
   }, []);
 
   const onFinish = (values) => {
-    getFinish(values)
+    getFinish(values);
     form.resetFields();
   };
   return (
@@ -172,7 +172,10 @@ export default function PriceModal({getFinish}) {
             },
           ]}
         >
-          <InputNumber style={{ height: "35px",width:'100%' }} placeholder="请输入单价" />
+          <InputNumber
+            style={{ height: "35px", width: "100%" }}
+            placeholder="请输入单价"
+          />
         </Form.Item>
         {/* <Form.Item
           label="类型"

@@ -2,7 +2,8 @@ import { getData, postData } from "./index";
 
 //设置管理员
 export const permissions = (data) => {
-  return getData("set/permissions", data);
+  // return getData("set/permissions", data);
+  return postData("UsertableUp", data);
 };
 
 //获取全部套餐
