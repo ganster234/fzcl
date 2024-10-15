@@ -7,7 +7,8 @@ import { getIp, addIp, delIp } from "../../api/pay";
 import { iPtable } from "../../utils/columns";
 import { Modal } from "antd";
 import "../payment/Payment.less";
-
+import useAppStore from "../../store";
+const { TextArea } = Input;
 const ContentLayouts = React.lazy(async () => {
   const item = await import("../../components/contentLayouts/ContentLayouts");
   return item;
@@ -20,6 +21,8 @@ export default function Payment() {
   const [total, setTotal] = useState(0); // 总条数
   const [dataList, setDataList] = useState([]);
   const [entermessage, setentermessage] = useState("");
+  const [TextAreaRemark, setTextAreaRemark] = useState("");
+
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1, //当前页码
@@ -29,6 +32,7 @@ export default function Payment() {
   const [state, setState] = useState({
     account: "", //账号名称
   });
+  const userInfo = useAppStore((state) => state.userInfo);
 
   useEffect(() => {
     //高度自适应
@@ -46,11 +50,15 @@ export default function Payment() {
     let result = await getIp({
       page: current,
       limit: pageSize,
-      account: account ? "" : state.account,
+      // account: account ? "" : state.account,
+      Name: account ? "" : state.account,
     });
     const { code, data, msg } = result || {};
-    if (code === 200) {
-      setDataList([...data?.data]);
+    // eslint-disable-next-line eqeqeq
+    if (code) {
+      console.log(data, "data");
+
+      setDataList([...data]);
       setTotal(data?.total);
     } else {
       message.destroy();
@@ -88,11 +96,13 @@ export default function Payment() {
       setDataList([]);
     }
   };
-  const romveAant = (val) => {
+  const romveAant = (record) => {
     delIp({
-      id: val.id + "",
+      // id: val.id + "",
+      Sid: record.Device_Sid, //项目sid
     }).then((res) => {
-      if (res.code === 200) {
+      // eslint-disable-next-line eqeqeq
+      if (res.code == 200) {
         getList();
         setIsModalOpen(false);
         message.success("操作成功");
@@ -102,9 +112,12 @@ export default function Payment() {
   const handleOk = () => {
     if (entermessage) {
       addIp({
-        account: entermessage,
+        Sid: userInfo.Device_Sid, //用户sid
+        Name: entermessage, //账号
+        Remark: TextAreaRemark, //备注
       }).then((res) => {
-        if (res.code === 200) {
+        // eslint-disable-next-line eqeqeq
+        if (res.code == 200) {
           getList();
           setIsModalOpen(false);
           message.success("操作成功");
@@ -124,11 +137,22 @@ export default function Payment() {
             onOk={handleOk}
             onCancel={() => setIsModalOpen(false)}
           >
-            <Input
-              placeholder="请输入用户名称"
-              value={entermessage}
-              onChange={(val) => setentermessage(val.target.value)}
-            ></Input>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <Input
+                placeholder="请输入账号名称"
+                value={entermessage}
+                onChange={(val) => setentermessage(val.target.value)}
+              ></Input>
+              <TextArea
+                placeholder="请输备注"
+                value={TextAreaRemark}
+                style={{
+                  height: 160,
+                  resize: "none",
+                }}
+                onChange={(val) => setTextAreaRemark(val.target.value)}
+              />
+            </div>
           </Modal>
           <div className="payment-top-item">
             <div className="payment-top-item-title">账号名称：</div>

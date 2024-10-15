@@ -1,20 +1,31 @@
-import { getData,postData } from './index'
+import { getData, postData } from "./index";
 
-//获取支付记录列表 
-export const getRecharge = (data) => { return getData('user/recharge', data) }
+//获取支付记录列表
+export const getRecharge = (data) => {
+  return postData("OupryGet", data);
+};
 
 //微信充值
-export const setPayMoney = (data) => { return postData('wechat/create', data) }
+export const setPayMoney = (data) => {
+  return postData("wechat/create", data);
+};
 
 // 查询订单
-export const getPayStatus = (data) => { return getData('pay/serach/status', data) }
-
+export const getPayStatus = (data) => {
+  return getData("pay/serach/status", data);
+};
 
 //USTD充值
-export const getPayUsdt = (data) => { return getData('pay/usdt', data) }
+export const getPayUsdt = (data) => {
+  return getData("pay/usdt", data);
+};
 
 //卡密充值
-export const getCard = (data) => { return postData('add/card', data) }
+export const getCard = (data) => {
+  return postData("add/card", data);
+};
 
 //支付数据
-export const getPayList = (data) => { return postData("SymoneyGet", data); }
+export const getPayList = (data) => {
+  return postData("SymoneyGet", data);
+};

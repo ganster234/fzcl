@@ -23,6 +23,7 @@ import {
 import { getThaliList, permissions } from "../../api/thali";
 import { userListColumns } from "../../utils/columns";
 import "./UserList.less";
+import useAppStore from "../../store";
 
 const ContentLayouts = React.lazy(async () => {
   const item = await import("../../components/contentLayouts/ContentLayouts");
@@ -57,6 +58,7 @@ export default function UserList() {
     },
   });
   const [username, setUsername] = useState("");
+  const userInfo = useAppStore((state) => state.userInfo);
 
   useEffect(() => {
     //高度自适应
@@ -72,14 +74,15 @@ export default function UserList() {
     const { current, pageSize } = tableParams.pagination;
     setLoading(true);
     let result = await getUserList({
-      page: str ? 1 : current,
-      limit: str ? 10 : pageSize,
+      Pagenum: str ? 1 : current,
+      Pagesize: str ? 10 : pageSize,
       username: str ? "" : username,
     });
     const { code, data, msg } = result || {};
-    if (code === 200) {
-      if (data?.data) {
-        setDataList([...data.data]);
+    // eslint-disable-next-line eqeqeq
+    if (code) {
+      if (data.length) {
+        setDataList([...data]);
         setTotal(data?.total);
         setLoading(false);
       }
@@ -98,19 +101,42 @@ export default function UserList() {
   };
 
   const interdict = async (record) => {
-    const { account, disable } = record;
+    const { Device_Sid, Device_state } = record;
     setInterdictLoading(true);
     let result = await setInterdict({
-      username: account,
-      disable: disable === 0 ? 1 : 0,
+      // username: account,
+      // disable: disable === 0 ? 1 : 0,
+      Sid: Device_Sid, //标识
+      State: Device_state === "正常" ? 1 : 0, //状态0开启1 关闭
+      Adminsid: userInfo.Device_Sid, //操作员sid
     });
 
     const { code } = result || {};
-    if (code === 200) {
+    // eslint-disable-next-line eqeqeq
+    if (code == 200) {
       setInterdictLoading(false);
       message.destroy();
       message.success("操作成功");
       getList();
+    }
+  };
+  const resetPassword = async (record) => {
+    const { Device_Sid } = record;
+    setInterdictLoading(true);
+    let result = await setPasswod({
+      Sid: Device_Sid, //标识
+      Pass: "0", //重置密码
+      Adminsid: userInfo.Device_Sid, //操作员sid
+    });
+    const { code } = result || {};
+    // eslint-disable-next-line eqeqeq
+    if (code == 200) {
+      setInterdictLoading(false);
+      message.destroy();
+      message.success("重置成功");
+      getList();
+    } else {
+      message.error(result?.msg);
     }
   };
 
@@ -241,10 +267,16 @@ export default function UserList() {
   };
 
   const setas = (val) => {
+    const { Device_Sid, Device_type } = val;
+
     //是否设为管理
     permissions({
-      id: val.id,
-      status: val.permissions === 0 ? 0 : val.permissions === 2 ? 1 : "",
+      // id: val.id,
+      // status: val.permissions === 0 ? 0 : val.permissions === 2 ? 1 : "",
+
+      Sid: Device_Sid, //标识
+      Type: Device_type.includes("管理") ? 0 : 1, //1是管理员 0是普通用户
+      Adminsid: userInfo.Device_Sid, //操作员sid
     }).then((res) => {
       if (res.code === 200) {
         getList();
@@ -371,7 +403,7 @@ export default function UserList() {
                                 </>
                               )}
 
-                              {record.disable === 0 && (
+                              {record.Device_state === "正常" && (
                                 <Popconfirm
                                   title="提示"
                                   description="是否确认禁用当前账号？"
@@ -384,7 +416,7 @@ export default function UserList() {
                                   </Button>
                                 </Popconfirm>
                               )}
-                              {record.disable === 1 && (
+                              {record.Device_state === "禁用" && (
                                 <Button
                                   size="small"
                                   type="primary"
@@ -397,17 +429,7 @@ export default function UserList() {
                               <Popconfirm
                                 title="提示"
                                 description="当前操作将重置用户密码是否继续？"
-                                onConfirm={async () => {
-                                  let result = await setPasswod({
-                                    user_id: [record.id],
-                                  });
-                                  // console.log(666, record, result);
-                                  if (result?.code === 200) {
-                                    message.success("重置成功");
-                                  } else {
-                                    message.error(result?.msg);
-                                  }
-                                }}
+                                onConfirm={() => resetPassword(record)}
                                 okText="确认"
                                 cancelText="取消"
                               >
@@ -425,11 +447,14 @@ export default function UserList() {
                                 type="primary"
                                 onClick={() => setas(record)}
                               >
-                                {record.permissions === 0
+                                {/* {record.permissions === 0
                                   ? "取消管理"
                                   : record.permissions === 2
                                   ? "设为管理"
-                                  : "-"}
+                                  : "-"} */}
+                                {record.Device_type.includes("管理")
+                                  ? "取消管理"
+                                  : "设为管理"}
                               </Button>
                             </>
                           )}

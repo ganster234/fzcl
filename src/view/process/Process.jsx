@@ -67,26 +67,37 @@ export default function Payment() {
 
   const getList = async (account) => {
     const { current, pageSize } = tableParams.pagination;
+    // return console.log(state, "state", account, "account");
     setLoading(true);
     let result = await getUsdtList({
-      ...state,
-      status: account ? "-1" : status,
-      start_time: account
+      // ...state,
+      // status: account ? "-1" : status,
+      // start_time: account
+      //   ? dayjs().format("YYYY-MM-DD")
+      //   : dayjs(state.start_time).format("YYYY-MM-DD"),
+      // end_time: account
+      //   ? dayjs().format("YYYY-MM-DD")
+      //   : dayjs(state.end_time).format("YYYY-MM-DD"),
+      // page: account ? 1 : current,
+      // limit: account ? 10 : pageSize,
+      // account: account ? "" : state.account,
+      Name: account ? "" : state.account, //名称
+      Stime: account
         ? dayjs().format("YYYY-MM-DD")
-        : dayjs(state.start_time).format("YYYY-MM-DD"),
-      end_time: account
+        : dayjs(state.start_time).format("YYYY-MM-DD"), //开始时间
+      Etime: account
         ? dayjs().format("YYYY-MM-DD")
-        : dayjs(state.end_time).format("YYYY-MM-DD"),
-      page: account ? 1 : current,
-      limit: account ? 10 : pageSize,
-      account: account ? "" : state.account,
+        : dayjs(state.end_time).format("YYYY-MM-DD"), //结束时间
+      State: account ? "-1" : status, //状态0派单中 1失败 2成功
+      Pagenum: account ? 1 : current, //页数
+      Pagesize: account ? 10 : pageSize, //显示数
     });
-    const { code, data, msg } = result || {};
+    const { code, data, msg, pagenum, total } = result || {};
     console.log(data);
-    if (code === 200) {
-      setDataList([...data?.data.data]);
-      setTotal(data?.data.total);
-      setaggregate(data?.total.price);
+    if (code) {
+      setDataList([...data]);
+      setTotal(pagenum);
+      setaggregate(total);
     } else {
       message.destroy();
       message.error(msg);

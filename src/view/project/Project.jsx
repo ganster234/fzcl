@@ -16,11 +16,14 @@ import {
   updateProjectAlias,
   getProjectAlias,
   reporteddata,
+  modifyTheQuery,
+  modifyTheAmountQuery,
 } from "../../api/project";
 import { projectColumns } from "../../utils/columns";
 import ProMolde from "./ProMolde";
 import { useLocation } from "react-router-dom";
 import "./Project.less";
+import useAppStore from "../../store";
 
 //可编辑逻辑
 const EditableCell = ({
@@ -34,7 +37,7 @@ const EditableCell = ({
   const [value, setValue] = useState(children);
   const handleChange = (e) => {
     setValue(e.target.value);
-    changeValue(record.id, e.target.value, title);
+    changeValue(record.Device_Sid, e.target.value, title);
   };
   const handleBlur = async () => {};
 
@@ -60,13 +63,14 @@ const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
       setEditingKey("");
     },
   }));
-  const isEditing = (record) => record.id === editingKey;
+  const isEditing = (record) => record.Device_Sid === editingKey;
 
   const edit = (record) => {
-    setEditingKey(record.id);
+    setEditingKey(record.Device_Sid);
+    console.log(record, "record");
   };
-  const changeValue = (id, value, title) => {
-    const currentData = data.find((item) => item.id === id);
+  const changeValue = (Device_Sid, value, title) => {
+    const currentData = data.find((item) => item.Device_Sid === Device_Sid);
     if (currentData) {
       currentData[title] = value;
     }
@@ -77,20 +81,25 @@ const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
 
   const save = async () => {
     console.log(editValue, currentItem, "editValue");
-    const { app_id, id, name, real_id } = editValue;
+    // const { app_id, id, name, real_id } = editValue;
+    const {
+      Device_appid,
+      Device_Sid,
+      Device_name,
+      Device_realid,
+      Device_Psid,
+    } = editValue;
 
     try {
       await updateProjectAlias({
-        app_id:
-          location.pathname !== "/layouts/platform/project"
-            ? currentItem.wx_app_id
-            : currentItem.app_id,
-        id: id.toString(),
-        name,
-        real_id,
+        Sid: Device_Sid,
+        Psid: Device_Psid,
+        Rid: Device_realid,
+        Aid: Device_appid, //app_id
+        Name: Device_name,
       });
       message.success("修改成功");
-      fetchAliases();
+      await fetchAliases();
       // 刷新数据
     } catch (error) {
       message.error("修改失败");
@@ -105,12 +114,12 @@ const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
   const columns = [
     {
       title: "别名",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "Device_name",
+      key: "Device_name",
       render: (text, record) =>
         isEditing(record) ? (
           <EditableCell
-            title="name"
+            title="Device_name"
             editable
             record={record}
             children={text}
@@ -121,13 +130,13 @@ const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
         ),
     },
     {
-      title: "APP_id",
-      dataIndex: "app_id",
-      key: "app_id",
+      title: "Device_appid",
+      dataIndex: "Device_appid",
+      key: "Device_appid",
       render: (text, record) =>
         isEditing(record) ? (
           <EditableCell
-            title="app_id"
+            title="Device_appid"
             editable
             record={record}
             children={text}
@@ -138,13 +147,13 @@ const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
         ),
     },
     {
-      title: "real_id",
-      dataIndex: "real_id",
-      key: "real_id",
+      title: "Device_realid",
+      dataIndex: "Device_realid",
+      key: "Device_realid",
       render: (text, record) =>
         isEditing(record) ? (
           <EditableCell
-            title="real_id"
+            title="Device_realid"
             editable
             record={record}
             children={text}
@@ -179,7 +188,7 @@ const EditableTable = forwardRef(({ data, fetchAliases, currentItem }, ref) => {
           cell: EditableCell,
         },
       }}
-      rowKey="id"
+      rowKey="Device_Sid"
       dataSource={data}
       columns={columns}
       pagination={false}
@@ -212,6 +221,7 @@ export default function Project() {
   const [aliasTableData, setAliasTableData] = useState([]); // 别名表格数据
 
   const location = useLocation();
+  const userInfo = useAppStore((state) => state.userInfo);
 
   useEffect(() => {
     // 根据 modalType 进行数据加载
@@ -235,6 +245,7 @@ export default function Project() {
   const showModal = (type, item) => {
     if (type === "view") {
     }
+    console.log(item, "item");
     setModalType(type);
     setCurrentItem(item); // 设置当前选中的项
     setIsModalVisible(true);
@@ -242,10 +253,7 @@ export default function Project() {
   const fetchAliases = async () => {
     try {
       const response = await getProjectAlias({
-        app_id:
-          location.pathname !== "/layouts/platform/project"
-            ? currentItem.wx_app_id
-            : currentItem.app_id,
+        Psid: currentItem.Device_Sid,
       }); // 查询别名接口
       setAliasTableData(response.data);
     } catch (error) {
@@ -254,19 +262,25 @@ export default function Project() {
   };
 
   const handleAddAlias = async (values) => {
+    console.log("handleAddAlias", values);
+    console.log(userInfo, "userInfo", currentItem);
     const { alias, real_id } = values;
     try {
-      await addProjectAlias({
-        app_id:
-          location.pathname !== "/layouts/platform/project"
-            ? currentItem.wx_app_id
-            : currentItem.app_id,
-        real_id,
-        name: alias,
-      }); // 新增项目别名
+      const AddAliasParams = {
+        Sid: userInfo.Device_Sid, //用户sid
+        Psid: currentItem.Device_Sid, //项目sid
+        Name: alias, //别名
+        Rid: real_id, //real_id
+        Aid:
+          location.pathname === "/layouts/platform/project"
+            ? currentItem.Device_appid
+            : currentItem.Device_wxappid,
+      };
+      // return console.log(AddAliasParams, "AddAliasParams");
+      await addProjectAlias({ ...AddAliasParams }); // 新增项目别名
       message.success("新增别名成功");
+      await fetchAliases(); // 刷新别名数据
       setIsModalVisible(false);
-      fetchAliases(); // 刷新别名数据
     } catch (error) {
       message.error("新增别名失败");
     }
@@ -309,22 +323,23 @@ export default function Project() {
     setLoading(true);
     const { pageSize, current } = tableParams.pagination;
     let result = await getProjectList({
-      app_name: val === "重置" ? "" : app_name,
-      page: val ? 1 : current,
-      limit: val ? 10 : pageSize,
-      is_qq: location.pathname === "/layouts/platform/project" ? undefined : 2,
+      Name: val === "重置" ? "" : app_name,
+      Pagenum: val ? 1 : current,
+      Pagesize: val ? 10 : pageSize,
+      Type: location.pathname === "/layouts/platform/project" ? "1" : "2", // "Type": "1", //0 全部 1 Q 2 W
     });
     const { code, data, msg } = result || {};
-    if (code === 200) {
-      let list = data?.data;
-      list.forEach((element, i) => {
-        element.data.forEach((item, index) => {
-          element["key"] = i;
-          element["distribution_price" + (index + 1)] = item.distribution_price;
-        });
-      });
+    // eslint-disable-next-line eqeqeq
+    if (code) {
+      // let list = data;
+      // list.forEach((element, i) => {
+      //   element.data.forEach((item, index) => {
+      //     element["key"] = i;
+      //     element["distribution_price" + (index + 1)] = item.distribution_price;
+      //   });
+      // });
       setTotal(data?.total);
-      setDataList([...data.data]);
+      setDataList([...data]);
       setLoading(false);
     } else {
       message.destroy();
@@ -341,74 +356,115 @@ export default function Project() {
       setDataList([]);
     }
   };
-  const projectEdit = (record) => {
-    setProjectDetails((item) => ({ ...item, ...record }));
-    setSetailsShow(true);
+  const projectEdit = async (id) => {
+    const { code, data, msg } = await modifyTheAmountQuery({
+      Psid: id,
+    });
+    console.log(data, "data");
+    // eslint-disable-next-line eqeqeq
+    if (code == 200) {
+      setProjectDetails((item) => ({ ...item, data }));
+      setSetailsShow(true);
+    } else {
+      message.error(msg || "");
+    }
   };
 
-  const changeValue = (index, even) => {
+  const changeInputValue = (index, even) => {
     const { data } = projectDetails;
     let list = [...data];
-    list[index].distribution_price = even;
+    list[index].Device_money = even;
     setProjectDetails((item) => ({
       ...item,
       data: [...list],
     }));
   };
 
-  const inputDetailBlur = async (index, str) => {
-    const { app_id, data, wx_app_id } = projectDetails;
-    const item = data[index];
-    console.log(item, projectDetails);
-    if (str) {
-      if (item) {
-        setPopupLoading(true);
-        let result = await getChangePrice({
-          price_id:
-            location.pathname === "/layouts/platform/project"
-              ? projectDetails.app_id
-              : wx_app_id,
-          package_id: item.id,
-          price: item.distribution_price,
-        });
-        message.destroy();
-        if (result?.code === 200) {
-          message.success("修改成功");
-          getList();
-        } else {
-          message.error(result?.msg || "");
-        }
-      }
+  const inputDetailBlur = async (index, str, subItem) => {
+    // setPopupLoading(true);
+    console.log(str, "str_______");
+
+    const editData = {
+      Sid: subItem.Device_Sid,
+      Psid: subItem.Device_Psid,
+      Pmoney: subItem.Device_money,
+      State: subItem.Device_state,
+    };
+    console.log(editData, "editData");
+    let result = await getChangePrice({
+      ...editData,
+    });
+    message.destroy();
+    // eslint-disable-next-line eqeqeq
+    if (result?.code) {
+      message.success("修改成功");
+      await projectEdit(subItem.Device_Psid);
     } else {
-      if (item) {
-        setPopupLoading(true);
-        let result = await getChangeShare({
-          price_id: app_id,
-          package_id: item.id,
-          is_share: item?.is_share,
-        });
-        message.destroy();
-        if (result?.code === 200) {
-          message.success("修改成功");
-          const { data } = projectDetails;
-          let list = [...data];
-          list[index].is_share = list[index].is_share === 0 ? 1 : 0;
-          setProjectDetails((item) => ({
-            ...item,
-            data: [...list],
-          }));
-        } else {
-          message.error(result?.msg || "");
-        }
-      }
+      message.error(result?.msg || "");
     }
     setPopupLoading(false);
+    getList();
+    // }
+    // } else {
+    // if (item) {
+    //   setPopupLoading(true);
+    //   let result = await getChangeShare({
+    //     price_id: app_id,
+    //     package_id: item.id,
+    //     is_share: item?.is_share,
+    //   });
+    //   message.destroy();
+    //   if (result?.code === 200) {
+    //     message.success("修改成功");
+    //     const { data } = projectDetails;
+    //     let list = [...data];
+    //     list[index].is_share = list[index].is_share === 0 ? 1 : 0;
+    //     setProjectDetails((item) => ({
+    //       ...item,
+    //       data: [...list],
+    //     }));
+    //   } else {
+    //     message.error(result?.msg || "");
+    //   }
+    // }
+    // }
   };
   const inquire = (val) => {
     if (val === "重置") {
       setapp_name("");
     }
     getList(val);
+  };
+
+  const handleEdit = async (id) => {
+    const { code, data, msg } = await modifyTheQuery({
+      Sid: id,
+    });
+    console.log(data, "data");
+
+    // eslint-disable-next-line eqeqeq
+    if (code == 200) {
+      seedMolde.current.setaddState("修改项目");
+      seedMolde.current.childFunction(data[0]);
+    } else {
+      message.error(msg || "");
+    }
+  };
+  const handleClickReport = async (record) => {
+    const res = await reporteddata({
+      Sid: record.Device_Sid,
+    });
+    // eslint-disable-next-line eqeqeq
+    if (res?.code == 200) {
+      message.success("上报成功");
+    } else {
+      message.error(res?.msg || "");
+    }
+    console.log(res);
+
+    // .then((res) => {
+    //   message.info(res.msg);
+    // });
   };
   return (
     <>
@@ -447,7 +503,7 @@ export default function Project() {
               x: 770,
               y: height,
             }}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.Device_Sid}
             loading={loading}
             pagination={{
               ...tableParams.pagination,
@@ -461,9 +517,10 @@ export default function Project() {
                 title: "APP_id",
                 dataIndex:
                   location.pathname !== "/layouts/platform/project"
-                    ? "wx_app_id"
-                    : "app_id",
+                    ? "Device_wxappid"
+                    : "Device_appid",
               },
+
               ...projectColumns,
               {
                 title: "操作",
@@ -477,13 +534,9 @@ export default function Project() {
                   >
                     {location.pathname !== "/layouts/platform/project" ? (
                       <Button
+                        type="text"
                         onClick={() => {
-                          reporteddata({
-                            wx_app_id: record.wx_app_id,
-                            app_name: record.app_name,
-                          }).then((res) => {
-                            message.info(res.msg);
-                          });
+                          handleClickReport(record);
                         }}
                         style={{ marginTop: "5px" }}
                         size="small"
@@ -498,8 +551,9 @@ export default function Project() {
                       type="text"
                       className="project-edit"
                       onClick={() => {
-                        seedMolde.current.setaddState("修改项目");
-                        seedMolde.current.childFunction(record);
+                        // seedMolde.current.setaddState("修改项目");
+                        // seedMolde.current.childFunction(record);
+                        handleEdit(record.Device_Sid);
                       }}
                     >
                       修改
@@ -507,7 +561,7 @@ export default function Project() {
                     <Button
                       type="text"
                       className="project-edit"
-                      onClick={() => projectEdit(record)}
+                      onClick={() => projectEdit(record.Device_Sid)}
                     >
                       编辑价格
                     </Button>
@@ -539,7 +593,9 @@ export default function Project() {
         <Popup
           visible={detailsShow}
           onMaskClick={() => {
-            setSetailsShow(false);
+            setTimeout(() => {
+              setSetailsShow(false);
+            }, 300);
           }}
           onClose={() => {
             setSetailsShow(false);
@@ -558,17 +614,18 @@ export default function Project() {
                 return (
                   <div className="popup-details-item" key={index}>
                     <span className="popup-details-item-title">
-                      {subItem?.name}:
+                      {subItem?.Device_name}:
                     </span>
                     <span className="popup-details-item-content">
                       <span className="popup-details-item-content-main">
                         <Input
-                          value={subItem?.distribution_price}
-                          readOnly={subItem?.is_share === 1}
+                          value={subItem?.Device_money}
+                          // eslint-disable-next-line eqeqeq
+                          readOnly={subItem?.Device_state == 1}
                           onChange={(even) => {
-                            changeValue(index, even.target.value);
+                            changeInputValue(index, even.target.value);
                           }}
-                          onBlur={() => inputDetailBlur(index, "blur")}
+                          onBlur={() => inputDetailBlur(index, "blur", subItem)}
                         />
                       </span>
                     </span>
@@ -597,9 +654,12 @@ export default function Project() {
                     </span> */}
                     <Switch
                       onChange={() => {
-                        inputDetailBlur(index);
+                        inputDetailBlur(index, "switch", subItem);
                       }}
-                      checked={subItem?.is_share === 0 ? false : true}
+                      // eslint-disable-next-line eqeqeq
+                      // checked={
+                      //   parseInt(subItem?.Device_state) == 0 ? false : true
+                      // }
                       checkedChildren="启用"
                       unCheckedChildren="禁用"
                       defaultChecked

@@ -43,23 +43,23 @@ export const settlement = [
 export const projectColumns = [
   {
     title: "项目名称",
-    dataIndex: "app_name",
+    dataIndex: "Device_name",
   },
   // {
   //   title: "日卡老号",
   //   dataIndex: "distribution_price0",
   // },
   {
-    title: "日卡新号",
-    dataIndex: "distribution_price1",
+    title: "日卡",
+    dataIndex: "Device_day",
   },
   {
     title: "周卡",
-    dataIndex: "distribution_price2",
+    dataIndex: "Device_week",
   },
   {
     title: "月卡",
-    dataIndex: "distribution_price3",
+    dataIndex: "Device_month",
   },
   // {
   //   title: "信用分300",
@@ -94,39 +94,39 @@ export const projectColumns = [
 export const userListColumns = [
   {
     title: "账号",
-    dataIndex: "account",
+    dataIndex: "Device_name",
   },
   {
     title: "邀请人",
-    dataIndex: "inviter_code",
+    dataIndex: "Device_yname",
   },
   {
     title: "权限",
-    dataIndex: "permissions",
-    render: (record) => (
-      <div>
-        {record === 0 && "管理员"}
-        {record === 2 && "普通用户"}
-      </div>
-    ),
+    dataIndex: "Device_type",
+    // render: (record) => (
+    //   <div>
+    //     {record === 0 && "管理员"}
+    //     {record === 2 && "普通用户"}
+    //   </div>
+    // ),
   },
   {
     title: "是否禁用",
-    dataIndex: "disable",
-    render: (record) => (
-      <div>
-        {record === 0 && "正常"}
-        {record === 1 && "禁用"}
-      </div>
-    ),
+    dataIndex: "Device_state",
+    // render: (record) => (
+    //   <div>
+    //     {record === 0 && "正常"}
+    //     {record === 1 && "禁用"}
+    //   </div>
+    // ),
   },
   {
     title: "余额",
-    dataIndex: "balance",
+    dataIndex: "Device_money",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 
@@ -210,37 +210,37 @@ export const scanColumns = [
 export const experience = [
   {
     title: "账号名称",
-    dataIndex: "account",
+    dataIndex: "Device_name",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "充值金额",
-    dataIndex: "money",
+    dataIndex: "Device_mball",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "状态",
-    dataIndex: "status",
-    render: (record) => (
-      <span>
-        {record === 0
-          ? "待审核"
-          : record === 1
-          ? "通过"
-          : record === 2
-          ? "驳回"
-          : "-"}
-      </span>
-    ),
+    dataIndex: "Device_shstate",
+    // render: (record) => (
+    //   <span>
+    //     {record === "0"
+    //       ? "待审核"
+    //       : record === "1"
+    //       ? "通过"
+    //       : record === "2"
+    //       ? "驳回"
+    //       : "-"}
+    //   </span>
+    // ),
   },
   {
     title: "交易单号",
-    dataIndex: "addr",
+    dataIndex: "Device_num",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
 ];
@@ -277,17 +277,17 @@ export const apply_show = [
 export const iPtable = [
   {
     title: "账号",
-    dataIndex: "account",
+    dataIndex: "Device_Name",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "备注",
-    dataIndex: "remark",
+    dataIndex: "Device_Remark",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_Time",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
 ];
@@ -335,63 +335,63 @@ export const payColumns = [
 export const rechargeColumns = [
   {
     title: "充值用户",
-    dataIndex: "account",
+    dataIndex: "Device_name",
     render: (record) => <>{record ? record : "-"}</>,
   },
   {
     title: "数量",
-    dataIndex: "num",
+    dataIndex: "Device_num",
   },
   {
     title: "余额",
-    dataIndex: "balance",
+    dataIndex: "Device_mb",
     render: (record) => <>{record ? record : "-"}</>,
   },
   {
     title: "订单号",
-    dataIndex: "order_id",
+    dataIndex: "Device_Sid",
   },
   {
     title: "充值金额",
-    dataIndex: "money",
+    dataIndex: "Device_mball",
   },
   {
     title: "状态",
-    dataIndex: "status",
-    render: (record) => (
-      <>
-        {record === -1
-          ? "全部"
-          : record === 1
-          ? "成功"
-          : record === 0
-          ? "支付中"
-          : "-"}
-      </>
-    ),
+    dataIndex: "Device_state",
+    // render: (record) => (
+    //   <>
+    //     {record === -1
+    //       ? "全部"
+    //       : record === 1
+    //       ? "成功"
+    //       : record === 0
+    //       ? "支付中"
+    //       : "-"}
+    //   </>
+    // ),
   },
   {
     title: "标题",
-    dataIndex: "title",
+    dataIndex: "Device_mbweb",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 
 export const groupColumns = [
   {
     title: "ID",
-    dataIndex: "id",
+    dataIndex: "Device_gid",
   },
   {
     title: "分组名称",
-    dataIndex: "group_name",
+    dataIndex: "Device_Name",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 

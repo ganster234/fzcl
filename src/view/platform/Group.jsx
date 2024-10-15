@@ -6,6 +6,7 @@ import { getResidueHeightByDOMRect } from "../../utils/utils";
 import { getGroupList, postAddGroup, getDelGroup } from "../../api/group";
 import { groupColumns } from "../../utils/columns";
 import "./Group.less";
+import useAppStore from "../../store";
 
 const ContentLayouts = React.lazy(async () => {
   const item = await import("../../components/contentLayouts/ContentLayouts");
@@ -21,13 +22,14 @@ export default function Group() {
   const [addGroupName, setAddName] = useState("");
   const [total, setTotal] = useState(0); // 总条数
   const [dataList, setDataList] = useState([]);
-  
+
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1, //当前页码
       pageSize: 10, // 每页数据条数
     },
   });
+  const userInfo = useAppStore((state) => state.userInfo);
 
   useEffect(() => {
     //高度自适应
@@ -46,10 +48,11 @@ export default function Group() {
       page: current,
       limit: pageSize,
       name: str ? "" : groupName,
+      Sid: userInfo.Device_Sid, //用户sid
     });
     const { code, data, msg } = result || {};
-    if (code===200) {
-      setDataList([...data?.data]);
+    if (code) {
+      setDataList([...data]);
       setTotal(data?.total);
     } else {
       message.destroy();
@@ -100,9 +103,12 @@ export default function Group() {
       return message.error("请输入要添加的分组名称");
     }
     setConfirmLoading(true);
-    let result = await postAddGroup({ name: addGroupName });
+    let result = await postAddGroup({
+      Sid: userInfo.Device_Sid, //用户sid
+      Name: addGroupName, //"分组名称"
+    });
     message.destroy();
-    if (result?.code===200) {
+    if (result?.code === 200) {
       setAddName(() => "");
       message.success("添加成功");
       setIsModalOpen(false);
@@ -117,9 +123,14 @@ export default function Group() {
     if (!record.id) {
       return;
     }
-    let result = await getDelGroup({ id: record.id });
+    let result = await getDelGroup({
+      // id: record.id
+      Sid: userInfo.Device_Sid, //用户sid
+      Gid: record.Device_sid, //分组sid
+    });
     message.destroy();
-    if (result?.code===200) {
+    // eslint-disable-next-line eqeqeq
+    if (result?.code == 200) {
       message.success(result?.msg);
       getList();
     } else {

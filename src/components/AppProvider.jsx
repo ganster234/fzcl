@@ -298,10 +298,8 @@ export default function AppProvider({ children }) {
         },
         {
           key: "/layouts/platform/ip",
-          element: lazyLoad(
-            lazy(() => import("../view/platform/IP.jsx"))
-          ),
-          roles: [ "superAdmin"],
+          element: lazyLoad(lazy(() => import("../view/platform/IP.jsx"))),
+          roles: ["superAdmin"],
           label: "账号白名单",
         },
       ],

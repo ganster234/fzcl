@@ -2,7 +2,7 @@ import { getData, postData } from "./index";
 
 //获取项目列表page第几页,limit一页多少条
 export const getProjectList = (data) => {
-  return getData("project/list", data);
+  return postData("OuproMainGet", data);
 };
 
 // 开启关闭套餐?id=1&is_share=0
@@ -12,17 +12,25 @@ export const getChangeShare = (data) => {
 
 // 修改套餐价格
 export const getChangePrice = (data) => {
-  return getData("project/update/price", data);
+  return postData("OuproMainBaUp", data);
 };
 
-// 添加项目
+// 新增项目
 export const getAddProject = (data) => {
-  return postData("project/add", data);
+  return postData("OuproAdd", data);
+};
+//修改项目  修改查询
+export const modifyTheQuery = (data) => {
+  return postData("OuproMainUpGet", data);
 };
 
 //修改项目
 export const setProject = (data) => {
-  return postData("project/update/status", data);
+  return postData("OuproMainUpUp", data);
+};
+//修改金额查询
+export const modifyTheAmountQuery = (data) => {
+  return postData("OuproMainBaGet", data);
 };
 
 // 获取项目和套餐
@@ -32,22 +40,22 @@ export const getProjectPackList = (data) => {
 
 //添加项目页面的接口
 export const setAddApplication = (data) => {
-  return postData("add/application", data);
+  return postData("OuprowebAdd", data);
 };
 //新增项目别名
 export const addProjectAlias = (data) => {
-  return postData("project/add/sanname", data);
+  return postData("OuproMainNaAdd", data);
 };
 //修改项目别名
 export const updateProjectAlias = (data) => {
-  return postData("project/update/sanname", data);
+  return postData("OuproMainNaUp", data);
 };
 //获取项目别名
 export const getProjectAlias = (data) => {
-  return getData("project/get/sanname", data);
+  return postData("OuproMainNaGet", data);
 };
 
 //上报长沙
 export const reporteddata = (data) => {
-  return getData("set/escalation/wx", data);
+  return postData("OuproMainUpUpLoad", data);
 };

@@ -17,11 +17,12 @@ export default function SecureFrom() {
   const [checkToken, setCheckToken] = useState("");
 
   const userInfo = useAppStore((state) => state.userInfo);
+  console.log(userInfo, "userInfo");
 
   const getPwdCode = async () => {
     let result = await getCode();
     const { code, data, msg } = result || {};
-    if (code===200) {
+    if (code === 200) {
       setCodeSrc(data?.img);
       setCheckToken(data?.key);
     } else {
@@ -32,21 +33,25 @@ export default function SecureFrom() {
 
   useEffect(() => {
     (() => {
-      getPwdCode();
+      // getPwdCode();
     })();
   }, []);
 
   const comSubmit = async () => {
     message.destroy();
-    if (!checkToken) {
+    // if (!checkToken) {
+    //   return;
+    // }
+    if (!userInfo.Device_Sid) {
       return;
     }
-    if (!userInfo.id) {
-      return;
+    // if (!state.code) {
+    //   return message.error("请输入验证码");
+    // }
+    if (!state.oldPassword) {
+      return message.error("请输入旧密码");
     }
-    if (!state.code) {
-      return message.error("请输入验证码");
-    }
+
     if (!state.password) {
       return message.error("请输入密码");
     }
@@ -54,12 +59,16 @@ export default function SecureFrom() {
       return message.error("两次输入密码不一致");
     }
     setLoading(true);
+    // return console.log(state, "state");
+    const { password, oldPassword } = state;
     let result = await postUpdatePwd({
-      ...state,
-      checkToken,
-      user_id: userInfo.id + "",
+      Sid: userInfo.Device_Sid, //用户sid
+      Pass: password, //新密码
+      Oldpass: oldPassword, //老密码
     });
-    if (result?.code===200) {
+    // eslint-disable-next-line eqeqeq
+    if (result?.code) {
+      // return;
       // 退出页面去除本地的登录信息
       localStorage.removeItem("globalState");
       localStorage.removeItem("token");
@@ -82,13 +91,13 @@ export default function SecureFrom() {
           <span>用户名：</span>
         </div>
         <Input
-          value={userInfo.account}
+          value={userInfo.Device_name}
           disabled={true}
           placeholder="请输入用户名"
           style={{ width: "488px", height: "40px" }}
         ></Input>
       </div>
-      <div className="form-item">
+      {/* <div className="form-item">
         <div className="form-item-title">
           <span className="form-color">*</span>
           <span>验证码：</span>
@@ -116,7 +125,22 @@ export default function SecureFrom() {
             style={{ width: "120px", height: "36px", borderRadius: "4px" }}
           />
         </div>
+      </div> */}
+      <div className="form-item">
+        <div className="form-item-title">
+          <span className="form-color">*</span>
+          <span>旧密码：</span>
+        </div>
+        <Input.Password
+          value={state.oldPassword}
+          onChange={(even) =>
+            setState((data) => ({ ...data, oldPassword: even.target.value }))
+          }
+          placeholder="请输入旧密码"
+          style={{ width: "488px", height: "40px" }}
+        ></Input.Password>
       </div>
+
       <div className="form-item">
         <div className="form-item-title">
           <span className="form-color">*</span>
