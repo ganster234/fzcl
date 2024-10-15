@@ -1,7 +1,7 @@
-import { getData } from './index'
+import { getData,postData } from './index'
 
 //登录器下载 
-export const getDownload = (data) => { return getData('download/url', data) }
+export const getDownload = (data) => { return postData("url", data); }
 
 //首页柱装图
 export const getDayCount = (data) => { return getData('index/day', data) }
