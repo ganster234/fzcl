@@ -4,19 +4,17 @@ import { Spin, Input, Radio, Button, message } from "antd";
 import { getUserOpen } from "../../../api/open";
 import { exportRaw } from "../../../utils/utils";
 
-import './ExportWxCk.less'
+import "./ExportWxCk.less";
 
-export default function ExportWxCk({closeExport}) {
+export default function ExportWxCk({ closeExport }) {
   const [exportLoading, setExportLoading] = useState(false);
   const [state, setState] = useState({
     openid_task_id: "",
-    type: 1,
   });
 
   const cancelExport = () => {
     setState({
       openid_task_id: "",
-      type: 1,
     });
     closeExport(false);
   };
@@ -24,19 +22,17 @@ export default function ExportWxCk({closeExport}) {
   const comExport = async () => {
     message.destroy();
     if (!state.openid_task_id) {
-      return;
+      return message.error("请输入内容");
     }
-    if (!state.type) {
-      return message.error("请选择下载类型");
-    }
+
     setExportLoading(true);
-    let result = await getUserOpen({ ...state,is_qq:'2' });
+    let result = await getUserOpen({ Sid: state.openid_task_id });
     const { code, data, msg } = result || {};
-    if (code === 200) {
+    console.log(result, "result234");
+    if (code === "200") {
       exportRaw(state.openid_task_id, data, true);
       setState({
         openid_task_id: "",
-        type: 1,
       });
       closeExport(false);
     } else {
@@ -44,7 +40,7 @@ export default function ExportWxCk({closeExport}) {
     }
     setExportLoading(false);
   };
-  
+
   return (
     <Spin spinning={exportLoading}>
       <div>

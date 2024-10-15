@@ -57,21 +57,21 @@ export default function ScanHead({ state, getState, scanSearch, resetting }) {
           style={{ width: "160px", height: "32px" }}
         />
       </div>
-      <div className="scan-top-item">
+      {/* <div className="scan-top-item">
         <div className="scan-top-item-title">订单号：</div>
         <Input
           value={state.order_id}
           onChange={(even) => getState(even.target.value, "order_id")}
-          placeholder="请输入订单号"
+          placeholder="请输入名称"
           style={{ width: "160px", height: "32px" }}
         />
-      </div>
+      </div> */}
       <div className="scan-top-item">
-        <div className="scan-top-item-title">用户账号：</div>
+        <div className="scan-top-item-title">名称：</div>
         <Input
           value={state.account}
           onChange={(even) => getState(even.target.value, "account")}
-          placeholder="请输入用户账号"
+          placeholder="请输入名称"
           style={{ width: "160px", height: "32px" }}
         />
       </div>
@@ -95,7 +95,7 @@ export default function ScanHead({ state, getState, scanSearch, resetting }) {
               label: "成功",
             },
             {
-              value: "0",
+              value: "2",
               label: "失败",
             },
           ]}
@@ -121,7 +121,7 @@ export default function ScanHead({ state, getState, scanSearch, resetting }) {
               label: "首次扫码",
             },
             {
-              value: "0",
+              value: "2",
               label: "多次扫码",
             },
           ]}

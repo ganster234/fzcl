@@ -2,7 +2,7 @@ import { getData, postData } from "./index";
 
 //获取open列表
 export const getOpenList = (data) => {
-  return getData("open/list", data);
+  return postData("OuproOpenGet", data);
 };
 
 //获取open列表
@@ -12,7 +12,7 @@ export const setAddOpen = (data) => {
 
 //下载open
 export const getUserOpen = (data) => {
-  return getData("user/open/list", data);
+  return postData("OuproOpenUpload", data);
 };
 
 // open，ck售后

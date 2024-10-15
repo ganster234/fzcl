@@ -10,10 +10,10 @@ export default function OpenTop({
   openReset,
   changeModal,
   changeExport,
-  saleChange
+  saleChange,
 }) {
   const endDisabledDay = (current) => {
-    return current && (current < dayjs(state.start_time) || current > dayjs());
+    return current && (current < dayjs(state.Stime) || current > dayjs());
   };
   const disabledDate = (current) => {
     return current && current > dayjs();
@@ -26,13 +26,13 @@ export default function OpenTop({
           <div className="open-top-input-item-texts">起止日期：</div>
           <div className="open-top-date-picker">
             <DatePicker
-              value={dayjs(state?.start_time)}
+              value={dayjs(state?.Stime)}
               disabledDate={disabledDate}
               onChange={(value) => {
                 if (value) {
-                  setStatus(value, "start_time");
+                  setStatus(value, "Stime");
                 } else {
-                  setStatus(new Date(), "start_time");
+                  setStatus(new Date(), "Stime");
                 }
               }}
               className="search-date-picker"
@@ -42,13 +42,13 @@ export default function OpenTop({
             />
             <span className="open-least">至</span>
             <DatePicker
-              value={dayjs(state?.end_time)}
+              value={dayjs(state?.Etime)}
               disabledDate={endDisabledDay}
               onChange={(value) => {
                 if (value) {
-                  setStatus(value, "end_time");
+                  setStatus(value, "Etime");
                 } else {
-                  setStatus(new Date(), "end_time");
+                  setStatus(new Date(), "Etime");
                 }
               }}
               className="search-date-picker"
@@ -61,8 +61,8 @@ export default function OpenTop({
         <div className="open-top-input-item">
           <div className="open-top-input-item-texts">用户名称：</div>
           <Input
-            value={state?.name}
-            onChange={(even) => setStatus(even.target.value, "name")}
+            value={state?.Username}
+            onChange={(even) => setStatus(even.target.value, "Username")}
             style={{ width: "220px", height: "32px" }}
             placeholder="请输入用户名称"
           />
@@ -70,8 +70,8 @@ export default function OpenTop({
         <div className="open-top-input-item">
           <div className="open-top-input-item-texts">任务编号：</div>
           <Input
-            value={state?.open_task_id}
-            onChange={(even) => setStatus(even.target.value, "open_task_id")}
+            value={state?.Sid}
+            onChange={(even) => setStatus(even.target.value, "Sid")}
             style={{ width: "220px", height: "32px" }}
             placeholder="请输入任务编号"
           />
@@ -94,13 +94,6 @@ export default function OpenTop({
         </Button>
       </div>
       <div className="create-open-export">
-        <Button
-          type="primary"
-          className="create-btn"
-          onClick={() => changeModal()}
-        >
-          创建任务
-        </Button>
         <Button
           className="open-export"
           style={{ color: "#ff9100" }}

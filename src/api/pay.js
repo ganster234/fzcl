@@ -3,7 +3,7 @@ import { getData, postData } from "./index";
 //
 //获取支付记录列表
 export const getPayList = (data) => {
-  return getData("pay/list", data);
+  return postData("OuprooderGet", data);
 };
 
 export const getIp = (data) => {

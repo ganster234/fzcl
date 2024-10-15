@@ -8,13 +8,11 @@ export default function ExportModal({ setExport }) {
   const [exportLoading, setExportLoading] = useState(false);
   const [state, setState] = useState({
     openid_task_id: "",
-    type: 1,
   });
 
   const cancelExport = () => {
     setState({
       openid_task_id: "",
-      type: 1,
     });
     setExport(false);
   };
@@ -22,19 +20,15 @@ export default function ExportModal({ setExport }) {
   const comExport = async () => {
     message.destroy();
     if (!state.openid_task_id) {
-      return
-    }
-    if (!state.type) {
-      return message.error("请选择下载类型");
+      return message.error("请输入内容");
     }
     setExportLoading(true);
-    let result = await getUserOpen({ ...state });
+    let result = await getUserOpen({ Sid: state.openid_task_id });
     const { code, data, msg } = result || {};
-    if (code===200) {
+    if (code === "200") {
       exportRaw(state.openid_task_id, data, true);
       setState({
         openid_task_id: "",
-        type: 1,
       });
       setExport(false);
     } else {
