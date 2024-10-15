@@ -38,7 +38,7 @@ export default function AddProject() {
       }
     );
     // eslint-disable-next-line eqeqeq
-    if (result?.code == 200) {
+    if (result?.code) {
       message.success("提交成功");
       addForm.current.resetFields();
     } else {

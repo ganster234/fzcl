@@ -80,7 +80,7 @@ export default function UserList() {
     });
     const { code, data, msg } = result || {};
     // eslint-disable-next-line eqeqeq
-    if (code == 200) {
+    if (code) {
       if (data.length) {
         setDataList([...data]);
         setTotal(data?.total);

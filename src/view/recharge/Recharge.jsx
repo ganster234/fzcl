@@ -50,21 +50,32 @@ export default function Recharge() {
 
   const getList = async (account) => {
     const { current, pageSize } = tableParams.pagination;
+    console.log(state, "state");
+
     setLoading(true);
     let result = await getRecharge({
-      ...state,
-      start_time:
-        state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
-      end_time: state.end_time && dayjs(state.end_time).format("YYYY-MM-DD"),
-      page: current,
-      limit: pageSize,
-      account: account ? "" : state.account,
+      // ...state,
+      // start_time:
+      //   state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
+      // end_time: state.end_time && dayjs(state.end_time).format("YYYY-MM-DD"),
+      // page: current,
+      // limit: pageSize,
+      // account: account ? "" : state.account,
+      Name: account ? "" : state.account, //名称
+      Stime: account
+        ? dayjs().format("YYYY-MM-DD")
+        : dayjs(state.start_time).format("YYYY-MM-DD"), //开始时间
+      Etime: account
+        ? dayjs().format("YYYY-MM-DD")
+        : dayjs(state.end_time).format("YYYY-MM-DD"), //结束时间
+      Pagenum: account ? 1 : current, //页数
+      Pagesize: account ? 10 : pageSize, //显示数
     });
     const { code, msg, data } = result || {};
-    if (code === 200) {
-      setDataList([...data?.data]);
-      setTotal(data?.total);
-      setTotalMoney(data?.total_money);
+    if (code) {
+      setDataList([...data]);
+      // setTotal(data?.total);
+      // setTotalMoney(data?.total_money);
     } else {
       message.destroy();
       message.error(msg);

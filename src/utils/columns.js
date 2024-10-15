@@ -223,37 +223,37 @@ export const scanColumns = [
 export const experience = [
   {
     title: "账号名称",
-    dataIndex: "account",
+    dataIndex: "Device_name",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "充值金额",
-    dataIndex: "money",
+    dataIndex: "Device_mball",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "状态",
-    dataIndex: "status",
-    render: (record) => (
-      <span>
-        {record === 0
-          ? "待审核"
-          : record === 1
-          ? "通过"
-          : record === 2
-          ? "驳回"
-          : "-"}
-      </span>
-    ),
+    dataIndex: "Device_shstate",
+    // render: (record) => (
+    //   <span>
+    //     {record === "0"
+    //       ? "待审核"
+    //       : record === "1"
+    //       ? "通过"
+    //       : record === "2"
+    //       ? "驳回"
+    //       : "-"}
+    //   </span>
+    // ),
   },
   {
     title: "交易单号",
-    dataIndex: "addr",
+    dataIndex: "Device_num",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
     render: (record) => <span>{record ? record : "-"}</span>,
   },
 ];
@@ -348,48 +348,48 @@ export const payColumns = [
 export const rechargeColumns = [
   {
     title: "充值用户",
-    dataIndex: "account",
+    dataIndex: "Device_name",
     render: (record) => <>{record ? record : "-"}</>,
   },
   {
     title: "数量",
-    dataIndex: "num",
+    dataIndex: "Device_num",
   },
   {
     title: "余额",
-    dataIndex: "balance",
+    dataIndex: "Device_mb",
     render: (record) => <>{record ? record : "-"}</>,
   },
   {
     title: "订单号",
-    dataIndex: "order_id",
+    dataIndex: "Device_Sid",
   },
   {
     title: "充值金额",
-    dataIndex: "money",
+    dataIndex: "Device_mball",
   },
   {
     title: "状态",
-    dataIndex: "status",
-    render: (record) => (
-      <>
-        {record === -1
-          ? "全部"
-          : record === 1
-          ? "成功"
-          : record === 0
-          ? "支付中"
-          : "-"}
-      </>
-    ),
+    dataIndex: "Device_state",
+    // render: (record) => (
+    //   <>
+    //     {record === -1
+    //       ? "全部"
+    //       : record === 1
+    //       ? "成功"
+    //       : record === 0
+    //       ? "支付中"
+    //       : "-"}
+    //   </>
+    // ),
   },
   {
     title: "标题",
-    dataIndex: "title",
+    dataIndex: "Device_mbweb",
   },
   {
     title: "创建时间",
-    dataIndex: "create_time",
+    dataIndex: "Device_time",
   },
 ];
 

@@ -55,7 +55,7 @@ export default function Payment() {
     });
     const { code, data, msg } = result || {};
     // eslint-disable-next-line eqeqeq
-    if (code == 200) {
+    if (code) {
       console.log(data, "data");
 
       setDataList([...data]);

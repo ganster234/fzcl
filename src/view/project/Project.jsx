@@ -330,7 +330,7 @@ export default function Project() {
     });
     const { code, data, msg } = result || {};
     // eslint-disable-next-line eqeqeq
-    if (code == 200) {
+    if (code) {
       // let list = data;
       // list.forEach((element, i) => {
       //   element.data.forEach((item, index) => {
@@ -396,7 +396,7 @@ export default function Project() {
     });
     message.destroy();
     // eslint-disable-next-line eqeqeq
-    if (result?.code == 200) {
+    if (result?.code) {
       message.success("修改成功");
       await projectEdit(subItem.Device_Psid);
     } else {

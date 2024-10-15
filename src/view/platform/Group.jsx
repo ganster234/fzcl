@@ -51,8 +51,7 @@ export default function Group() {
       Sid: userInfo.Device_Sid, //用户sid
     });
     const { code, data, msg } = result || {};
-    // eslint-disable-next-line eqeqeq
-    if (code == 200) {
+    if (code) {
       setDataList([...data]);
       setTotal(data?.total);
     } else {

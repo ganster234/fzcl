@@ -28,7 +28,7 @@ export default function SystemSetup() {
         Type: val,
       });
       // eslint-disable-next-line eqeqeq
-      if (result?.code == 200) {
+      if (result?.code) {
         console.log(result.data, "result");
         const fieldsData = result.data.map((item, index) => ({
           // id: item.id,
@@ -92,7 +92,7 @@ export default function SystemSetup() {
         Sid: userInfo.Device_Sid, //用户sid
       });
       // eslint-disable-next-line eqeqeq
-      if (result?.code == 200) {
+      if (result?.code) {
         setUserInfo(result.data[0]);
       } else {
         message.error(result?.msg);

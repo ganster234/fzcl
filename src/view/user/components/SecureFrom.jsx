@@ -67,7 +67,7 @@ export default function SecureFrom() {
       Oldpass: oldPassword, //老密码
     });
     // eslint-disable-next-line eqeqeq
-    if (result?.code == 200) {
+    if (result?.code) {
       // return;
       // 退出页面去除本地的登录信息
       localStorage.removeItem("globalState");

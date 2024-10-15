@@ -38,7 +38,7 @@ export default function Notice() {
     let result = await postUpdateNotice({ Remark: state.Device_Remark });
     message.destroy();
     // eslint-disable-next-line eqeqeq
-    if (result?.code == 200) {
+    if (result?.code) {
       message.success("发布成功");
       await getNoticeData();
     } else {
