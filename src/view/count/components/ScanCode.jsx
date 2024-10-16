@@ -10,7 +10,11 @@ export default function ScanCode({ dataList, loading }) {
   };
 
   // 计算总计
-  const totalAge = dataList.reduce((acc, item) => acc + item.totals, 0);
+  // const totalAge = dataList.reduce((acc, item) => acc + item.Device_num, 0);
+  const totalAge = dataList.reduce((acc, item) => {
+    const num = parseFloat(item.Device_num);
+    return acc + (isNaN(num) ? 0 : num);
+  }, 0);
   return (
     <>
       <Table
@@ -19,17 +23,17 @@ export default function ScanCode({ dataList, loading }) {
           x: 1000,
           y: 470,
         }}
-        rowKey={(record) => record.app_id}
+        rowKey={(record, i) => i}
         loading={loading}
         pagination={false}
         columns={[
           {
             title: "项目名",
-            dataIndex: "app_name",
+            dataIndex: "Device_name",
           },
           {
             title: "总量",
-            dataIndex: "totals",
+            dataIndex: "Device_num",
           },
           {
             title: "操作",
@@ -53,7 +57,7 @@ export default function ScanCode({ dataList, loading }) {
         dataSource={dataList}
       />
       <Modal
-        title={dataItem?.app_name}
+        title={dataItem?.Device_name}
         open={scanIsModal}
         footer={null}
         destroyOnClose
@@ -66,16 +70,16 @@ export default function ScanCode({ dataList, loading }) {
           scroll={{
             y: 300,
           }}
-          rowKey={(record) => record.user_id}
+          rowKey={(record, i) => i}
           pagination={false}
           columns={[
             {
               title: "账号",
-              dataIndex: "account",
+              dataIndex: "Device_account",
               className: "replace-color",
             },
           ]}
-          dataSource={dataItem?.data}
+          dataSource={dataItem?.Device_data}
         />
       </Modal>
     </>

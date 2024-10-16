@@ -9,17 +9,17 @@ export default function CountFronsWx({ loading, dataList, total }) {
     setFronsItem(data);
   };
   // 计算总量总计
-  const totalNum = dataList.reduce(
-    (acc, item) => Number(acc) + Number(item.totalNum),
+  const Device_num = dataList.reduce(
+    (acc, item) => Number(acc) + Number(item.Device_num),
     0
   );
   const totalAmount = dataList.reduce(
-    (acc, item) => Number(acc) + Number(item.totalAmount),
+    (acc, item) => Number(acc) + Number(item.Device_money),
     0
   );
   return (
     <>
-      <div className="count-frons-top">
+      {/* <div className="count-frons-top">
         <span className="count-frons-top-item">
           今日注册总数：<span>{total?.total_num || "0"}</span>
         </span>
@@ -32,69 +32,69 @@ export default function CountFronsWx({ loading, dataList, total }) {
         <span className="count-frons-top-item">
           今日缓存数：<span>{total?.cache_num || "0"}</span>
         </span>
-      </div>
+      </div> */}
       <Table
         rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
         scroll={{
           x: 1000,
           y: 450,
         }}
-        rowKey={(record) => record.app_id}
+        rowKey={(record) => record.Device_pid}
         loading={loading}
         pagination={false}
         columns={[
           {
             title: "项目ID",
-            dataIndex: "app_id",
+            dataIndex: "Device_pid",
           },
           {
             title: "项目名称",
-            dataIndex: "app_name",
+            dataIndex: "Device_pname",
           },
           {
             title: "套餐名称",
-            dataIndex: "package_name",
+            dataIndex: "Device_tname",
             render: (record) => <span>{record ? record : "--"}</span>,
           },
           {
             title: "总量",
-            dataIndex: "totalNum",
+            dataIndex: "Device_num",
           },
-          
+
           {
             title: "总金额",
-            dataIndex: "totalAmount",
+            dataIndex: "Device_money",
           },
-          {
-            title: "操作",
-            render: (record) => (
-              <Button type="primary" onClick={() => countDetails(record)}>
-                查看详情
-              </Button>
-            ),
-          },
+          // {
+          //   title: "操作",
+          //   render: (record) => (
+          //     <Button type="primary" onClick={() => countDetails(record)}>
+          //       查看详情
+          //     </Button>
+          //   ),
+          // },
         ]}
         // 在表格底部渲染总计
         summary={() => (
           <Table.Summary fixed>
-          <Table.Summary.Row>
-            <Table.Summary.Cell index={0}>总计</Table.Summary.Cell>
-            <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
-            <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
-            <Table.Summary.Cell index={3}>
-              {Number(totalNum).toFixed(2)}
-            </Table.Summary.Cell>
-            <Table.Summary.Cell index={4}>
-              {Number(totalAmount).toFixed(2)}
-            </Table.Summary.Cell>
-            <Table.Summary.Cell index={5}>-</Table.Summary.Cell>
-          </Table.Summary.Row>
-        </Table.Summary>
+            <Table.Summary.Row>
+              <Table.Summary.Cell index={0}>总计</Table.Summary.Cell>
+              <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
+              <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
+              <Table.Summary.Cell index={3}>
+                {Number(Device_num).toFixed(2)}
+              </Table.Summary.Cell>
+              <Table.Summary.Cell index={4}>
+                {Number(totalAmount).toFixed(2)}
+              </Table.Summary.Cell>
+              <Table.Summary.Cell index={5}>-</Table.Summary.Cell>
+            </Table.Summary.Row>
+          </Table.Summary>
         )}
         dataSource={dataList}
       />
       <Modal
-        title={fronsItem?.app_name}
+        title={fronsItem?.Device_pname}
         open={fronsShow}
         width={700}
         footer={null}
@@ -112,12 +112,12 @@ export default function CountFronsWx({ loading, dataList, total }) {
           columns={[
             {
               title: "套餐ID",
-              dataIndex: "app_id",
+              dataIndex: "Device_pid",
               className: "replace-color",
             },
             {
               title: "套餐名称",
-              dataIndex: "package_name",
+              dataIndex: "Device_tname",
               className: "replace-color",
               render: (record) => <span>{record ? record : "--"}</span>,
             },

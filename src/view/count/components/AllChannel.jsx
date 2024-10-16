@@ -8,13 +8,17 @@ export default function AllChannel({ loading, dataList }) {
     (option?.value ?? "").toLowerCase().includes(input.toLowerCase());
 
   // 计算总量总计
-  const totalAge = dataList.reduce(
-    (acc, item) => Number(acc) + Number(item.totalNum),
-    0
-  );
+  // const totalAge = dataList.reduce(
+  //   (acc, item) => Number(acc) + Number(item.totalNum),
+  //   0
+  // );
+  const totalAge = dataList.reduce((acc, item) => {
+    const num = parseFloat(item.Device_num);
+    return acc + (isNaN(num) ? 0 : num);
+  }, 0);
   // 计算总金额总计
   const totalAmount = dataList.reduce(
-    (acc, item) => Number(acc) + Number(item.totalAmount),
+    (acc, item) => Number(acc) + Number(item.Device_money),
     0
   );
   return (
@@ -31,15 +35,15 @@ export default function AllChannel({ loading, dataList }) {
         columns={[
           {
             title: "账号",
-            dataIndex: "account",
+            dataIndex: "Device_name",
           },
           {
             title: "总量",
-            dataIndex: "totalNum",
+            dataIndex: "Device_num",
           },
           {
             title: "总金额",
-            dataIndex: "totalAmount",
+            dataIndex: "Device_money",
           },
           {
             title: "项目",
@@ -50,11 +54,11 @@ export default function AllChannel({ loading, dataList }) {
                 showSearch
                 filterOption={filterOption}
               >
-                {record.app_lst &&
-                  record.app_lst.map((item, index) => {
+                {record.Device_data &&
+                  record.Device_data.map((item, index) => {
                     return (
-                      <Option key={index} value={item}>
-                        {item}
+                      <Option key={index} value={item.Device_account}>
+                        {item.Device_account}
                       </Option>
                     );
                   })}

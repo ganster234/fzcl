@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { message } from "antd";
-import { getCount } from "../../api/count";
+import {
+  getCount,
+  getOutjsm,
+  getOutjpay,
+  getOutjpropay,
+} from "../../api/count";
 import dayjs from "dayjs";
 
 import CountTop from "./components/CountTop";
@@ -37,27 +42,65 @@ export default function Count() {
 
   const getCountList = async (str) => {
     setLoading(true);
-    let result = await getCount({
-      start_time: str
+    const commonParams = {
+      Stime: str
         ? ""
         : state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
-      end_time: str
+      Etime: str
         ? ""
         : state.end_time && dayjs(state.end_time).format("YYYY-MM-DD"),
-      app_id: str ? "" : state.app_id,
-      type: state.active,
-    });
-    const { code, data, msg } = result || {};
-    message.destroy();
-    if (code === 200) {
-      if (state.active === 2) {
-        setDataList([...data?.list]);
+    };
+
+    try {
+      let response;
+      if (state.active === 0) {
+        response = await getOutjsm(commonParams);
+        console.log("getOutjsm Response:", response);
+      } else if (state.active === 1) {
+        response = await getOutjpay(commonParams);
+        console.log("getOutjpay Response:", response);
+      } else if (state.active === 2) {
+        response = await getOutjpropay({ ...commonParams, Type: "1" });
+        console.log("getOutjpropay Type 1 Response:", response);
+      } else if (state.active === 6) {
+        response = await getOutjpropay({ ...commonParams, Type: "2" });
+        console.log("getOutjpropay Type 2 Response:", response);
       } else {
-        setDataList([...data]);
+        console.warn("无效的 state.active 值:", state.active);
       }
-    } else {
-      message.error(msg);
+      const { code, data, msg } = response || {};
+      console.log(response, state.active, "state.active");
+      message.destroy();
+      if (code) {
+        setDataList([...data]);
+      } else {
+        message.error(msg);
+      }
+    } catch (error) {
+      console.error("接口调用出错:", error);
     }
+
+    // let result = await getCount({
+    //   start_time: str
+    //     ? ""
+    //     : state.start_time && dayjs(state.start_time).format("YYYY-MM-DD"),
+    //   end_time: str
+    //     ? ""
+    //     : state.end_time && dayjs(state.end_time).format("YYYY-MM-DD"),
+    //   app_id: str ? "" : state.app_id,
+    //   type: state.active,
+    // });
+    // const { code, data, msg } = result || {};
+    // message.destroy();
+    // if (code === 200) {
+    //   if (state.active === 2) {
+    //     setDataList([...data?.list]);
+    //   } else {
+    //     setDataList([...data]);
+    //   }
+    // } else {
+    //   message.error(msg);
+    // }
     setLoading(false);
   };
 

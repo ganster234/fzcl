@@ -9,12 +9,12 @@ export default function CountFrons({ loading, dataList }) {
     setFronsItem(data);
   };
   // 计算总量总计
-  const totalNum = dataList.reduce(
-    (acc, item) => Number(acc) + Number(item.totalNum),
+  const Device_num = dataList.reduce(
+    (acc, item) => Number(acc) + Number(item.Device_num),
     0
   );
   const totalAmount = dataList.reduce(
-    (acc, item) => Number(acc) + Number(item.totalAmount),
+    (acc, item) => Number(acc) + Number(item.Device_money),
     0
   );
 
@@ -26,39 +26,39 @@ export default function CountFrons({ loading, dataList }) {
           x: 1000,
           y: 470,
         }}
-        rowKey={(record) => record.app_id}
+        rowKey={(record) => record.Device_pid}
         loading={loading}
         pagination={false}
         columns={[
           {
             title: "项目ID",
-            dataIndex: "app_id",
+            dataIndex: "Device_pid",
           },
           {
             title: "项目名称",
-            dataIndex: "app_name",
+            dataIndex: "Device_pname",
           },
           {
             title: "套餐名称",
-            dataIndex: "package_name",
+            dataIndex: "Device_tname",
             render: (record) => <span>{record ? record : "--"}</span>,
           },
           {
             title: "总量",
-            dataIndex: "totalNum",
+            dataIndex: "Device_num",
           },
           {
             title: "总金额",
-            dataIndex: "totalAmount",
+            dataIndex: "Device_money",
           },
-          {
-            title: "操作",
-            render: (record) => (
-              <Button type="primary" onClick={() => countDetails(record)}>
-                查看详情
-              </Button>
-            ),
-          },
+          // {
+          //   title: "操作",
+          //   render: (record) => (
+          //     <Button type="primary" onClick={() => countDetails(record)}>
+          //       查看详情
+          //     </Button>
+          //   ),
+          // },
         ]}
         // 在表格底部渲染总计
         summary={() => (
@@ -68,7 +68,7 @@ export default function CountFrons({ loading, dataList }) {
               <Table.Summary.Cell index={1}>-</Table.Summary.Cell>
               <Table.Summary.Cell index={2}>-</Table.Summary.Cell>
               <Table.Summary.Cell index={3}>
-                {Number(totalNum).toFixed(2)}
+                {Number(Device_num).toFixed(2)}
               </Table.Summary.Cell>
               <Table.Summary.Cell index={4}>
                 {Number(totalAmount).toFixed(2)}
@@ -80,7 +80,7 @@ export default function CountFrons({ loading, dataList }) {
         dataSource={dataList}
       />
       <Modal
-        title={fronsItem?.app_name}
+        title={fronsItem?.Device_pname}
         open={fronsShow}
         width={700}
         footer={null}
@@ -98,12 +98,12 @@ export default function CountFrons({ loading, dataList }) {
           columns={[
             {
               title: "套餐ID",
-              dataIndex: "app_id",
+              dataIndex: "Device_pid",
               className: "replace-color",
             },
             {
               title: "套餐名称",
-              dataIndex: "package_name",
+              dataIndex: "Device_tname",
               className: "replace-color",
               render: (record) => <span>{record ? record : "--"}</span>,
             },
