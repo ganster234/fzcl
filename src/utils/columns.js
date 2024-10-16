@@ -291,6 +291,62 @@ export const iPtable = [
     render: (record) => <span>{record ? record : "-"}</span>,
   },
 ];
+export const addProjectTable = [
+  {
+    title: "项目名称",
+    dataIndex: "Device_name",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "项目链接",
+    dataIndex: "Device_url",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "状态", //0 审核中 1已审核 2拒绝
+    dataIndex: "Device_state",
+    render: (record) => (
+      <>
+        {record === "0"
+          ? "审核中"
+          : record === "1"
+          ? "已审核"
+          : record === "2"
+          ? "拒绝"
+          : "-"}
+      </>
+    ),
+  },
+  {
+    title: "创建时间",
+    dataIndex: "Device_time",
+  },
+  {
+    title: "审核人员",
+    dataIndex: "Device_shuser",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "提交人员",
+    dataIndex: "Device_user",
+    render: (record) => <span>{record ? record : "-"}</span>,
+  },
+  {
+    title: "项目类型", //全部 0 Q 1 V 2
+    dataIndex: "Device_type",
+    render: (record) => (
+      <>
+        {record === "0"
+          ? "全部"
+          : record === "1"
+          ? "Q"
+          : record === "2"
+          ? "V"
+          : "-"}
+      </>
+    ),
+  },
+];
 
 export const payColumns = [
   {
@@ -447,65 +503,83 @@ export const orderColumns = [
   //   dataIndex: "account",
   // },
   {
-    title: "项目名字",
-    width: 120,
-    dataIndex: "appName",
+    title: "订单号",
+    width: 360,
+    dataIndex: "Device_Sid",
+  },
+  {
+    title: "用户",
+    dataIndex: "Device_name",
   },
   {
     title: "项目ID",
-    width: 160,
-    dataIndex: "appId",
+    dataIndex: "Device_pid",
   },
   {
-    title: "订单号",
-    width: 360,
-    dataIndex: "orderId",
+    title: "项目名字",
+    dataIndex: "Device_pname",
   },
+
   {
     title: "套餐",
-    dataIndex: "packageName",
+    width: 120,
+    dataIndex: "Device_tname",
     render: (record) => <span>{record ? record : "--"}</span>,
   },
   {
-    title: "分组",
-    dataIndex: "group_name",
-    render: (record) => <span>{record ? record : "--"}</span>,
-  },
-  {
-    title: "投保",
-    dataIndex: "isInsure",
-    render: (record) => <span>{record === 1 ? "已投保" : "未投保"}</span>,
-  },
-  {
-    title: "倍数",
-    dataIndex: "number",
-    render: (record) => <span>{record ? record : "--"}</span>,
-  },
-  {
-    title: "投保金额",
-    dataIndex: "insurePrice",
-    render: (record) => <span>{record ? record : "--"}</span>,
-  },
-  {
-    title: "创建时间",
-    width: 200,
-    dataIndex: "createTime",
-  },
-  {
-    title: "到期时间",
-    width: 200,
-    dataIndex: "expiresTime",
+    title: "状态", //状态  0未使用  1已使用
+    dataIndex: "Device_use",
     render: (record) => (
-      <span>
-        {record ? dayjs(record * 1000).format("YYYY-MM-DD HH:mm:ss") : "-"}
-      </span>
+      <span>{record === "0" ? "未使用" : record === "1" ? "已使用" : "-"}</span>
     ),
   },
   {
-    title: "更新时间",
-    width: 200,
-    dataIndex: "updateTime",
+    title: "售后", //售后 0未售后  1 已售后
+    dataIndex: "Device_sh",
+    render: (record) => (
+      <span>{record === "0" ? "未售后" : record === "1" ? "已售后" : "-"}</span>
+    ),
   },
+  // {
+  //   title: "分组",
+  //   dataIndex: "group_name",
+  //   render: (record) => <span>{record ? record : "--"}</span>,
+  // },
+  // {
+  //   title: "投保",
+  //   dataIndex: "isInsure",
+  //   render: (record) => <span>{record === 1 ? "已投保" : "未投保"}</span>,
+  // },
+  // {
+  //   title: "倍数",
+  //   dataIndex: "number",
+  //   render: (record) => <span>{record ? record : "--"}</span>,
+  // },
+  // {
+  //   title: "投保金额",
+  //   dataIndex: "insurePrice",
+  //   render: (record) => <span>{record ? record : "--"}</span>,
+  // },
+  // {
+  //   title: "创建时间",
+  //   width: 200,
+  //   dataIndex: "createTime",
+  // },
+  {
+    title: "到期时间",
+    width: 200,
+    dataIndex: "Device_dqtime",
+    // render: (record) => (
+    //   <span>
+    //     {record ? dayjs(record * 1000).format("YYYY-MM-DD HH:mm:ss") : "-"}
+    //   </span>
+    // ),
+  },
+  // {
+  //   title: "更新时间",
+  //   width: 200,
+  //   dataIndex: "updateTime",
+  // },
 ];
 
 export const wholeDealColumns = [

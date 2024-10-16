@@ -1,14 +1,21 @@
-import { postData,getData } from './index'
-
+import { postData, getData } from "./index";
 
 //获取订单列表
-export const getOrderList = (data) => { return getData('/auth/appOrder/getOrderIdByUser', data) }
+export const getOrderList = (data) => {
+  return postData("OuSmTableGet", data);
+};
 
 //批量删除
-export const setDelOrder = (data) => { return postData('delOrderIds', data) }
+export const setDelOrder = (data) => {
+  return postData("delOrderIds", data);
+};
 
 //修改分组
-export const setGroup = (data) => { return postData('add/update/group', data) }
+export const setGroup = (data) => {
+  return postData("add/update/group", data);
+};
 
-//订单续费 
-export const setOneDay = (data) => { return getData('one/day', data) }
+//订单续费
+export const setOneDay = (data) => {
+  return getData("one/day", data);
+};

@@ -58,14 +58,20 @@ export default function Order() {
       pageSize: 10, // 每页数据条数
     },
   });
+  const Userid = sessionStorage.getItem("user");
 
   //获取分组
   useEffect(() => {
     // 获取分组ID
     const getGroup = async () => {
-      let result = await getGroupListNoPage();
+      let result = await getGroupListNoPage({
+        Sid: Userid,
+        Name: "", //名称
+        Pagenum: "1",
+        Pagesize: "999",
+      });
       message.destroy();
-      if (result?.code === 200) {
+      if (result?.code) {
         setGroupList([...result?.data]);
       } else {
         message.error(result?.msg);
@@ -73,13 +79,18 @@ export default function Order() {
     };
     // 获取项目ID
     const getPackList = async () => {
-      let result = await getProjectPackList();
+      let result = await getProjectPackList({
+        Type: "0", //0 全部 1 Q 2 W
+        App: "", // 1不是  0 是
+        Web: "", // 1不是  0 是
+      });
       const { code, data, msg } = result || {};
       message.destroy();
-      if (code === 200) {
-        if (data?.price && data?.price.length > 0) {
-          setPackList([...data?.price]);
-        }
+      if (code) {
+        // if (data?.price && data?.price.length > 0) {
+        //   setPackList([...data?.price]);
+        // }
+        setPackList([...data]);
       } else {
         message.error(msg);
       }
@@ -113,27 +124,41 @@ export default function Order() {
     } = state;
     console.log("state", state);
     let parma = {
-      appId: str ? "" : appId + "",
-      group_id: str ? "" : group_id + "",
-      status: str ? "" : status + "",
-      order_id: str ? "" : order_id + "",
-      aftersaleed: str ? "" : aftersaleed + "",
-      start_time: str
+      // appId: str ? "" : appId + "",
+      // group_id: str ? "" : group_id + "",
+      // status: str ? "" : status + "",
+      // order_id: str ? "" : order_id + "",
+      // aftersaleed: str ? "" : aftersaleed + "",
+      // start_time: str
+      //   ? dayjs().format("YYYY-MM-DD")
+      //   : start_time && dayjs(start_time).format("YYYY-MM-DD"),
+      // end_time: str
+      //   ? dayjs().format("YYYY-MM-DD")
+      //   : end_time && dayjs(end_time).format("YYYY-MM-DD"),
+      // account: str ? "" : account + "",
+      // page: current,
+      // limit: pageSize,
+      Psid: str ? "" : appId + "", //项目sid
+      Gsid: str ? "" : group_id + "", //分组sid
+      Username: str ? "" : account + "", //用户名
+      Sid: str ? "" : order_id + "", //订单号
+      State: str ? "" : status + "", //状态  0未使用  1已使用
+      Type: str ? "" : aftersaleed + "", //售后 0未售后  1 已售后
+      Stime: str
         ? dayjs().format("YYYY-MM-DD")
         : start_time && dayjs(start_time).format("YYYY-MM-DD"),
-      end_time: str
+      Etime: str
         ? dayjs().format("YYYY-MM-DD")
         : end_time && dayjs(end_time).format("YYYY-MM-DD"),
-      account: str ? "" : account + "",
-      page: current,
-      limit: pageSize,
+      Pagenum: current,
+      Pagesize: pageSize,
     };
     setLoading(true);
     let result = await getOrderList(parma);
-    const { code, data, msg } = result || {};
-    if (code === 200) {
-      setTotal(data?.orderTotal);
-      setDataList([...data?.orderInfoList]);
+    const { code, data, msg, pagenum } = result || {};
+    if (code) {
+      setTotal(pagenum);
+      setDataList([...data]);
     } else {
       message.error(msg);
     }
@@ -180,6 +205,7 @@ export default function Order() {
       order_id: "", //订单号
       status: "", //使用
       account: "", //用户名
+      aftersaleed: "",
     });
     queryBtn("str");
   };
@@ -330,7 +356,7 @@ export default function Order() {
           <Table
             rowClassName={(record, i) => (i % 2 === 1 ? "even" : "odd")} // 重点是这个api
             scroll={{
-              x: 2600,
+              x: 1600,
               y: height,
             }}
             rowKey={(record) => record.orderId}
@@ -344,66 +370,66 @@ export default function Order() {
             }}
             onChange={handleTableChange}
             columns={[
-              {
-                title: "订单ID",
-                dataIndex: "id",
-              },
-              {
-                title: "操作",
-                render: (record) => (
-                  <>
-                    {record.type === 3 || record.account_type !== 1 ? (
-                      // <Button
-                      //   type="primary"
-                      //   onClick={() => orderRenew(record.orderId)}
-                      // >
-                      //   续费
-                      // </Button>
-                      <>-</>
-                    ) : (
-                      <>-</>
-                    )}
-                  </>
-                ),
-              },
-              {
-                title: "用户",
-                dataIndex: "account",
-              },
+              // {
+              //   title: "订单ID",
+              //   dataIndex: "id",
+              // },
+              // {
+              //   title: "操作",
+              //   render: (record) => (
+              //     <>
+              //       {record.type === 3 || record.account_type !== 1 ? (
+              //         // <Button
+              //         //   type="primary"
+              //         //   onClick={() => orderRenew(record.orderId)}
+              //         // >
+              //         //   续费
+              //         // </Button>
+              //         <>-</>
+              //       ) : (
+              //         <>-</>
+              //       )}
+              //     </>
+              //   ),
+              // },
+              // {
+              //   title: "用户",
+              //   dataIndex: "account",
+              // },
               ...orderColumns,
-              {
-                title: "状态",
-                dataIndex: "firstAuth",
-                render: (record) => (
-                  <span style={{ color: record === 1 ? "#666666" : "#327DFC" }}>
-                    {record === 1 ? "未使用" : "已使用"}
-                  </span>
-                ),
-              },
-              {
-                title: "自动售后",
-                dataIndex: "aftersaleed",
-                render: (record) => (
-                  <span
-                    style={{
-                      color:
-                        record === 1
-                          ? "#666666"
-                          : record === 1
-                          ? "#12C3B1"
-                          : "",
-                    }}
-                  >
-                    {record === 1 ? "已售后" : record === 0 ? "未售后" : "全部"}
-                  </span>
-                ),
-              },
-              {
-                title: "备注",
-                width: 200,
-                dataIndex: "remark",
-                render: (record) => <span>{record ? record : "-"}</span>,
-              },
+              // {
+              //   title: "状态",
+              //   dataIndex: "firstAuth",
+              //   render: (record) => (
+              //     <span style={{ color: record === 1 ? "#666666" : "#327DFC" }}>
+              //       {record === 1 ? "未使用" : "已使用"}
+              //     </span>
+              //   ),
+              // },
+              // {
+              //   title: "自动售后",
+              //   dataIndex: "aftersaleed",
+              //   render: (record) => (
+              //     <span
+              //       style={{
+              //         color:
+              //           record === 1
+              //             ? "#666666"
+              //             : record === 1
+              //             ? "#12C3B1"
+              //             : "",
+              //       }}
+              //     >
+              //       {record === 1 ? "已售后" : record === 0 ? "未售后" : "全部"}
+              //     </span>
+              //   ),
+              // },
+              // {
+              //   title: "备注",
+              //   width: 200,
+              //   dataIndex: "remark",
+              //   render: (record) => <span>{record ? record : "-"}</span>,
+              // },
             ]}
             dataSource={dataList}
           />

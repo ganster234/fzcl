@@ -121,7 +121,7 @@ export default function SystemSetup() {
       <Spin spinning={setupLoading}>
         <div>
           <Tabs
-            defaultActiveKey="1"
+            defaultActiveKey="0"
             items={[
               {
                 key: "0",

@@ -46,12 +46,21 @@ export default function Register() {
     // }
     else {
       setLoading(true);
-      let result = await register({
-        ...yesFinish,
-        checkToken: loginKey,
-      });
+      const { username, password, comPwd, invitation_code } = yesFinish;
+      const registerParams = {
+        // ...yesFinish,
+        // checkToken: loginKey,
+        User: username, //账号
+        Pass: password, //密码
+        Compass: comPwd, //重复密码
+        Sid: invitation_code, //邀请码
+      };
+      // return console.log("registerParams", registerParams);
+
+      let result = await register(registerParams);
       const { msg } = result || {};
-      if (result?.code === 200) {
+      // eslint-disable-next-line eqeqeq
+      if (result?.code == 200) {
         setLoading(false);
         message.success("注册成功");
         navigate("/");

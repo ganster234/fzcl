@@ -17,12 +17,12 @@ export default function DataCount() {
     var option;
     let xAxisData = [];
     let seriesData = [];
-    let result = await getDayCount({ type: saleActive ? "today" : "month " });
+    let result = await getDayCount({ type: saleActive ? "day" : "mo " });
     const { code, data } = result || {};
-    if (code === 200) {
+    if (code) {
       data.forEach((item) => {
-        xAxisData.push(item.time);
-        seriesData.push(item.money);
+        xAxisData.push(item.Device_time);
+        seriesData.push(item.Device_money);
       });
     }
 
@@ -73,11 +73,12 @@ export default function DataCount() {
   }, [saleActive]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const getChannel = async () => {
+      //日：day  月：mo
       let result = await getDayStati({
-        type: channelActive ? "today" : "month",
+        type: channelActive ? "day" : "mo",
       });
-      if (result?.code === 200) {
-        setChannelDetail({ ...result?.data });
+      if (result?.code) {
+        setChannelDetail({ ...result?.data[0] });
       }
     };
     getChannel();
@@ -120,33 +121,33 @@ export default function DataCount() {
               所有销售渠道总额
             </div>
             <div className="channel-detail-item-content">
-              {channelDetail?.total || "0.00"}
+              {channelDetail?.Device_moneyall || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.old_total || "0.00"}
+              {channelDetail?.Device_moneyallold || "0.00"}
             </div>
           </div>
           <Divider type="vertical" className="channel-detail-item-vertical" />
           <div className="count-channel-detail-item">
             <div className="channel-detail-item-title">open销售总额</div>
             <div className="channel-detail-item-content">
-              {channelDetail?.open || "0.00"}
+              {channelDetail?.Device_open || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.old_open || "0.00"}
+              {channelDetail?.Device_openold || "0.00"}
             </div>
           </div>
           <Divider type="vertical" className="channel-detail-item-vertical" />
           <div className="count-channel-detail-item">
             <div className="channel-detail-item-title">项目扫码总次数</div>
             <div className="channel-detail-item-content">
-              {channelDetail?.sao || "0.00"}
+              {channelDetail?.Device_sm || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.old_sao || "0.00"}
+              {channelDetail?.Device_smold || "0.00"}
             </div>
           </div>
 
@@ -156,11 +157,11 @@ export default function DataCount() {
               {channelActive ? "今日" : "本月"}扫码成功数
             </div>
             <div className="channel-detail-item-content">
-              {channelDetail?.suc_sao || "0.00"}
+              {channelDetail?.Device_smok || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.suc_old_sao || "0.00"}
+              {channelDetail?.Device_smokold || "0.00"}
             </div>
           </div>
           <Divider type="vertical" className="channel-detail-item-vertical" />
@@ -169,11 +170,11 @@ export default function DataCount() {
               {channelActive ? "今日" : "本月"}扫码失败数
             </div>
             <div className="channel-detail-item-content">
-              {channelDetail?.err_sao || "0.00"}
+              {channelDetail?.Device_smno || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.err_old_sao || "0.00"}
+              {channelDetail?.Device_smnoold || "0.00"}
             </div>
           </div>
 
@@ -181,44 +182,44 @@ export default function DataCount() {
           <div className="count-channel-detail-item">
             <div className="channel-detail-item-title">项目售后总额</div>
             <div className="channel-detail-item-content">
-              {channelDetail?.after || "0.00"}
+              {channelDetail?.Device_sh || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.old_after || "0.00"}
+              {channelDetail?.Device_shold || "0.00"}
             </div>
           </div>
           <Divider type="vertical" className="channel-detail-item-vertical" />
           <div className="count-channel-detail-item">
             <div className="channel-detail-item-title">用户充值总额</div>
             <div className="channel-detail-item-content">
-              {channelDetail?.add || "0.00"}
+              {channelDetail?.Device_pay || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.old_add || "0.00"}
+              {channelDetail?.Device_payold || "0.00"}
             </div>
           </div>
           <Divider type="vertical" className="channel-detail-item-vertical" />
           <div className="count-channel-detail-item">
             <div className="channel-detail-item-title">ck销售总额</div>
             <div className="channel-detail-item-content">
-              {channelDetail?.ck || "0.00"}
+              {channelDetail?.Device_ck || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.old_ck || "0.00"}
+              {channelDetail?.Device_ckold || "0.00"}
             </div>
           </div>
           <Divider type="vertical" className="channel-detail-item-vertical" />
           <div className="count-channel-detail-item">
             <div className="channel-detail-item-title">周卡售后</div>
             <div className="channel-detail-item-content">
-              {channelDetail?.week_after || "0.00"}
+              {channelDetail?.Device_shweek || "0.00"}
             </div>
             <div className="channel-detail-item-footer">
               {channelActive ? "较昨日" : "较上月"}
-              {channelDetail?.week_old_after || "0.00"}
+              {channelDetail?.Device_shweekold || "0.00"}
             </div>
           </div>
         </div>

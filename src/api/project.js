@@ -35,13 +35,22 @@ export const modifyTheAmountQuery = (data) => {
 
 // 获取项目和套餐
 export const getProjectPackList = (data) => {
-  return getData("project/price/pack", data);
+  return postData("OuproByTypeGet", data);
 };
 
 //添加项目页面的接口
 export const setAddApplication = (data) => {
   return postData("OuprowebAdd", data);
 };
+//添加项目  修改状态
+export const addApplicationModify = (data) => {
+  return postData("OuprowebUp", data);
+};
+// 查询
+export const getAddApplication = (data) => {
+  return postData("OuprowebGet", data);
+};
+
 //新增项目别名
 export const addProjectAlias = (data) => {
   return postData("OuproMainNaAdd", data);

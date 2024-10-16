@@ -76,8 +76,8 @@ export default function OrderTop({
             {packList &&
               packList.map((item, index) => {
                 return (
-                  <Option key={index} value={item.app_id}>
-                    {item.app_name}
+                  <Option key={index} value={item.Device_Sid}>
+                    {item.Device_name}
                   </Option>
                 );
               })}
@@ -97,8 +97,8 @@ export default function OrderTop({
             {groupList &&
               groupList.map((item, index) => {
                 return (
-                  <Option key={index} value={item.id}>
-                    {item.group_name}
+                  <Option key={index} value={item.Device_gid}>
+                    {item.Device_Name}
                   </Option>
                 );
               })}
@@ -149,7 +149,7 @@ export default function OrderTop({
             onChange={(value) => getState(value, "aftersaleed")}
             filterOption={filterOption}
           >
-            <Option value={"-1"}>全部</Option>
+            <Option value={""}>全部</Option>
             <Option value={"0"}>未售后</Option>
             <Option value={"1"}>已售后</Option>
           </Select>
