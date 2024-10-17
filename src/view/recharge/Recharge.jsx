@@ -188,7 +188,7 @@ export default function Recharge() {
               x: 1500,
               y: height,
             }}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.Device_Sid}
             loading={loading}
             pagination={{
               ...tableParams.pagination,

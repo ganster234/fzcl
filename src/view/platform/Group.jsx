@@ -62,10 +62,10 @@ export default function Group() {
   };
 
   const scanSearch = () => {
-    if (!groupName) {
-      message.destroy();
-      return message.error("请输入查询名称");
-    }
+    // if (!groupName) {
+    //   message.destroy();
+    //   return message.error("请输入查询名称");
+    // }
     anewList();
   };
 
@@ -187,7 +187,7 @@ export default function Group() {
               x: 1500,
               y: height,
             }}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.Device_gid}
             loading={loading}
             pagination={{
               ...tableParams.pagination,

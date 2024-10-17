@@ -298,7 +298,7 @@ export default function Payment() {
               x: 1000,
               y: height,
             }}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.Device_Sid}
             loading={loading}
             pagination={{
               ...tableParams.pagination,
@@ -308,99 +308,99 @@ export default function Payment() {
             }}
             onChange={handleTableChange}
             columns={[
-              {
-                title: "操作",
-                render: (record) => (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    {role === "superAdmin" && record.status === 0 ? (
-                      <Popconfirm
-                        title="提示"
-                        description={
-                          <div>
-                            <p>当前操将审核该单充值状态</p>
-                            <Input
-                              value={remark}
-                              onChange={(val) => setremark(val.target.value)}
-                              placeholder="请输入备注（非必填）"
-                            ></Input>
-                            <Input.Password
-                              style={{ marginTop: "10px" }}
-                              value={password}
-                              onChange={(val) => setpassword(val.target.value)}
-                              placeholder="输入审核密码（必填）"
-                            ></Input.Password>
-                          </div>
-                        }
-                        onConfirm={() => audit_culo(1, record.id)}
-                        onCancel={() => audit_culo(2, record.id)}
-                        okText="通过"
-                        cancelText="驳回"
-                      >
-                        <Button type="primary" danger size="small">
-                          审核
-                        </Button>
-                      </Popconfirm>
-                    ) : (
-                      <></>
-                    )}
-                    {role === "superAdmin" ? (
-                      <Popconfirm
-                        title="提示"
-                        description={
-                          <div>
-                            <p>当前操将修改充值金额</p>
-                            <Input
-                              value={money}
-                              onChange={(val) => setmoney(val.target.value)}
-                              placeholder="输入金额"
-                            ></Input>
-                          </div>
-                        }
-                        onConfirm={() => gaimoney(record.id)}
-                        okText="确定"
-                        cancelText="取消"
-                      >
-                        <Button
-                          onClick={() => setmoney(record.money)}
-                          style={{
-                            margin: "0 10px",
-                          }}
-                          type="primary"
-                          size="small"
-                        >
-                          修改金额
-                        </Button>
-                      </Popconfirm>
-                    ) : (
-                      <></>
-                    )}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Tooltip placement="topLeft" title="修改交易单号">
-                        <p
-                          onClick={() => {
-                            setaddr(record.addr);
-                            setIsModalOpen(record.id);
-                          }}
-                          style={{ cursor: "pointer", fontSize: "20px" }}
-                        >
-                          <FormOutlined />
-                        </p>
-                      </Tooltip>
-                    </div>
-                  </div>
-                ),
-              },
+              // {
+              //   title: "操作",
+              //   render: (record) => (
+              //     <div
+              //       style={{
+              //         display: "flex",
+              //         justifyContent: "center",
+              //         alignItems: "center",
+              //       }}
+              //     >
+              //       {role === "superAdmin" && record.status === 0 ? (
+              //         <Popconfirm
+              //           title="提示"
+              //           description={
+              //             <div>
+              //               <p>当前操将审核该单充值状态</p>
+              //               <Input
+              //                 value={remark}
+              //                 onChange={(val) => setremark(val.target.value)}
+              //                 placeholder="请输入备注（非必填）"
+              //               ></Input>
+              //               <Input.Password
+              //                 style={{ marginTop: "10px" }}
+              //                 value={password}
+              //                 onChange={(val) => setpassword(val.target.value)}
+              //                 placeholder="输入审核密码（必填）"
+              //               ></Input.Password>
+              //             </div>
+              //           }
+              //           onConfirm={() => audit_culo(1, record.id)}
+              //           onCancel={() => audit_culo(2, record.id)}
+              //           okText="通过"
+              //           cancelText="驳回"
+              //         >
+              //           <Button type="primary" danger size="small">
+              //             审核
+              //           </Button>
+              //         </Popconfirm>
+              //       ) : (
+              //         <></>
+              //       )}
+              //       {role === "superAdmin" ? (
+              //         <Popconfirm
+              //           title="提示"
+              //           description={
+              //             <div>
+              //               <p>当前操将修改充值金额</p>
+              //               <Input
+              //                 value={money}
+              //                 onChange={(val) => setmoney(val.target.value)}
+              //                 placeholder="输入金额"
+              //               ></Input>
+              //             </div>
+              //           }
+              //           onConfirm={() => gaimoney(record.id)}
+              //           okText="确定"
+              //           cancelText="取消"
+              //         >
+              //           <Button
+              //             onClick={() => setmoney(record.money)}
+              //             style={{
+              //               margin: "0 10px",
+              //             }}
+              //             type="primary"
+              //             size="small"
+              //           >
+              //             修改金额
+              //           </Button>
+              //         </Popconfirm>
+              //       ) : (
+              //         <></>
+              //       )}
+              //       <div
+              //         style={{
+              //           display: "flex",
+              //           justifyContent: "center",
+              //         }}
+              //       >
+              //         <Tooltip placement="topLeft" title="修改交易单号">
+              //           <p
+              //             onClick={() => {
+              //               setaddr(record.addr);
+              //               setIsModalOpen(record.id);
+              //             }}
+              //             style={{ cursor: "pointer", fontSize: "20px" }}
+              //           >
+              //             <FormOutlined />
+              //           </p>
+              //         </Tooltip>
+              //       </div>
+              //     </div>
+              //   ),
+              // },
               ...experience,
             ]}
             dataSource={dataList}

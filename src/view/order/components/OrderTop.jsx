@@ -166,14 +166,14 @@ export default function OrderTop({
         </Button>
       </div>
       <div className="order-top-batch">
-        <Button
+        {/* <Button
           className="batch-export"
           style={{ color: "#fff" }}
           onClick={() => showModalStatus(true, "showExport")}
         >
           订单导出
-        </Button>
-        <Button
+        </Button> */}
+        {/* <Button
           className="batch-group"
           style={{ color: "#FF9100" }}
           onClick={() => showModalStatus(true, "showGroup")}
@@ -186,7 +186,7 @@ export default function OrderTop({
           onClick={() => showModalStatus(true, "showDelete")}
         >
           批量删除
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

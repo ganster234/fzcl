@@ -323,7 +323,7 @@ export default function UserList() {
                   x: 1400,
                   y: height,
                 }}
-                rowKey={(record) => record.id}
+                rowKey={(record) => record.Device_Sid}
                 loading={loading}
                 pagination={{
                   ...tableParams.pagination,
@@ -385,21 +385,21 @@ export default function UserList() {
                                       </Button>
                                     </Popconfirm>
                                   )}
-                                  <Button
+                                  {/* <Button
                                     size="small"
                                     type="primary"
                                     style={{ marginRight: "5px" }}
                                     onClick={() => changeMoney(record)}
                                   >
                                     修改余额
-                                  </Button>
-                                  <Button
+                                  </Button> */}
+                                  {/* <Button
                                     size="small"
                                     style={{ marginRight: "5px" }}
                                     onClick={() => getUser(record)}
                                   >
                                     项目管理
-                                  </Button>
+                                  </Button> */}
                                 </>
                               )}
 

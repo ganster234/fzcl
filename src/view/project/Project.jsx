@@ -380,9 +380,9 @@ export default function Project() {
     }));
   };
 
-  const inputDetailBlur = async (index, str, subItem) => {
+  const inputDetailBlur = async (index, str, subItem, checked) => {
     // setPopupLoading(true);
-    console.log(str, "str_______");
+    console.log(checked, "str_______", str);
 
     const editData = {
       Sid: subItem.Device_Sid,
@@ -390,7 +390,13 @@ export default function Project() {
       Pmoney: subItem.Device_money,
       State: subItem.Device_state,
     };
-    console.log(editData, "editData");
+    if (str === "switch" && checked) {
+      editData.State = "1";
+    }
+    if (str === "switch" && checked === false) {
+      editData.State = "0";
+    }
+    // return console.log(editData, "editData");
     let result = await getChangePrice({
       ...editData,
     });
@@ -653,13 +659,11 @@ export default function Project() {
                       </span>
                     </span> */}
                     <Switch
-                      onChange={() => {
-                        inputDetailBlur(index, "switch", subItem);
+                      onChange={(checked) => {
+                        inputDetailBlur(index, "switch", subItem, checked);
                       }}
+                      checked={subItem.Device_state === "1" ? true : false}
                       // eslint-disable-next-line eqeqeq
-                      // checked={
-                      //   parseInt(subItem?.Device_state) == 0 ? false : true
-                      // }
                       checkedChildren="启用"
                       unCheckedChildren="禁用"
                       defaultChecked

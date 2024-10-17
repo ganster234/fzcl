@@ -194,7 +194,7 @@ export default function Payment() {
             scroll={{
               y: height,
             }}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.Device_Sid}
             loading={loading}
             pagination={{
               ...tableParams.pagination,
