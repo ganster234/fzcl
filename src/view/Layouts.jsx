@@ -60,6 +60,7 @@ export default function Layouts({ children }) {
   const [highlight, sethighlight] = useState(""); //高亮
   const [postElection, setpostElection] = useState({}); //支付方式选中后
   const [tourl, settourl] = useState(""); //支付
+  const Userid = sessionStorage.getItem("user");
   const roWx = [
     {
       money: "100",
@@ -75,18 +76,6 @@ export default function Layouts({ children }) {
     },
   ];
   const [rechargeList, setrechargeList] = useState([]);
-  //   {
-  //   money: "100",
-  // },
-  // {
-  //   money: "200",
-  // },
-  // {
-  //   money: "500",
-  // },
-  // {
-  //   money: "1000",
-  // },
   let kamiList = [
     {
       title: "10",
@@ -118,7 +107,7 @@ export default function Layouts({ children }) {
     if (rechargeShow) {
       setRechargeLoading(true);
       getPayList({ State: "0" }).then((result) => {
-        console.log(result, "resultresultresult");
+        // console.log(result, "resultresultresult");
         if (result?.code) {
           setRechargeLoading(false);
           setpattern(result?.data);
@@ -152,7 +141,6 @@ export default function Layouts({ children }) {
 
   // 获取以及更新用户信息
   const getUserInfo = async () => {
-    const Userid = sessionStorage.getItem("user");
     let result = await getUser({ Sid: Userid });
     console.log(result, "resultresultresult");
     const { code, data, msg } = result || {};
@@ -217,31 +205,37 @@ export default function Layouts({ children }) {
       return message.error("购买数量只能为整数");
     }
     setRechargeLoading(true);
-    let result = await setPayMoney({
-      title: `充值${rechargeActive}元`,
-      price: rechargeActive + "",
-      num: num,
-      type: postElection.Device_type, ///w    1  微信支付 2 支付宝
-    });
-    const { code, data, msg } = result || {};
+    const prams = {
+      Usersid: Userid,
+      Username: userInfo.Device_name,
+      Num: num,
+      Money: rechargeActive,
+      Btmoney: "显示" + rechargeActive,
+      Code: "",
+      Type: postElection.Device_type,
+    };
+    let result = await setPayMoney(prams);
+    const { code, orderId, orderurl, msg } = result || {};
+    console.log(result, "resultssss");
     message.destroy();
+    setRechargeLoading(false);
     if (code === 200) {
-      setImgCode(data?.img);
+      setImgCode(decodeURIComponent(orderurl));
       setRechargeStatus("scanCode");
 
-      setRechargeLoading(false);
       //调起轮询
       times = setInterval(() => {
-        checkStatus(data?.order_id);
-      }, 1000);
+        checkStatus(orderId);
+      }, 5000);
     } else {
       message.error(msg);
     }
   };
   //轮循订单
-  const checkStatus = (order_id) => {
-    getPayStatus({ order_id: order_id }).then((result) => {
-      if (result?.code === 200 && result?.data === 1) {
+  const checkStatus = (Sid) => {
+    getPayStatus({ Sid, Type: postElection.Device_type }).then((result) => {
+      console.log(result, "result122445");
+      if (result?.code === "200") {
         clearInterval(times);
         setImgCode("");
         setRechargeStatus("payment");
@@ -261,20 +255,24 @@ export default function Layouts({ children }) {
   // ustd充值
   const rechargeUstd = async () => {
     message.destroy();
-
     if (!rechargeActive) {
       return message.error("请选择充值金额");
     }
     if (!Topupaccount) {
       return message.error("请输入充值账户");
     }
-
     setRechargeLoading(true);
-    let result = await getPayUsdt({
-      price: rechargeActive,
-      num: 1,
-      addr: Topupaccount,
-    });
+    const prams = {
+      Usersid: Userid,
+      Username: userInfo.Device_name,
+      Num: "1",
+      Money: rechargeActive,
+      Btmoney: "显示" + rechargeActive,
+      Code: Topupaccount,
+      Type: postElection.Device_type,
+    };
+    let result = await getPayUsdt(prams);
+    console.log(result, "resultresult");
     if (result?.code === 200) {
       message.success("提交成功，请等待审核");
       setPayUsdt("");
@@ -323,15 +321,15 @@ export default function Layouts({ children }) {
         ...kamiState,
       }),
     });
-    const { code, data, msg } = result || {};
+    const { code, orderurl, orderId, msg } = result || {};
     message.destroy();
     if (code === 200) {
-      setImgCode(data?.img);
+      setImgCode(orderurl);
       setRechargeStatus("scanCode");
       setRechargeLoading(false);
       //调起轮询
       times = setInterval(() => {
-        checkStatus(data?.order_id);
+        checkStatus(orderId);
       }, 1000);
     } else {
       message.error(msg);
