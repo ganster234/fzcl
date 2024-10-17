@@ -54,8 +54,8 @@ export default function Thali() {
   const navigate = useNavigate();
   const whetherAPP =
     location.pathname === "/layouts/wechat/thail"
-      ? { Web: 1, App: 0 }
-      : { Web: 0, App: 1 };
+      ? { Web: 0, App: 1 }
+      : { Web: 1, App: 0 };
   useEffect(() => {
     getList(whetherAPP);
   }, [location]); // eslint-disable-line react-hooks/exhaustive-deps

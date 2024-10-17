@@ -218,11 +218,11 @@ export default function Layouts({ children }) {
     const { code, orderId, orderurl, msg } = result || {};
     console.log(result, "resultssss");
     message.destroy();
-    setRechargeLoading(false);
+     setRechargeLoading(false);
     if (code === 200) {
       setImgCode(decodeURIComponent(orderurl));
       setRechargeStatus("scanCode");
-
+     
       //调起轮询
       times = setInterval(() => {
         checkStatus(orderId);

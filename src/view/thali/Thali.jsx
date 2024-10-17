@@ -56,8 +56,8 @@ export default function Thali(props) {
   const navigate = useNavigate();
   const whetherAPP =
     location.pathname === "/layouts/thali/thail"
-      ? { Web: 1, App: 0 }
-      : { Web: 0, App: 1 };
+      ? { Web: 0, App: 1 }
+      : { Web: 1, App: 0 };
   useEffect(() => {
     getList(whetherAPP);
   }, [location, is_qq]); // eslint-disable-line react-hooks/exhaustive-deps
