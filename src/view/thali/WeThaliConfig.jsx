@@ -80,7 +80,11 @@ export default function ThaliConfig() {
   };
   // 获取分组
   const getGroupList = async () => {
-    let result = await getGroupListNoPage({ Sid: Userid });
+    let result = await getGroupListNoPage({
+      Sid: Userid,
+      Pagenum: "1",
+      Pagesize: "200",
+    });
     message.destroy();
     if (result?.code) {
       setGroupList([...result?.data]);

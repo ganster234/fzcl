@@ -1,6 +1,7 @@
 .aaaass {
   background-color: #0F152B;
   margin: 0 !important;
+  height: 120vh;
 }
 .shox {
   background-color: #001529 !important;
@@ -126,12 +127,13 @@
 .recharge-modal-box .recharge-money-box {
   margin-top: 24px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
 }
 .recharge-modal-box .recharge-money-box .recharge-money-item {
   width: 150px;
   height: 110px;
+  margin: 10px;
   cursor: pointer;
   display: flex;
   flex-direction: column;

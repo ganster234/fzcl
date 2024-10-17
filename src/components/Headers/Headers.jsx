@@ -6,9 +6,8 @@ import { useNavigate } from "react-router-dom";
 import useAppStore from "../../store";
 
 import "./Headers.less";
-import { getDownload, cleanhuanc } from "../../api/home";
+import { getDownload } from "../../api/home";
 export default function Headers() {
-  const role = sessionStorage.getItem("role");
   const userInfo = useAppStore((state) => state.userInfo);
   const changServiceShow = useAppStore((state) => state.setServiceShow);
   const changRechargeShow = useAppStore((state) => state.setRechargeShow);

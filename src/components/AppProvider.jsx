@@ -168,11 +168,11 @@ export default function AppProvider({ children }) {
           ),
           label: "APP",
         },
-        {
-          key: "/layouts/wechat/take/code",
-          element: lazyLoad(lazy(() => import("../view/thali/WxTakeCode.jsx"))),
-          label: "导出code",
-        },
+        // {
+        //   key: "/layouts/wechat/take/code",
+        //   element: lazyLoad(lazy(() => import("../view/thali/WxTakeCode.jsx"))),
+        //   label: "导出code",
+        // },
         {
           key: "/layouts/wechat/thail/config",
           element: lazyLoad(

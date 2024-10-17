@@ -117,11 +117,9 @@ export default function Layouts({ children }) {
   useEffect(() => {
     if (rechargeShow) {
       setRechargeLoading(true);
-      getPayList({ State: "" }).then((result) => {
-        setRechargeLoading(false);
-        setpattern(result?.data);
-        ///////临时//////////
-        if (result?.code === 200) {
+      getPayList({ State: "0" }).then((result) => {
+        console.log(result, "resultresultresult");
+        if (result?.code) {
           setRechargeLoading(false);
           setpattern(result?.data);
         }
@@ -156,7 +154,7 @@ export default function Layouts({ children }) {
   const getUserInfo = async () => {
     const Userid = sessionStorage.getItem("user");
     let result = await getUser({ Sid: Userid });
-    // console.log(result, "resultresultresult");
+    console.log(result, "resultresultresult");
     const { code, data, msg } = result || {};
     if (code) {
       setUserInfo(data[0]);
@@ -223,7 +221,7 @@ export default function Layouts({ children }) {
       title: `充值${rechargeActive}元`,
       price: rechargeActive + "",
       num: num,
-      type: postElection.pay_type, ///w    1  微信支付 2 支付宝
+      type: postElection.Device_type, ///w    1  微信支付 2 支付宝
     });
     const { code, data, msg } = result || {};
     message.destroy();
@@ -454,7 +452,7 @@ export default function Layouts({ children }) {
                     <span style={{ color: "red" }}>
                       2.若充值出现任何问题可联系客服处理
                     </span>
-                    {postElection.remark ? (
+                    {postElection.Device_remark ? (
                       <p
                         style={{
                           color: "red",
@@ -462,7 +460,7 @@ export default function Layouts({ children }) {
                           fontSize: "15px",
                         }}
                       >
-                        温馨提示：{postElection.remark}
+                        温馨提示：{postElection.Device_remark}
                       </p>
                     ) : (
                       <></>
@@ -472,13 +470,13 @@ export default function Layouts({ children }) {
                   <div className="recharge-modal-message-item">
                     <span>充值账户：</span>
                     <span className="recharge-message-item-user-info">
-                      {userInfo?.account || "用户--"}
+                      {userInfo?.Device_name || "用户--"}
                     </span>
                   </div>
                   <div className="recharge-modal-message-item">
                     <span>账户余额：</span>
                     <span className="recharge-message-item-money">
-                      {userInfo?.balance || "0.00"}
+                      {userInfo?.Device_money || "0.00"}
                     </span>
                   </div>
                   <div className="recharge-modal-message-item">
@@ -491,13 +489,13 @@ export default function Layouts({ children }) {
                             className="recharge-checkbox-item"
                             onClick={() => {
                               console.log(item, "sssssstime");
-                              if (item.price) {
-                                const arr = item.price.split(",");
+                              if (item.Device_money) {
+                                const arr = item.Device_money.split(",");
                                 setrechargeList(
                                   arr.map((item) => ({ money: item })) || []
                                 );
                               }
-                              if (item.pay_type === "pay_kami") {
+                              if (item.Device_type === "pay_kami") {
                                 if (item.url) {
                                   window.open(item.url);
                                 } else {
@@ -507,23 +505,23 @@ export default function Layouts({ children }) {
                                 setRechargeActive("100");
                                 setNum(1);
                                 setpostElection(item);
-                                sethighlight(item.pay_type);
+                                sethighlight(item.Device_type);
                                 setRechargedActiveShow(
                                   //////////////////////新增支付方式////////////////////////
-                                  item.pay_type === "wxpay" ||
-                                    item.pay_type === "yuansheng" ||
-                                    item.pay_type === "wechat" ||
-                                    item.pay_type === "baoge"
+                                  item.Device_type === "wxpay" ||
+                                    item.Device_type === "yuansheng" ||
+                                    item.Device_type === "wechat" ||
+                                    item.Device_type === "baoge"
                                     ? "wCHaPay"
-                                    : item.pay_type === "alipay"
+                                    : item.Device_type === "alipay"
                                     ? "wexin"
-                                    : item.pay_type === "USTD"
+                                    : item.Device_type === "USTD"
                                     ? "USDT"
-                                    : item.pay_type
+                                    : item.Device_type
                                 );
                                 if (
                                   times &&
-                                  rechargedActiveShow !== item.pay_type
+                                  rechargedActiveShow !== item.Device_type
                                 ) {
                                   clearInterval(times);
                                   setRechargeStatus("notRecharged");
@@ -533,14 +531,14 @@ export default function Layouts({ children }) {
                           >
                             <img
                               src={
-                                highlight === item.pay_type
+                                highlight === item.Device_type
                                   ? rechargedActive
                                   : rechargedCheckout
                               }
                               alt=""
                               className="recharge-checkbox-item-icon"
                             />
-                            <span>{item.pay_name}</span>
+                            <span>{item.Device_name}</span>
                           </span>
                         );
                       })}
@@ -646,7 +644,7 @@ export default function Layouts({ children }) {
                         <span>
                           请在钱包向收款账户转账充U金额，打款成功后24小时内充值成功。
                           <span style={{ color: "red" }}>
-                            （USDT汇率：{userInfo?.usdt_rate || ""}）
+                            （USDT汇率：{userInfo?.Device_hl || ""}）
                           </span>
                         </span>
                       </div>
@@ -656,7 +654,7 @@ export default function Layouts({ children }) {
                           {/* {Topupaccount.length > 20
                             ? userInfo?.wallet
                             : "请输入正确交易单号与交易金额"} */}
-                          {userInfo?.wallet}
+                          {postElection?.Device_url}
                         </span>
                       </div>
                       <div className="recharge-modal-message-item">
@@ -717,16 +715,12 @@ export default function Layouts({ children }) {
                             );
                           })}
                       </div>
-                      {Topupaccount.length > 20 ? (
-                        <div
-                          className="recharge-btn-sign"
-                          onClick={() => rechargeUstd()}
-                        >
-                          确认提交
-                        </div>
-                      ) : (
-                        <></>
-                      )}
+                      <div
+                        className="recharge-btn-sign"
+                        onClick={() => rechargeUstd()}
+                      >
+                        确认提交
+                      </div>
                     </div>
                   )}
                   {/* USTD扫码支付 */}

@@ -141,12 +141,12 @@ export default function AppProvider({ children }) {
           roles: ["admin", "role", "superAdmin"],
           label: "套餐列表",
         },
-        {
-          key: "/layouts/wechat/take/code",
-          element: lazyLoad(lazy(() => import("../view/thali/WxTakeCode.jsx"))),
-          roles: ["admin", "role", "superAdmin"],
-          label: "导出code",
-        },
+        // {
+        //   key: "/layouts/wechat/take/code",
+        //   element: lazyLoad(lazy(() => import("../view/thali/WxTakeCode.jsx"))),
+        //   roles: ["admin", "role", "superAdmin"],
+        //   label: "导出code",
+        // },
         {
           key: "/layouts/wechat/thail/config",
           element: lazyLoad(
