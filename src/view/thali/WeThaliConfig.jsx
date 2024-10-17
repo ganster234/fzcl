@@ -206,10 +206,15 @@ export default function ThaliConfig() {
       const { code, data, msg } = result || {};
       message.destroy();
       if (code === 200) {
-        message.success("购买成功");
         setOrderDetail([result.orderId]);
         getDetail();
-        setOrderModal(true); //生成订单列表
+        setTimeout(() => {
+          message.open({
+            type: "success",
+            content: "购买成功",
+            duration: 5,
+          });
+        }, 800);
       } else {
         message.error(msg);
       }
@@ -522,10 +527,8 @@ export default function ThaliConfig() {
               <Popconfirm
                 title="提示"
                 description={() => {
-                  if (thaliInfo.id === 386) {
-                    if (thaliData?.pack_id[active].package_id === 10006) {
-                      return `您购买的是CK账号?`;
-                    }
+                  if (thaliData?.money[active]?.Device_id === "4") {
+                    return `您购买的是CK账号?`;
                   }
                   return `您购买的是${scanOpenShow ? "小程序" : "扫码"}账号?`;
                 }}
