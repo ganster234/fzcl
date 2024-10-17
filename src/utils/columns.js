@@ -192,10 +192,38 @@ export const scanColumns = [
   {
     title: "扫码类型",
     dataIndex: "Device_type",
+    render: (record) => (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          className="scan-type"
+          style={{
+            color: record === "首次扫码" ? "#327dfc" : "#f7bb1e",
+            border:
+              record === "首次扫码" ? "1px solid #327dfc" : "1px solid #f7bb1e",
+          }}
+        >
+          {record}
+        </div>
+      </div>
+    ),
   },
   {
     title: "扫码状态",
     dataIndex: "Device_state",
+    render: (record) => (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          className="scan-type"
+          style={{
+            color: record === "扫码成功" ? "#12C3B1" : "#f53e56",
+            border:
+              record === "扫码成功" ? "1px solid #12c3b1" : "1px solid #f53e56",
+          }}
+        >
+          {record}
+        </div>
+      </div>
+    ),
   },
   {
     title: "备注",
@@ -221,6 +249,20 @@ export const experience = [
   {
     title: "状态",
     dataIndex: "Device_shstate",
+    render: (record) => (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          className="scan-type"
+          style={{
+            color: record === "通过" ? "#327dfc" : "#f53e56",
+            border:
+              record === "通过" ? "1px solid #327dfc" : "1px solid #f53e56",
+          }}
+        >
+          {record}
+        </div>
+      </div>
+    ),
     // render: (record) => (
     //   <span>
     //     {record === "0"
@@ -414,6 +456,20 @@ export const rechargeColumns = [
   {
     title: "状态",
     dataIndex: "Device_state",
+    render: (record) => (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          className="open-task-status"
+          style={{
+            color: record === "派单中" ? "#666666" : "#12C3B1 ",
+            border:
+              record === "派单中" ? "1px solid #666666" : "1px solid #12C3B1",
+          }}
+        >
+          {record}
+        </div>
+      </div>
+    ),
     // render: (record) => (
     //   <>
     //     {record === -1
@@ -529,9 +585,23 @@ export const orderColumns = [
   {
     title: "状态", //状态  0未使用  1已使用
     dataIndex: "Device_use",
-    render: (record) => (
-      <span>{record === "0" ? "未使用" : record === "1" ? "已使用" : "-"}</span>
-    ),
+    // render: (record) => (
+    //   <span>{record === "0" ? "未使用" : record === "1" ? "已使用" : "-"}</span>
+    // ),
+    render: (record) => {
+      let color = "black";
+      let text = "-";
+
+      if (record === "0") {
+        color = "#f7bb1e"; // 未使用
+        text = "未使用";
+      } else if (record === "1") {
+        color = "#12C3B1"; // 已使用
+        text = "已使用";
+      }
+
+      return <span style={{ color }}>{text}</span>;
+    },
   },
   {
     title: "售后", //售后 0未售后  1 已售后

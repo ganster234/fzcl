@@ -108,7 +108,8 @@ export default function Group() {
       Name: addGroupName, //"分组名称"
     });
     message.destroy();
-    if (result?.code === 200) {
+    // eslint-disable-next-line eqeqeq
+    if (result?.code == 200) {
       setAddName(() => "");
       message.success("添加成功");
       setIsModalOpen(false);

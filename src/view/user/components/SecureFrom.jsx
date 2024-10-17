@@ -13,6 +13,7 @@ export default function SecureFrom() {
     code: "",
     password: "",
     comPwd: "",
+    oldPassword: "",
   });
   const [checkToken, setCheckToken] = useState("");
 

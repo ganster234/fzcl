@@ -189,6 +189,22 @@ export default function WxThaliCk() {
                 {
                   title: "任务状态",
                   dataIndex: "Device_remark",
+                  render: (record) => (
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <div
+                        className="open-task-status"
+                        style={{
+                          color: record === "已完成" ? "#12C3B1" : "#666666",
+                          border:
+                            record === "已完成"
+                              ? "1px solid #12c3b1"
+                              : "1px solid #666666",
+                        }}
+                      >
+                        {record}
+                      </div>
+                    </div>
+                  ),
                 },
               ]}
               dataSource={dataList}
