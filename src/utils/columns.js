@@ -391,11 +391,11 @@ export const addProjectTable = [
 ];
 
 export const payColumns = [
-  {
-    title: "任务编号",
-    dataIndex: "Device_Sid",
-    render: (record) => <span>{record ? record : "-"}</span>,
-  },
+  // {
+  //   title: "任务编号",
+  //   dataIndex: "Device_Sid",
+  //   render: (record) => <span>{record ? record : "-"}</span>,
+  // },
   {
     title: "项目名称",
     dataIndex: "Device_name",

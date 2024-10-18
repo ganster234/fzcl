@@ -359,7 +359,7 @@ export default function Order() {
               x: 1600,
               y: height,
             }}
-            rowKey={(record) => record.orderId}
+            rowKey={(record) => record.Device_Sid}
             rowSelection={rowSelection}
             loading={loading}
             pagination={{
