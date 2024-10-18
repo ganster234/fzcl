@@ -397,13 +397,11 @@ export default function ThaliConfig() {
                     <div className="project-details-item-thali-info">
                       <Radio.Group
                         onChange={(even) => {
-                          console.log(thaliData);
                           setScanOpenShow(even.target.value);
                         }}
                         value={scanOpenShow}
                       >
                         <Radio value={false}>扫码</Radio>
-
                         <Radio value={true}>小程序</Radio>
                       </Radio.Group>
                       <span style={{ color: "red" }}>

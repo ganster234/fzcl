@@ -393,9 +393,7 @@ export default function ThaliConfig() {
                     <div className="project-details-item-title">类型：</div>
                     <div className="project-details-item-thali-info">
                       <Radio.Group
-                        onChange={(even) => {
-                          setScanOpenShow(even.target.value);
-                        }}
+                        onChange={(even) => setScanOpenShow(even.target.value)}
                         value={scanOpenShow}
                       >
                         <Radio value={true}>open</Radio>
