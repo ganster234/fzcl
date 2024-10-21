@@ -2,7 +2,7 @@ import { getData, postData } from "./index";
 
 // 登录的验证码
 export const getCode = (data) => {
-  return getData("verifyCode", data);
+  return postData("AppVerifyCode", data);
 };
 
 //登录

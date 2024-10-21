@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { context } from "../../components/AppProvider";
 import { Button, Form, Input, message, Spin } from "antd";
 // getCode,transmitting
-import { login } from "../../api/login";
+import { login, getCode } from "../../api/login";
 import { usebegin } from "../../store/mystore";
 // import Fingerprint2 from "fingerprintjs2";
 // import useAppStore from "../../store";
@@ -12,17 +12,46 @@ import "./Login.less";
 export default function Login() {
   // const platformSrc = useAppStore((state) => state.platformSrc); //设置用户信息
   const takestore = usebegin();
+  const [codeSrc, setCodeSrc] = useState("");
+  const [loginKey, setKey] = useState("");
+  const [loginCheckToken, setCheckToken] = useState("");
+
   const [loading, setLoading] = useState(false);
   // 跳转
   const navigate = useNavigate();
   const { resetMenus } = useContext(context);
   useEffect(() => {
     // transmitting({ data: JSON.stringify(newData) });
+    getCodeSrc();
   }, []);
-
+  //获取验证码
+  const getCodeSrc = async () => {
+    let result = await getCode();
+    const { code, data } = result || {};
+    // eslint-disable-next-line eqeqeq
+    if (code == 200) {
+      if (data[0]?.img) {
+        setCodeSrc(data[0]?.img);
+        setKey(data[0]?.key);
+        setCheckToken(data[0]?.checkToken);
+      }
+    } else {
+      message.destroy();
+      message.open({
+        type: "error",
+        content: result.msg,
+      });
+    }
+  };
   const onFinish = async (yesFinish) => {
+    // return console.log(yesFinish, "yesFinish");
+
     setLoading(true);
-    let result = await login({ ...yesFinish });
+    let result = await login({
+      ...yesFinish,
+      checkToken: loginCheckToken,
+      Key: loginKey,
+    });
     // const fingerprint = await new Promise((resolve) => {
     //   Fingerprint2.get((components) => {
     //     const values = components.map((component) => component.value);
@@ -35,7 +64,7 @@ export default function Login() {
       //登录成功
       takestore.setdisclosedBallot(false);
       setLoading(false);
-      sessionStorage.setItem("token", '');
+      sessionStorage.setItem("token", "");
       sessionStorage.setItem("user", data[0].Device_Sid);
       // 刷新页面导致路由以及丢失menu的关键  暂时写死的超级管理员
       sessionStorage.setItem("role", data[0].Device_Roles || "role");
@@ -131,6 +160,41 @@ export default function Login() {
             >
               <Input.Password size="small" placeholder="请输入登录密码!" />
             </Form.Item>
+
+            <Form.Item>
+              <div className=" imgcodeBOX ">
+                <Form.Item
+                  name="VerifyCode"
+                  rules={[
+                    {
+                      required: true,
+                      message: "请输入验证码!",
+                    },
+                  ]}
+                >
+                  <Input placeholder="请输入验证码!" />
+                </Form.Item>
+                <img
+                  className=" codeImg "
+                  src={codeSrc}
+                  alt=""
+                  onClick={getCodeSrc}
+                />
+              </div>
+              <div className="clickLgzc">
+                <p>
+                  没有账号
+                  <span
+                    onClick={() => {
+                      navigate("/register");
+                    }}
+                  >
+                    点此注册
+                  </span>
+                </p>
+              </div>
+            </Form.Item>
+
             <Form.Item>
               <div className="clickLgzc">
                 <p>
