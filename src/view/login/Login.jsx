@@ -194,22 +194,6 @@ export default function Login() {
                 </p>
               </div>
             </Form.Item>
-
-            <Form.Item>
-              <div className="clickLgzc">
-                <p>
-                  没有账号
-                  <span
-                    onClick={() => {
-                      navigate("/register");
-                    }}
-                  >
-                    点此注册
-                  </span>
-                </p>
-              </div>
-            </Form.Item>
-
             <Form.Item
               wrapperCol={{
                 // offset: 8,

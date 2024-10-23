@@ -218,15 +218,18 @@ export default function Layouts({ children }) {
     const { code, orderId, orderurl, msg } = result || {};
     console.log(result, "resultssss");
     message.destroy();
-     setRechargeLoading(false);
+    setRechargeLoading(false);
     if (code === 200) {
-      setImgCode(decodeURIComponent(orderurl));
-      setRechargeStatus("scanCode");
-     
-      //调起轮询
-      times = setInterval(() => {
-        checkStatus(orderId);
-      }, 5000);
+      // setImgCode(decodeURIComponent(orderurl));
+      // setRechargeStatus("scanCode");
+
+      // //调起轮询
+      // times = setInterval(() => {
+      //   checkStatus(orderId);
+      // }, 5000);
+      const decodedUrl = decodeURIComponent(result.orderweburl);
+      console.log(decodedUrl, "decodedUrlsaoma");
+      window.open(decodedUrl);
     } else {
       message.error(msg);
     }
@@ -274,15 +277,18 @@ export default function Layouts({ children }) {
     let result = await getPayUsdt(prams);
     console.log(result, "resultresult");
     if (result?.code === 200) {
-      message.success("提交成功，请等待审核");
-      setPayUsdt("");
-      setNum(1);
-      sethighlight("");
-      setRechargeActive("100");
-      setRechargedActiveShow("");
-      setRechargeLoading(false);
-      //更新本地数据
-      getUserInfo();
+      // message.success("提交成功，请等待审核");
+      // setPayUsdt("");
+      // setNum(1);
+      // sethighlight("");
+      // setRechargeActive("100");
+      // setRechargedActiveShow("");
+      // setRechargeLoading(false);
+      // //更新本地数据
+      // getUserInfo();
+      const decodedUrl = decodeURIComponent(result.orderweburl);
+      console.log(decodedUrl, "decodedUrl");
+      window.open(decodedUrl);
     } else {
       message.error(result?.msg);
     }
