@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== "development") {
 // 调用isMobile函数，根据返回值执行不同的操作
 if (isMobile()) {
   console.log("手机访问");
-  window.location.href = "https://ph.seolkf830.com/";
+  window.location.href = "https://m.shouquan123.com/#/";
 } else {
   console.log("屏幕访问");
 }

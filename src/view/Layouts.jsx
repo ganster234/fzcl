@@ -220,16 +220,17 @@ export default function Layouts({ children }) {
     message.destroy();
     setRechargeLoading(false);
     if (code === 200) {
-      // setImgCode(decodeURIComponent(orderurl));
-      // setRechargeStatus("scanCode");
+      setImgCode(decodeURIComponent(orderurl));
+      setRechargeStatus("scanCode");
 
-      // //调起轮询
-      // times = setInterval(() => {
-      //   checkStatus(orderId);
-      // }, 5000);
-      const decodedUrl = decodeURIComponent(result.orderweburl);
-      console.log(decodedUrl, "decodedUrlsaoma");
-      window.open(decodedUrl);
+      //调起轮询
+      times = setInterval(() => {
+        checkStatus(orderId);
+      }, 5000);
+      // 新支付2.0
+      // const decodedUrl = decodeURIComponent(result.orderweburl);
+      // console.log(decodedUrl, "decodedUrlsaoma");
+      // window.open(decodedUrl);
     } else {
       message.error(msg);
     }
@@ -277,18 +278,21 @@ export default function Layouts({ children }) {
     let result = await getPayUsdt(prams);
     console.log(result, "resultresult");
     if (result?.code === 200) {
-      // message.success("提交成功，请等待审核");
-      // setPayUsdt("");
-      // setNum(1);
-      // sethighlight("");
-      // setRechargeActive("100");
-      // setRechargedActiveShow("");
-      // setRechargeLoading(false);
-      // //更新本地数据
-      // getUserInfo();
-      const decodedUrl = decodeURIComponent(result.orderweburl);
-      console.log(decodedUrl, "decodedUrl");
-      window.open(decodedUrl);
+      setPayUsdt("");
+      setNum(1);
+      sethighlight("");
+      setRechargeActive("100");
+      setRechargedActiveShow("");
+      setRechargeLoading(false);
+      //更新本地数据
+      getUserInfo();
+      setTimeout(() => {
+        message.success("提交成功，请等待审核");
+      }, 800);
+      // //////////新充值2.0//////////////////
+      // const decodedUrl = decodeURIComponent(result.orderweburl);
+      // console.log(decodedUrl, "decodedUrl");
+      // window.open(decodedUrl);
     } else {
       message.error(result?.msg);
     }

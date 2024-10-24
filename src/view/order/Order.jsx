@@ -65,6 +65,7 @@ export default function Order() {
     // 获取分组ID
     const getGroup = async () => {
       let result = await getGroupListNoPage({
+        
         Sid: Userid,
         Name: "", //名称
         Pagenum: "1",
@@ -138,6 +139,7 @@ export default function Order() {
       // account: str ? "" : account + "",
       // page: current,
       // limit: pageSize,
+      Usersid:Userid,
       Psid: str ? "" : appId + "", //项目sid
       Gsid: str ? "" : group_id + "", //分组sid
       Username: str ? "" : account + "", //用户名

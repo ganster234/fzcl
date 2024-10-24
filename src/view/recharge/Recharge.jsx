@@ -12,8 +12,10 @@ const ContentLayouts = React.lazy(async () => {
   const item = await import("../../components/contentLayouts/ContentLayouts");
   return item;
 });
+
 // 充值列表
 export default function Recharge() {
+  const Userid = sessionStorage.getItem("user");
   const [height, setHeight] = useState(550);
   const [state, setState] = useState({
     start_time: new Date(), //开始时间
@@ -61,6 +63,7 @@ export default function Recharge() {
       // page: current,
       // limit: pageSize,
       // account: account ? "" : state.account,
+      Usersid: Userid,
       Name: account ? "" : state.account, //名称
       Stime: account
         ? dayjs().format("YYYY-MM-DD")

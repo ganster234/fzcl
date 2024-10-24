@@ -30,6 +30,7 @@ const ContentLayouts = React.lazy(async () => {
 });
 
 export default function Payment() {
+  const Userid = sessionStorage.getItem("user");
   const role = sessionStorage.getItem("role");
   const [addr, setaddr] = useState(""); //交易单号i
   const [password, setpassword] = useState(""); //密码
@@ -81,6 +82,7 @@ export default function Payment() {
       // page: account ? 1 : current,
       // limit: account ? 10 : pageSize,
       // account: account ? "" : state.account,
+      Usersid: Userid,
       Name: account ? "" : state.account, //名称
       Stime: account
         ? dayjs().format("YYYY-MM-DD")
